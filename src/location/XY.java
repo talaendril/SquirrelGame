@@ -22,6 +22,13 @@ public final class XY {
 		this.y = y;
 	}
 	
+	public XY(XY location, XY vector) {
+		int newX = location.getX() + vector.getX();
+		int newY = location.getY() + vector.getY();
+		this.x = (newX < 0) ? 0 : newX;
+		this.y = (newY < 0) ? 0 : newY;
+	}
+	
 	public int getX() {
 		return this.x;
 	}
@@ -31,7 +38,7 @@ public final class XY {
 	}
 	
 	public boolean equals(XY location) {
-		return location.getX() == this.x && location.getY() == this.y;
+		return (location.getX() == this.x && location.getY() == this.y);
 	}
 	
 	@Override
@@ -39,9 +46,12 @@ public final class XY {
 		return this.x + " " + this.y;
 	}
 	
-	public static XY getRandomDirection() {
-		int random = new Random().nextInt(9) + 1;
-		switch(random) {
+	public static int randomNumber() {
+		return new Random().nextInt(9) + 1;
+	}
+	
+	public static XY getVector(int number) {
+		switch(number) {
 		case 1:
 			return DOWN_LEFT;
 		case 2:
@@ -61,5 +71,9 @@ public final class XY {
 		default:
 			return ORIGIN;
 		}
-	}			
+	}	
+	
+	public static XY outOfBoundsLocation() {
+		return new XY(-1, 1);
+	}
 }
