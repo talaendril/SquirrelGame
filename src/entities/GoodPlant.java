@@ -1,5 +1,6 @@
 package entities;
 
+import core.EntityContext;
 import location.XY;
 
 public class GoodPlant extends Entity {
@@ -14,7 +15,7 @@ public class GoodPlant extends Entity {
 	}
 	
 	@Override
-	public void nextStep() {
+	public void nextStep(EntityContext context) {
 		//nothing to do
 	}
 }

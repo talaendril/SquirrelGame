@@ -35,9 +35,4 @@ public class HandOperatedMasterSquirrel extends MasterSquirrel {
 			return null;
 		}
 	}
-	
-	@Override
-	public void nextStep() {	//not the perfect approach with tryNextStep but it works for now
-		this.setLocation(this.getNextLocation());
-	}
 }

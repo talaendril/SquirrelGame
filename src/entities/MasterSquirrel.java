@@ -21,7 +21,7 @@ public class MasterSquirrel extends Squirrel {
 	
 	public void spawnMiniSquirrel() {
 		if (this.getEnergy() >= 1500) {
-			production.add(new MiniSquirrel(ID.getNewID(), 500, new XY(this.getLocation(), XY.getVector(XY.randomNumber())), this));
+			production.add(new MiniSquirrel(ID.getNewID(), 150, new XY(this.getLocation(), XY.getVector(XY.randomNumber())), this));
 			//TODO checking if new MiniSquirrel location is a valid location
 		}
 	}

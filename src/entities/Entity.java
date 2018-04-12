@@ -1,5 +1,7 @@
 package entities;
 
+import core.EntityContext;
+import entities.Squirrel;
 import location.XY;
 
 public abstract class Entity {
@@ -48,17 +50,23 @@ public abstract class Entity {
 		}
 	}
 	
-	public void updateEnergy(int delta) {
+	//boolean here returns if MiniSquirrel should die
+	public boolean updateEnergy(int delta) {
 		if(this instanceof Squirrel) {
-			this.energy -= delta;
+			this.energy += delta;
+			if(this.energy < 0) {
+				return false;
+			}
 		}
+		return true;
 	}
 	
+	//can probably be removed
 	public XY tryNextStep() {
 		return this.nextLocation = new XY(this.location, XY.getVector(XY.randomNumber()));
 	}
 	
-	public void nextStep() {	//might need to be abstract
+	public void nextStep(EntityContext context) {
 		this.location = this.nextLocation;
 	}
 	
