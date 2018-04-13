@@ -10,6 +10,7 @@ public class BadBeast extends Character {
 	
 	private int stepCounter = 0;
 	private int biteCounter = 0;
+	private XY preferredDirection = null;
 
 	public BadBeast(int id, XY location) {
 		super(id, -150, location);
@@ -17,22 +18,30 @@ public class BadBeast extends Character {
 	
 	@Override
 	public String toString() {
-		return "| BadBeast" + super.toString();
-	}
-	
-	public int getStepCounter() {
-		if(stepCounter == 4) {
-			stepCounter = 0;
-		}
-		return this.stepCounter++;
+		return "| BadBeast" + super.toString() + " Current Stepcount: " + this.stepCounter;
 	}
 	
 	public int getBiteCounter() {
 		return this.biteCounter++;
 	}
 	
+	public int getStepCounter() {
+		if(this.stepCounter == 4) {
+			this.stepCounter = 0;
+		}
+		return ++this.stepCounter;
+	}
+	
 	@Override
 	public void nextStep(EntityContext context) {
-		context.tryMove(this, XY.getVector(XY.randomNumber()));
+		if(preferredDirection == null) {
+			context.tryMove(this, XY.getVector(XY.randomNumber()));
+		} else {
+			context.tryMove(this, preferredDirection);
+		}
+	}
+	
+	public void setPreferredDirection(XY direction) {
+		this.preferredDirection = direction;
 	}
 }

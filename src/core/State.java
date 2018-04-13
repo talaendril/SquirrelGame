@@ -14,7 +14,6 @@ public class State {
 	}
 	
 	public FlattenedBoard flattenedBoard() {
-		//TODO
-		return null;
+		return board.flatten();
 	}
 }

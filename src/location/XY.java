@@ -23,6 +23,14 @@ public final class XY {
 	}
 	
 	public XY(XY location, XY vector) {
+		/*
+		if (location != null && vector != null) {
+			int newX = location.getX() + vector.getX();
+			int newY = location.getY() + vector.getY();
+			this.x = (newX < 0) ? 0 : newX;
+			this.y = (newY < 0) ? 0 : newY;
+		}
+		*/
 		int newX = location.getX() + vector.getX();
 		int newY = location.getY() + vector.getY();
 		this.x = (newX < 0) ? 0 : newX;
@@ -47,27 +55,32 @@ public final class XY {
 	}
 	
 	public static int randomNumber() {
-		return new Random().nextInt(9) + 1;
+		while(true) {
+			int random = new Random().nextInt(9) + 1;
+			if(random != 5) {
+				return random;
+			}
+		}
 	}
 	
-	public static XY getVector(int number) {
-		switch(number) {
+	public static XY getVector(int number) {	//moving is currently scuffed since we operate in a matrix
+		switch(number) {						//inverting down and up seems to fix it
 		case 1:
-			return DOWN_LEFT;
+			return UP_LEFT;
 		case 2:
-			return DOWN;
+			return UP;
 		case 3:
-			return DOWN_RIGHT;
+			return UP_RIGHT;
 		case 4:
 			return LEFT;
 		case 6:
 			return RIGHT;
 		case 7:
-			return UP_LEFT;
+			return DOWN_LEFT;
 		case 8:
-			return UP;
+			return DOWN;
 		case 9:
-			return UP_RIGHT;
+			return DOWN_RIGHT;
 		default:
 			return ORIGIN;
 		}

@@ -10,7 +10,7 @@ public class Board {
 	
 	private final int boardSizeX;
 	private final int boardSizeY;
-	private EntitySet es = new EntitySet();
+	private EntitySet es = new EntitySet(BoardConfig.totalEntities);
 
 	public Board() {
 		this.boardSizeX = BoardConfig.size.getX();
@@ -50,6 +50,9 @@ public class Board {
 		for(int masterSquirrelsCount = 0; masterSquirrelsCount < BoardConfig.numberOfMasterSquirrels; masterSquirrelsCount++) {
 			es.addEntity(new MasterSquirrel(ID.getNewID(), getEmptyLocation()));
 		}
+		for(int homsCount = 0; homsCount < BoardConfig.numberOfHandOperatedMasterSquirrels; homsCount++) {
+			es.addEntity(new HandOperatedMasterSquirrel(ID.getNewID(), getEmptyLocation()));
+		}
 		for(int wallCount = 0; wallCount < BoardConfig.numberOfRandomWalls; wallCount++) {
 			es.addEntity(new Wall(ID.getNewID(), getEmptyLocation()));
 		}
@@ -57,8 +60,8 @@ public class Board {
 	
 	public XY getEmptyLocation() {
 		while (true) {
-			int randomX = new Random().nextInt(boardSizeX);
-			int randomY = new Random().nextInt(boardSizeY);
+			int randomX = new Random().nextInt(boardSizeX - 1);
+			int randomY = new Random().nextInt(boardSizeY - 1);
 			XY check = new XY(randomX, randomY);
 			if (es.getEntity(check) == null) {
 				return check;
@@ -79,6 +82,9 @@ public class Board {
 					System.out.print("BP\t");
 				} else if(es.getEntity(new XY(j, i)) instanceof GoodPlant) {
 					System.out.print("GP\t");
+				} else if(es.getEntity(new XY(j, i)) instanceof HandOperatedMasterSquirrel) {
+					HandOperatedMasterSquirrel homs = (HandOperatedMasterSquirrel) es.getEntity(new XY(j, i));
+					System.out.print("OS" + homs.getID() + "\t");
 				} else if(es.getEntity(new XY(j, i)) instanceof MasterSquirrel) {
 					MasterSquirrel ms = (MasterSquirrel) es.getEntity(new XY(j, i));
 					System.out.print("S" + ms.getID() + "\t");
@@ -96,6 +102,19 @@ public class Board {
 	//TODO create a FlattenedBoard?
 	public FlattenedBoard flatten() {
 		return new FlattenedBoard(es, this);
+	}
+	
+	public void callNextStep() {
+		this.nextStep();
+		this.printBoard();
+	}
+	
+	public void nextStep() {
+		for(Entity e : es.getEntities()) {
+			if(e != null) {
+				e.nextStep(this.flatten());
+			}
+		}
 	}
 	
 	@Override

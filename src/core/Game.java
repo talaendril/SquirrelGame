@@ -9,6 +9,11 @@ public class Game {
 	public static void main(String[] args) {
 		Board board = new Board();
 		board.printBoard();
+
+		while(true) {
+			board.callNextStep();
+			System.out.println(board.toString());
+		}
 	}
 	
 	public void run() {

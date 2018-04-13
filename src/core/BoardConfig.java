@@ -13,7 +13,8 @@ public class BoardConfig {
 	public static final int numberOfBadPlants = 1;
 	public static final int numberOfBadBeasts = 2;
 	public static final int numberOfGoodBeasts = 1;
-	public static final int numberOfMasterSquirrels = 1;
+	public static final int numberOfMasterSquirrels = 0;
+	public static final int numberOfHandOperatedMasterSquirrels = 1;
 	public static final int numberOfRandomWalls = 3;
 	public static final int numberOfWalls = 2 * size.getX() + 2 * size.getY() - 4 + numberOfRandomWalls;
 	public static final int totalEntities = 

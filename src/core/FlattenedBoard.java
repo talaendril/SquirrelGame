@@ -1,7 +1,5 @@
 package core;
 
-import java.util.Iterator;
-
 import entities.BadBeast;
 import entities.Entity;
 import entities.GoodBeast;
@@ -23,10 +21,10 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		this.board = b;
 		entityMatrix = new Entity[this.board.getBoardSizeY()][this.board.getBoardSizeX()];
 		
-		Iterator<Entity> iterator = cells.getEntities().iterator();
-		while(iterator.hasNext()) {
-			Entity e = iterator.next();
-			entityMatrix[e.getLocation().getY()][e.getLocation().getX()] = e;
+		for(Entity e : cells.getEntities()) {
+			if (e != null) {
+				entityMatrix[e.getLocation().getY()][e.getLocation().getX()] = e;
+			}
 		}
 	}
 	
@@ -54,7 +52,6 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		if(ms.getStunned()) {
 			return;
 		}
-		
 		Entity e = cells.getEntity(new XY(ms.getLocation(), direction));
 		if (e != null) {
 			if (e instanceof Character) {
@@ -99,43 +96,53 @@ public class FlattenedBoard implements EntityContext, BoardView {
 
 	@Override
 	public void tryMove(GoodBeast gb, XY direction) {
-		if(gb.getStepCounter() == GoodBeast.MAXIMUM_STEPCOUNT) {
-			return;
-		}
-		Entity e = cells.getEntity(new XY(gb.getLocation(), direction));
-		if(e != null) {
-			if(e instanceof Squirrel) {
-				e.updateEnergy(gb.getEnergy());
-				this.killAndReplace(gb);
-			} else {
-				//do nothing
-			}
+		Entity squirrel;
+		if((squirrel = this.nearestPlayerEntity(gb.getLocation())) != null) {
+			gb.setPreferredDirection(this.bestVectorAwayFromEntity(gb, squirrel));
 		} else {
-			gb.move(direction);
+			gb.setPreferredDirection(null);
+		}
+		if (gb.getStepCounter() == GoodBeast.MAXIMUM_STEPCOUNT) {
+			Entity e = cells.getEntity(new XY(gb.getLocation(), direction));
+			if (e != null) {
+				if (e instanceof Squirrel) {
+					e.updateEnergy(gb.getEnergy());
+					this.killAndReplace(gb);
+				} else {
+					//do nothing
+				}
+			} else {
+				gb.move(direction);
+			} 
 		}
 	}
 
 	@Override
 	public void tryMove(BadBeast bb, XY direction) {
-		if(bb.getStepCounter() == BadBeast.MAXIMUM_STEPCOUNT) {
-			return;
+		Entity squirrel;
+		if((squirrel = this.nearestPlayerEntity(bb.getLocation())) != null) {
+			bb.setPreferredDirection(this.bestVectorToEntity(bb, squirrel));
+		} else {
+			bb.setPreferredDirection(null);
 		}
-		Entity e = cells.getEntity(new XY(bb.getLocation(), direction));
-		if(e != null) {
-			if(e instanceof Squirrel) {
-				if(!e.updateEnergy(bb.getEnergy())) {
-					this.killAndReplace(e);
-				}
-				if(bb.getBiteCounter() == BadBeast.MAXIMUM_BITECOUNT) {
-					this.killAndReplace(bb);
+		if (bb.getStepCounter() == BadBeast.MAXIMUM_STEPCOUNT) {
+			Entity e = cells.getEntity(new XY(bb.getLocation(), direction));
+			if (e != null) {
+				if (e instanceof Squirrel) {
+					if (!e.updateEnergy(bb.getEnergy())) {
+						this.kill(e);
+					}
+					if (bb.getBiteCounter() == BadBeast.MAXIMUM_BITECOUNT) {
+						this.killAndReplace(bb);
+					} else {
+						bb.move(direction);
+					}
 				} else {
-					bb.move(direction);
+					//do nothing
 				}
 			} else {
-				//do nothing
-			}
-		} else {
-			bb.move(direction);
+				bb.move(direction);
+			} 
 		}
 	}
 
@@ -144,7 +151,6 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		if(master.getStunned()) {
 			return;
 		}
-		
 		Entity e = cells.getEntity(new XY(master.getLocation(), direction));
 		if(e != null) {
 			if(e instanceof Character) {
@@ -172,19 +178,119 @@ public class FlattenedBoard implements EntityContext, BoardView {
 					master.setStunned();
 				} else {
 					this.killAndReplace(e);
+					master.move(direction);
 				}
 				master.updateEnergy(e.getEnergy());
-				
 			}
 		} else {
 			master.move(direction);
 		}
 	}
-
-	@Override
+	
 	public Squirrel nearestPlayerEntity(XY pos) {
-		// TODO check if any Entity is within 6 steps of another Entity
+		int count = 0;
+		int size = 6;
+		int elements = size * size;
+		int x = pos.getX(), y = pos.getY();
+		Entity e = null;
+		
+		int left = -1, down = 1, right = 2, up = -2;
+		
+		while(count < elements-1) {
+			for(int i = 0; i > left; i--) {
+				y--;
+				if((e = cells.getEntity(new XY(x, y++))) != null && e instanceof Squirrel) {
+					return (Squirrel) e;
+				}
+				count++;
+			}
+			for(int i = 0; i < down; i++) {
+				x++;
+				if((e = cells.getEntity(new XY(x, y++))) != null && e instanceof Squirrel) {
+					return (Squirrel) e;
+				}
+				count++;
+			}
+			for(int i = 0; i < right ;i++) {
+				y--;
+				if((e = cells.getEntity(new XY(x, y++))) != null && e instanceof Squirrel) {
+					return (Squirrel) e;
+				}
+				count++;
+			}
+			for(int i = 0; i > up; i--) {
+				x--;
+				if((e = cells.getEntity(new XY(x, y++))) != null && e instanceof Squirrel) {
+					return (Squirrel) e;
+				}
+				count++;
+			}
+			left -= 2;
+			down += 2;
+			right += 2;
+			up -= 2;
+		}
 		return null;
+	}
+	
+	public XY bestVectorToEntity(BadBeast beast, Entity target) {	
+		int deltaX = target.getLocation().getX() - beast.getLocation().getX();
+		int deltaY = target.getLocation().getY() - beast.getLocation().getY();
+		if(deltaX == 0 && deltaY > 0) {	//Squirrel is above you
+			return XY.getVector(8);
+		}
+		if(deltaX == 0 && deltaY < 0) {	//Squirrel is below you
+			return XY.getVector(2);
+		}
+		if(deltaX > 0 && deltaY == 0) {	//Squirrel is right of you
+			return XY.getVector(6);
+		}
+		if(deltaX < 0 && deltaY == 0) {	//Squirrel is left of you
+			return XY.getVector(4);
+		}
+		if(deltaX > 0 && deltaY > 0) {	//Squirrel is up and right
+			return XY.getVector(9);
+		}
+		if(deltaX < 0 && deltaY > 0) {	//Squirrel is up and left
+			return XY.getVector(7);
+		}
+		if(deltaX > 0 && deltaY < 0) {	//Squirrel is down and right
+			return XY.getVector(3);
+		}
+		if(deltaX < 0 && deltaY < 0) {	//Squirrel is down and left
+			return XY.getVector(1);
+		}
+		return XY.getVector(5);	//default: do nothing
+	}
+	
+	public XY bestVectorAwayFromEntity(GoodBeast beast, Entity hunter) {
+		int deltaX = hunter.getLocation().getX() - beast.getLocation().getX();
+		int deltaY = hunter.getLocation().getY() - beast.getLocation().getY();
+		if(deltaX == 0 && deltaY > 0) {	//Squirrel is above you
+			return XY.getVector(2);
+		}
+		if(deltaX == 0 && deltaY < 0) {	//Squirrel is below you
+			return XY.getVector(8);
+		}
+		if(deltaX > 0 && deltaY == 0) {	//Squirrel is right of you
+			return XY.getVector(4);
+		}
+		if(deltaX < 0 && deltaY == 0) {	//Squirrel is left of you
+			return XY.getVector(6);
+		}
+		if(deltaX > 0 && deltaY > 0) {	//Squirrel is up and right
+			return XY.getVector(1);
+		}
+		if(deltaX < 0 && deltaY > 0) {	//Squirrel is up and left
+			return XY.getVector(3);
+		}
+		if(deltaX > 0 && deltaY < 0) {	//Squirrel is down and right
+			return XY.getVector(7);
+		}
+		if(deltaX < 0 && deltaY < 0) {	//Squirrel is down and left
+			return XY.getVector(9);
+		}
+		return XY.getVector(5);	//default: do nothing
 	}
 
 	@Override
