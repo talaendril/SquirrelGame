@@ -71,9 +71,9 @@ public final class XY {
 		default:
 			return ORIGIN;
 		}
-	}	
+	}
 	
-	public static XY outOfBoundsLocation() {
-		return new XY(-1, 1);
+	public static XY getRandomLocationBetween(int maxX, int maxY) {
+		return new XY(new Random().nextInt(maxX), new Random().nextInt(maxY));
 	}
 }

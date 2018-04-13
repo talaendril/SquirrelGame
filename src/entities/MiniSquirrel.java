@@ -1,5 +1,6 @@
 package entities;
 
+import core.EntityContext;
 import location.XY;
 
 public class MiniSquirrel extends Squirrel {
@@ -20,5 +21,10 @@ public class MiniSquirrel extends Squirrel {
 	@Override
 	public String toString() {
 		return "| MiniSquirrel" + super.toString();
+	}
+	
+	@Override
+	public void nextStep(EntityContext context) {
+		context.tryMove(this, XY.getVector(XY.randomNumber()));
 	}
 }

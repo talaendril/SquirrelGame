@@ -2,7 +2,7 @@ package entities;
 
 import location.XY;
 
-public class Squirrel extends Character {
+public abstract class Squirrel extends Character {
 	
 	private int stunnedSteps = 3;
 	private boolean stunned = false;

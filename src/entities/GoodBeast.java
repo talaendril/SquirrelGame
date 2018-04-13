@@ -1,8 +1,11 @@
 package entities;
 
+import core.EntityContext;
 import location.XY;
 
 public class GoodBeast extends Character {
+	
+	public static final int MAXIMUM_STEPCOUNT = 3;
 	
 	private int stepCounter = 0;
 
@@ -16,14 +19,14 @@ public class GoodBeast extends Character {
 	}
 	
 	public int getStepCounter() {
-		return this.stepCounter;
+		if(this.stepCounter == 4) {
+			this.stepCounter = 0;
+		}
+		return this.stepCounter++;
 	}
 	
-	public void incrementStepCounter() {
-		if(stepCounter == 4) {
-			stepCounter = 0;
-		} else {
-			stepCounter++;
-		}
+	@Override
+	public void nextStep(EntityContext context) {
+		context.tryMove(this, XY.getVector(XY.randomNumber()));
 	}
 }

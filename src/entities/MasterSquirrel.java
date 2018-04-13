@@ -3,6 +3,7 @@ package entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import core.EntityContext;
 import idmanager.ID;
 import location.XY;
 
@@ -28,5 +29,10 @@ public class MasterSquirrel extends Squirrel {
 	
 	public boolean checkEntityInProduction(Entity entity) {
 		return production.contains(entity);
+	}
+	
+	@Override
+	public void nextStep(EntityContext context) {
+		context.tryMove(this, XY.getVector(XY.randomNumber()));
 	}
 }

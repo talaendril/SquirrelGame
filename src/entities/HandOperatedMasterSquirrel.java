@@ -2,6 +2,7 @@ package entities;
 
 import java.io.IOException;
 
+import core.EntityContext;
 import location.XY;
 
 public class HandOperatedMasterSquirrel extends MasterSquirrel {
@@ -25,14 +26,11 @@ public class HandOperatedMasterSquirrel extends MasterSquirrel {
 	}
 	
 	@Override
-	public XY tryNextStep() {
+	public void nextStep(EntityContext context) {
 		try {
-			XY next = new XY(this.getLocation(), XY.getVector(this.readInput()));
-			this.setNextLocation(next);
-			return next;
-		} catch (IOException e) {
+			context.tryMove(this, XY.getVector(this.readInput()));
+		} catch(IOException e) {
 			e.printStackTrace();
-			return null;
 		}
 	}
 }

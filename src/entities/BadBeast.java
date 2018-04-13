@@ -1,10 +1,12 @@
 package entities;
 
+import core.EntityContext;
 import location.XY;
 
 public class BadBeast extends Character {
 	
-	public static final int MAXIMUM_BITECOUNT = 7;
+	public static final int MAXIMUM_BITECOUNT = 6; 
+	public static final int MAXIMUM_STEPCOUNT = 3;
 	
 	private int stepCounter = 0;
 	private int biteCounter = 0;
@@ -19,22 +21,18 @@ public class BadBeast extends Character {
 	}
 	
 	public int getStepCounter() {
-		return this.stepCounter;
+		if(stepCounter == 4) {
+			stepCounter = 0;
+		}
+		return this.stepCounter++;
 	}
 	
 	public int getBiteCounter() {
-		return this.biteCounter;
+		return this.biteCounter++;
 	}
 	
-	public void incrementBiteCounter() {
-		this.biteCounter++;
-	}
-	
-	public void incrementStepCounter() {
-		if(stepCounter == 4) {
-			stepCounter = 0;
-		} else {
-			stepCounter++;
-		}
+	@Override
+	public void nextStep(EntityContext context) {
+		context.tryMove(this, XY.getVector(XY.randomNumber()));
 	}
 }
