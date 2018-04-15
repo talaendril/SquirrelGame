@@ -47,33 +47,44 @@ public final class XY {
 	}
 	
 	public static int randomNumber() {
-		return new Random().nextInt(9) + 1;
+		while(true) {
+			int random = new Random().nextInt(9) + 1;
+			if(random != 5) {
+				return random;
+			}
+		}
 	}
 	
-	public static XY getVector(int number) {
-		switch(number) {
+	public static XY getVector(int number) {	//inverting down and up to make moving in the matrix better
+		switch(number) {						
 		case 1:
-			return DOWN_LEFT;
+			return UP_LEFT;
 		case 2:
-			return DOWN;
+			return UP;
 		case 3:
-			return DOWN_RIGHT;
+			return UP_RIGHT;
 		case 4:
 			return LEFT;
 		case 6:
 			return RIGHT;
 		case 7:
-			return UP_LEFT;
+			return DOWN_LEFT;
 		case 8:
-			return UP;
+			return DOWN;
 		case 9:
-			return UP_RIGHT;
+			return DOWN_RIGHT;
 		default:
 			return ORIGIN;
 		}
-	}	
+	}
 	
-	public static XY outOfBoundsLocation() {
-		return new XY(-1, 1);
+	public static XY getRandomLocationBetween(int maxX, int maxY) {
+		return new XY(new Random().nextInt(maxX), new Random().nextInt(maxY));
+	}
+	
+	public static double distanceBetween(XY first, XY second) {
+		int deltaX = Math.abs(first.getX() - second.getX());
+		int deltaY = Math.abs(first.getY() - second.getY());
+		return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
 	}
 }

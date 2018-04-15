@@ -1,75 +1,69 @@
 package core;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import entities.Entity;
-import entities.GoodPlant;
-import entities.MasterSquirrel;
 import entities.Wall;
 import location.XY;
 
 public class EntitySet {
 	
-	private List<Entity> entities = new ArrayList<Entity>();
+	private Entity[] entities;
+	private int currentArrayPosition = 0;
 	
-	public EntitySet() {
-		
+	public EntitySet(int ArraySize) {
+		entities = new Entity[ArraySize];
+	}
+	
+	public Entity[] doubleArraySize() {
+		Entity[] newArray = new Entity[entities.length * 2];
+		for(int i = 0; i < entities.length; i++) {
+			newArray[i] = entities[i];
+		}
+		return newArray;
 	}
 	
 	public void addEntity(Entity entity) {
 		if(entity != null) {
-			entities.add(entity);
+			if(currentArrayPosition == entities.length) {
+				entities = this.doubleArraySize();
+			}
+			entities[currentArrayPosition++] = entity;
 		}
 	}
 	
 	public void removeEntity(Entity entity) {
-		if(entities.contains(entity)) {
-			entities.remove(entity);
+		for(int i = 0; i < entities.length; i++) {
+			if(entities[i] != null && entities[i].equals(entity)) {
+				for(int j = i; j < entities.length - 1; j++) {
+					entities[j] = entities[j+1];
+				}
+			}
 		}
 	}
 	
 	@Override
 	public String toString() {
 		String string = "";
-		Iterator<Entity> iterator = entities.iterator();
-		while(iterator.hasNext()) {
-			Entity e = iterator.next();
-			if(!(e instanceof Wall)) {
-				string += e.toString() + "\n";
+		for(Entity e : entities) {
+			if (e != null) {
+				if (!(e instanceof Wall)) {
+					string += e.toString() + "\n";
+				} 
 			}
 		}
 		return string;
 	}
 	
-	public void callNextStep() {
-		Entity toBeRemoved = null;
-		Iterator<Entity> iterator = entities.iterator();
-		while(iterator.hasNext()) {
-			Entity e = iterator.next();
-			if(e instanceof MasterSquirrel) {
-				toBeRemoved = this.getEntity(e.tryNextStep());
-				if(toBeRemoved != null && toBeRemoved instanceof GoodPlant) {
-					e.updateEnergy(toBeRemoved.getEnergy());
-					toBeRemoved.setLocation(XY.outOfBoundsLocation());
-				}
-			}
-			e.nextStep();
-		}
-		this.removeEntity(toBeRemoved);
-	}
 	
-	public List<Entity> getEntities() {
+	public Entity[] getEntities() {
 		return this.entities;
 	}
 	
 	public Entity getEntity(XY location) {
-		Iterator<Entity> iterator = entities.iterator();
-		while(iterator.hasNext()) {
-			Entity e = iterator.next();
-			if(e.getLocation().equals(location)) {
-				return e;
+		for(Entity e : entities) {
+			if(e != null) {
+				if(e.getLocation().equals(location)) {
+					return e;
+				}
 			}
 		}
 		return null;

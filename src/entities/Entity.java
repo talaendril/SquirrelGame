@@ -1,5 +1,7 @@
 package entities;
 
+import core.EntityContext;
+import entities.Squirrel;
 import location.XY;
 
 public abstract class Entity {
@@ -7,7 +9,6 @@ public abstract class Entity {
 	private int id;
 	private int energy;
 	private XY location;
-	private XY nextLocation;
 	
 	public Entity(int id, int energy, XY xy) {
 		this.id = id;
@@ -27,10 +28,6 @@ public abstract class Entity {
 		return this.location;
 	}
 	
-	public XY getNextLocation() {
-		return this.nextLocation;
-	}
-	
 	@Override
 	public String toString() {
 		return " ID: " + this.id + " | Energy: " + this.energy + " | Location: " + this.location.toString();
@@ -42,24 +39,21 @@ public abstract class Entity {
 		}
 	}
 	
-	public void setNextLocation(XY location) {
-		if(location != null) {
-			this.nextLocation = location;
-		}
-	}
-	
-	public void updateEnergy(int delta) {
+	//boolean here returns if MiniSquirrel should die
+	public boolean updateEnergy(int delta) {
 		if(this instanceof Squirrel) {
-			this.energy -= delta;
+			this.energy += delta;
+			if(this.energy < 0 && this instanceof MiniSquirrel) {
+				return false;
+			}
 		}
+		return true;
 	}
 	
-	public XY tryNextStep() {
-		return this.nextLocation = new XY(this.location, XY.getVector(XY.randomNumber()));
-	}
+	public abstract void nextStep(EntityContext context);
 	
-	public void nextStep() {	//might need to be abstract
-		this.location = this.nextLocation;
+	public void move(XY direction) {
+		this.location = new XY(this.location, direction);
 	}
 	
 	public boolean equals(Entity entity) {
