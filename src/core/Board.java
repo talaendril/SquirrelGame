@@ -35,6 +35,12 @@ public class Board {
 				}
 			}
 		}
+		for(int homsCount = 0; homsCount < BoardConfig.numberOfHandOperatedMasterSquirrels; homsCount++) {
+			es.addEntity(new HandOperatedMasterSquirrel(ID.getNewID(), getEmptyLocation()));
+		}
+		for(int masterSquirrelsCount = 0; masterSquirrelsCount < BoardConfig.numberOfMasterSquirrels; masterSquirrelsCount++) {
+			es.addEntity(new MasterSquirrel(ID.getNewID(), getEmptyLocation()));
+		}
 		for(int badBeastsCount = 0; badBeastsCount < BoardConfig.numberOfBadBeasts; badBeastsCount++) {
 			es.addEntity(new BadBeast(ID.getNewID(), getEmptyLocation()));
 		}
@@ -46,12 +52,6 @@ public class Board {
 		}
 		for(int goodPlantsCount = 0; goodPlantsCount < BoardConfig.numberOfGoodPlants; goodPlantsCount++) {
 			es.addEntity(new GoodPlant(ID.getNewID(), getEmptyLocation()));
-		}
-		for(int masterSquirrelsCount = 0; masterSquirrelsCount < BoardConfig.numberOfMasterSquirrels; masterSquirrelsCount++) {
-			es.addEntity(new MasterSquirrel(ID.getNewID(), getEmptyLocation()));
-		}
-		for(int homsCount = 0; homsCount < BoardConfig.numberOfHandOperatedMasterSquirrels; homsCount++) {
-			es.addEntity(new HandOperatedMasterSquirrel(ID.getNewID(), getEmptyLocation()));
 		}
 		for(int wallCount = 0; wallCount < BoardConfig.numberOfRandomWalls; wallCount++) {
 			es.addEntity(new Wall(ID.getNewID(), getEmptyLocation()));

@@ -23,14 +23,6 @@ public final class XY {
 	}
 	
 	public XY(XY location, XY vector) {
-		/*
-		if (location != null && vector != null) {
-			int newX = location.getX() + vector.getX();
-			int newY = location.getY() + vector.getY();
-			this.x = (newX < 0) ? 0 : newX;
-			this.y = (newY < 0) ? 0 : newY;
-		}
-		*/
 		int newX = location.getX() + vector.getX();
 		int newY = location.getY() + vector.getY();
 		this.x = (newX < 0) ? 0 : newX;
@@ -63,8 +55,8 @@ public final class XY {
 		}
 	}
 	
-	public static XY getVector(int number) {	//moving is currently scuffed since we operate in a matrix
-		switch(number) {						//inverting down and up seems to fix it
+	public static XY getVector(int number) {	//inverting down and up to make moving in the matrix better
+		switch(number) {						
 		case 1:
 			return UP_LEFT;
 		case 2:
@@ -88,5 +80,11 @@ public final class XY {
 	
 	public static XY getRandomLocationBetween(int maxX, int maxY) {
 		return new XY(new Random().nextInt(maxX), new Random().nextInt(maxY));
+	}
+	
+	public static double distanceBetween(XY first, XY second) {
+		int deltaX = Math.abs(first.getX() - second.getX());
+		int deltaY = Math.abs(first.getY() - second.getY());
+		return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
 	}
 }
