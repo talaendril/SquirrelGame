@@ -68,4 +68,20 @@ public class EntitySet {
 		}
 		return null;
 	}
+	
+	public XY getEmptyLocationAround(XY pos) {
+		if(this.getEntity(new XY(pos.getX() - 1, pos.getY())) == null) {
+			return new XY(pos.getX() - 1, pos.getY());
+		}
+		if(this.getEntity(new XY(pos.getX() - 1, pos.getY())) == null) {
+			return new XY(pos.getX() + 1, pos.getY());
+		}
+		if(this.getEntity(new XY(pos.getX() - 1, pos.getY())) == null) {
+			return new XY(pos.getX(), pos.getY() - 1);
+		}
+		if(this.getEntity(new XY(pos.getX() - 1, pos.getY())) == null) {
+			return new XY(pos.getX(), pos.getY() + 1);
+		} 
+		return null;
+	}
 }

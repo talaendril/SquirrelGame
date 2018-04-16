@@ -1,19 +1,19 @@
 package core;
 
+import ui.MoveCommand;
+import ui.UI;
+
 public class Game {
 	
-	public Game(State state) {
-		
-	}
-
-	public static void main(String[] args) {
-		Board board = new Board();
-		board.printBoard();
-
-		while(true) {
-			board.callNextStep();
-			System.out.println(board.toString());
-		}
+	private State state;
+	private Board board;
+	private UI ui;
+	private MoveCommand nextCommand;
+	
+	public Game(State state, Board board, UI ui) {
+		this.state = state;
+		this.board = board;
+		this.ui = ui;
 	}
 	
 	public void run() {
@@ -25,14 +25,16 @@ public class Game {
 	}
 	
 	protected void render() {
-		//TODO show output
+		ui.render(board.flatten());
+		System.out.println(board.toString());
 	}
 	
 	protected void processInput() {
-		//TODO works with user Input
+		//nextCommand = ui.getCommand();
 	}
 	
 	protected void update() {
-		//TODO updates current state of the game
+		//board.callNextStep(EntityType.HANDOPERATEDMASTERSQUIRREL, nextCommand);
+		board.callNextStep();
 	}
 }

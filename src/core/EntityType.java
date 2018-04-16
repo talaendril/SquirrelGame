@@ -6,7 +6,7 @@ public enum EntityType {
 	GOODBEAST, BADBEAST, 
 	GOODPLANT, BADPLANT, 
 	MASTERSQUIRREL, MINISQUIRREL, 
-	WALL;
+	WALL, HANDOPERATEDMASTERSQUIRREL;
 	
 	public static EntityType getEntityType(Entity e) {
 		if(e instanceof GoodBeast) {
@@ -17,12 +17,14 @@ public enum EntityType {
 			return EntityType.GOODPLANT;
 		} else if(e instanceof BadPlant) {
 			return EntityType.BADPLANT;
-		} else if(e instanceof MasterSquirrel) {
-			return EntityType.MASTERSQUIRREL;
+		} else if(e instanceof HandOperatedMasterSquirrel){
+			return EntityType.HANDOPERATEDMASTERSQUIRREL; 
 		} else if(e instanceof MiniSquirrel) {
 			return EntityType.MINISQUIRREL;
 		} else if(e instanceof Wall) {
 			return EntityType.WALL;
+		} else if(e instanceof MasterSquirrel) {
+			return EntityType.MASTERSQUIRREL;
 		} else {
 			return null;
 		}
