@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import core.EntityContext;
 import location.XY;
+import ui.MoveCommand;
 
 public class HandOperatedMasterSquirrel extends MasterSquirrel {
 
@@ -32,5 +33,9 @@ public class HandOperatedMasterSquirrel extends MasterSquirrel {
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void nextStep(EntityContext context, MoveCommand command) {
+		context.tryMove(this, XY.getVector(command));
 	}
 }

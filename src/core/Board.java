@@ -5,6 +5,7 @@ import java.util.Random;
 import entities.*;
 import idmanager.ID;
 import location.XY;
+import ui.MoveCommand;
 
 public class Board {
 	
@@ -69,45 +70,31 @@ public class Board {
 		}
 	}
 	
-	public void printBoard() {
-		for(int i = 0; i < boardSizeY; i++) {
-			for(int j = 0; j < boardSizeX; j++) {
-				if(es.getEntity(new XY(j, i)) instanceof Wall) {
-					System.out.print("W\t");
-				} else if(es.getEntity(new XY(j, i)) instanceof BadBeast) {
-					System.out.print("BB\t");
-				} else if(es.getEntity(new XY(j, i)) instanceof GoodBeast) {
-					System.out.print("GB\t");
-				} else if(es.getEntity(new XY(j, i)) instanceof BadPlant) {
-					System.out.print("BP\t");
-				} else if(es.getEntity(new XY(j, i)) instanceof GoodPlant) {
-					System.out.print("GP\t");
-				} else if(es.getEntity(new XY(j, i)) instanceof HandOperatedMasterSquirrel) {
-					HandOperatedMasterSquirrel homs = (HandOperatedMasterSquirrel) es.getEntity(new XY(j, i));
-					System.out.print("OS" + homs.getID() + "\t");
-				} else if(es.getEntity(new XY(j, i)) instanceof MasterSquirrel) {
-					MasterSquirrel ms = (MasterSquirrel) es.getEntity(new XY(j, i));
-					System.out.print("S" + ms.getID() + "\t");
-				} else if(es.getEntity(new XY(j, i)) instanceof MiniSquirrel) {
-					MiniSquirrel ms = (MiniSquirrel) es.getEntity(new XY(j, i));
-					System.out.print("s" + ms.getMaster().getID() + "\t");
-				} else {
-					System.out.print(".\t");
-				}
-			}
-			System.out.println("");
-		}
-	}
-	
-	//TODO create a FlattenedBoard?
 	public FlattenedBoard flatten() {
 		return new FlattenedBoard(es, this);
 	}
 	
 	public void callNextStep() {
 		this.nextStep();
-		this.printBoard();
 	}
+	
+	/*start of overload	this is just so a MoveCommand can be given from Game to MasterSquirrel
+	public void callNextStep(EntityType type, MoveCommand command) {
+		this.nextStep(type, command);
+	}
+	
+	public void nextStep(EntityType type, MoveCommand command) {
+		for(Entity e : es.getEntities()) {
+			if(e != null) {
+				if(EntityType.getEntityType(e) == type) {
+					((HandOperatedMasterSquirrel) e).nextStep(this.flatten(), command);
+				} else {
+					e.nextStep(this.flatten());
+				}
+			}
+		}
+	}
+	end of overload*/
 	
 	public void nextStep() {
 		for(Entity e : es.getEntities()) {

@@ -2,6 +2,8 @@ package location;
 
 import java.util.Random;
 
+import ui.MoveCommand;
+
 public final class XY {
 	
 	private final int x;
@@ -72,6 +74,29 @@ public final class XY {
 		case 8:
 			return DOWN;
 		case 9:
+			return DOWN_RIGHT;
+		default:
+			return ORIGIN;
+		}
+	}
+	
+	public static XY getVector(MoveCommand command) {
+		switch(command) {
+		case DOWN_LEFT:
+			return UP_LEFT;
+		case DOWN:
+			return UP;
+		case DOWN_RIGHT:
+			return UP_RIGHT;
+		case LEFT:
+			return LEFT;
+		case RIGHT:
+			return RIGHT;
+		case UP_LEFT:
+			return DOWN_LEFT;
+		case UP:
+			return DOWN;
+		case UP_RIGHT:
 			return DOWN_RIGHT;
 		default:
 			return ORIGIN;

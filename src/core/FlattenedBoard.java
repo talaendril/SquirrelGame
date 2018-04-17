@@ -1,8 +1,11 @@
 package core;
 
 import entities.BadBeast;
+import entities.BadPlant;
 import entities.Entity;
 import entities.GoodBeast;
+import entities.GoodPlant;
+import entities.HandOperatedMasterSquirrel;
 import entities.MasterSquirrel;
 import entities.MiniSquirrel;
 import entities.Squirrel;
@@ -25,6 +28,37 @@ public class FlattenedBoard implements EntityContext, BoardView {
 			if (e != null) {
 				entityMatrix[e.getLocation().getY()][e.getLocation().getX()] = e;
 			}
+		}
+	}
+	
+	@Override
+	public void printBoard() {
+		for(int i = 0; i < entityMatrix.length; i++) {
+			for(int j = 0; j < entityMatrix[0].length; j++) {
+				if(entityMatrix[i][j] instanceof Wall) {
+					System.out.print("W\t");
+				} else if(entityMatrix[i][j] instanceof BadBeast) {
+					System.out.print("BB\t");
+				} else if(entityMatrix[i][j] instanceof GoodBeast) {
+					System.out.print("GB\t");
+				} else if(entityMatrix[i][j] instanceof BadPlant) {
+					System.out.print("BP\t");
+				} else if(entityMatrix[i][j] instanceof GoodPlant) {
+					System.out.print("GP\t");
+				} else if(entityMatrix[i][j] instanceof HandOperatedMasterSquirrel) {
+					HandOperatedMasterSquirrel homs = (HandOperatedMasterSquirrel) entityMatrix[i][j];
+					System.out.print("OS" + homs.getID() + "\t");
+				} else if(entityMatrix[i][j] instanceof MasterSquirrel) {
+					MasterSquirrel ms = (MasterSquirrel) entityMatrix[i][j];
+					System.out.print("S" + ms.getID() + "\t");
+				} else if(entityMatrix[i][j] instanceof MiniSquirrel) {
+					MiniSquirrel ms = (MiniSquirrel) entityMatrix[i][j];
+					System.out.print("s" + ms.getMaster().getID() + "\t");
+				} else {
+					System.out.print(".\t");
+				}
+			}
+			System.out.println("");
 		}
 	}
 	
@@ -55,17 +89,17 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		Entity e = cells.getEntity(new XY(ms.getLocation(), direction));
 		if (e != null) {
 			if (e instanceof Character) {
-				if (e instanceof MasterSquirrel) {
+				if (EntityType.getEntityType(e) == EntityType.MASTERSQUIRREL) {
 					if (e.equals(ms.getMaster())) {
 						ms.getMaster().updateEnergy(ms.getEnergy());
 					} else {
 						e.updateEnergy(MiniSquirrel.ENERGY_GAIN_NOT_MASTER);
 					}
 					this.kill(ms);
-				} else if (e instanceof MiniSquirrel) {
+				} else if (EntityType.getEntityType(e) == EntityType.MINISQUIRREL) {
 					this.kill(e);
 					this.kill(ms);
-				} else if (e instanceof BadBeast) {
+				} else if (EntityType.getEntityType(e) == EntityType.BADBEAST) {
 					if (((BadBeast) e).getBiteCounter() == BadBeast.MAXIMUM_BITECOUNT) {
 						this.killAndReplace(e);
 					}
@@ -74,7 +108,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 					} else {
 						ms.move(direction);
 					}
-				} else if (e instanceof GoodBeast) {
+				} else if (EntityType.getEntityType(e) == EntityType.GOODBEAST) {
 					ms.updateEnergy(e.getEnergy());
 					this.killAndReplace(e);
 				} 
@@ -82,7 +116,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 				if(!ms.updateEnergy(e.getEnergy())) {
 					this.kill(ms);
 				}
-				if(e instanceof Wall) {
+				if(EntityType.getEntityType(e) == EntityType.WALL) {
 					ms.setStunned();
 				} else {
 					this.killAndReplace(e);
@@ -135,7 +169,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 					if (bb.getBiteCounter() == BadBeast.MAXIMUM_BITECOUNT) {
 						this.killAndReplace(bb);
 					} else {
-						bb.move(vector);
+						//do nothing
 					}
 				} else {
 					//do nothing
@@ -154,9 +188,9 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		Entity e = cells.getEntity(new XY(master.getLocation(), direction));
 		if(e != null) {
 			if(e instanceof Character) {
-				if(e instanceof MasterSquirrel) {
+				if(EntityType.getEntityType(e) == EntityType.MASTERSQUIRREL) {
 					//do nothing
-				} else if(e instanceof MiniSquirrel) {
+				} else if(EntityType.getEntityType(e) == EntityType.MINISQUIRREL) {
 					if(master.checkEntityInProduction(e)) {
 						master.updateEnergy(e.getEnergy()); 
 					} else {
@@ -164,7 +198,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 					}
 					this.kill(e);
 				} else {
-					if(e instanceof BadBeast) {
+					if(EntityType.getEntityType(e) == EntityType.BADBEAST) {
 						if(((BadBeast) e).getBiteCounter() == BadBeast.MAXIMUM_BITECOUNT) {
 							this.killAndReplace(e);
 						}
@@ -174,7 +208,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 					master.updateEnergy(e.getEnergy());
 				} 
 			} else {
-				if(e instanceof Wall) {
+				if(EntityType.getEntityType(e) == EntityType.WALL) {
 					master.setStunned();
 				} else {
 					this.killAndReplace(e);
@@ -184,6 +218,16 @@ public class FlattenedBoard implements EntityContext, BoardView {
 			}
 		} else {
 			master.move(direction);
+		}
+		if(master.getEnergy() > MasterSquirrel.MINISQUIRREL_THRESHOLD) {
+			XY location = cells.getEmptyLocationAround(master.getLocation());
+			if(location == null) {
+				return;
+			} else {
+				MiniSquirrel newMS = master.spawnMiniSquirrel(location);
+				master.updateEnergy(-MasterSquirrel.ENERGY_GIVEN);
+				cells.addEntity(newMS);
+			}
 		}
 	}
 	
@@ -273,6 +317,14 @@ public class FlattenedBoard implements EntityContext, BoardView {
 			return XY.getVector(3);
 		}
 		return XY.getVector(XY.randomNumber());
+	}
+	
+	public XY miniSquirrelSpawnable(XY pos) {
+		XY location = null;
+		if((location = cells.getEmptyLocationAround(pos)) == null) {
+			return null;
+		}
+		return location;
 	}
 
 	@Override
