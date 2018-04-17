@@ -27,6 +27,7 @@ public class ConsoleUI implements UI {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		number -= '0';
 		switch(number) {
 		case 1:
 			return MoveCommand.DOWN_LEFT;

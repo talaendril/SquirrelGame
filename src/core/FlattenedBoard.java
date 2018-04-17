@@ -83,7 +83,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 
 	@Override
 	public void tryMove(MiniSquirrel ms, XY direction) {
-		if(ms.getStunned()) {
+		if(ms.getStunned() || direction == XY.ORIGIN) {
 			return;
 		}
 		Entity e = cells.getEntity(new XY(ms.getLocation(), direction));
@@ -182,7 +182,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 
 	@Override
 	public void tryMove(MasterSquirrel master, XY direction) {
-		if(master.getStunned()) {
+		if(master.getStunned() || direction == XY.ORIGIN) {
 			return;
 		}
 		Entity e = cells.getEntity(new XY(master.getLocation(), direction));
@@ -263,10 +263,10 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		int deltaX = target.getLocation().getX() - beast.getLocation().getX();
 		int deltaY = target.getLocation().getY() - beast.getLocation().getY();
 		if(deltaX == 0 && deltaY > 0) {	//Squirrel is above you
-			return XY.getVector(8);
+			return XY.getVector(2);
 		}
 		if(deltaX == 0 && deltaY < 0) {	//Squirrel is below you
-			return XY.getVector(2);
+			return XY.getVector(8);
 		}
 		if(deltaX > 0 && deltaY == 0) {	//Squirrel is right of you
 			return XY.getVector(6);
@@ -293,10 +293,10 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		int deltaX = hunter.getLocation().getX() - beast.getLocation().getX();
 		int deltaY = hunter.getLocation().getY() - beast.getLocation().getY();
 		if(deltaX == 0 && deltaY > 0) {	//Squirrel is above you
-			return XY.getVector(2);
+			return XY.getVector(8);
 		}
 		if(deltaX == 0 && deltaY < 0) {	//Squirrel is below you
-			return XY.getVector(8);
+			return XY.getVector(2);
 		}
 		if(deltaX > 0 && deltaY == 0) {	//Squirrel is right of you
 			return XY.getVector(4);

@@ -6,7 +6,6 @@ import java.util.List;
 import core.EntityContext;
 import idmanager.ID;
 import location.XY;
-import ui.MoveCommand;
 
 public class MasterSquirrel extends Squirrel {
 	

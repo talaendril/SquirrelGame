@@ -3,6 +3,7 @@ package core;
 import java.util.Random;
 
 import entities.*;
+import entities.Character;
 import idmanager.ID;
 import location.XY;
 import ui.MoveCommand;
@@ -74,27 +75,20 @@ public class Board {
 		return new FlattenedBoard(es, this);
 	}
 	
-	public void callNextStep() {
-		this.nextStep();
-	}
-	
-	/*start of overload	this is just so a MoveCommand can be given from Game to MasterSquirrel
-	public void callNextStep(EntityType type, MoveCommand command) {
-		this.nextStep(type, command);
-	}
-	
-	public void nextStep(EntityType type, MoveCommand command) {
+	public void nextStep(MoveCommand command) {
 		for(Entity e : es.getEntities()) {
 			if(e != null) {
-				if(EntityType.getEntityType(e) == type) {
-					((HandOperatedMasterSquirrel) e).nextStep(this.flatten(), command);
-				} else {
+				if (e instanceof Character) {
+					if (e instanceof HandOperatedMasterSquirrel) {
+						((HandOperatedMasterSquirrel) e).nextStepHOMS(this.flatten(), command);
+						continue;
+					}
 					e.nextStep(this.flatten());
+				 
 				}
 			}
 		}
 	}
-	end of overload*/
 	
 	public void nextStep() {
 		for(Entity e : es.getEntities()) {

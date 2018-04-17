@@ -30,11 +30,11 @@ public class Game {
 	}
 	
 	protected void processInput() {
-		//nextCommand = ui.getCommand();
+		nextCommand = ui.getCommand();
+		System.out.println(nextCommand);
 	}
 	
 	protected void update() {
-		//board.callNextStep(EntityType.HANDOPERATEDMASTERSQUIRREL, nextCommand);
-		board.callNextStep();
+		board.nextStep(nextCommand);
 	}
 }
