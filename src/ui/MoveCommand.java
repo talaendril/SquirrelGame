@@ -1,5 +1,7 @@
 package ui;
 
+import java.util.Random;
+
 public enum MoveCommand {
 	UP, DOWN, RIGHT, LEFT, UP_RIGHT, UP_LEFT, DOWN_RIGHT, DOWN_LEFT, NONE;
 	
@@ -22,6 +24,15 @@ public enum MoveCommand {
 			return UP_RIGHT;
 		} else {
 			return NONE;
+		}
+	}
+	
+	public static MoveCommand getRandomCommand() {
+		while(true) {
+			int random = new Random().nextInt(9) + 1;
+			if(random != 5) {
+				return getMoveCommand(random);
+			}
 		}
 	}
 }

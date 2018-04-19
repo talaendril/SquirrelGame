@@ -35,6 +35,6 @@ public class Game {
 	}
 	
 	protected void update() {
-		board.nextStep(nextCommand);
+		state.update(nextCommand);
 	}
 }

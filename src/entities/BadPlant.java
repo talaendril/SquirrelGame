@@ -2,6 +2,7 @@ package entities;
 
 import core.EntityContext;
 import location.XY;
+import ui.MoveCommand;
 
 public class BadPlant extends Entity {
 
@@ -15,7 +16,7 @@ public class BadPlant extends Entity {
 	}
 	
 	@Override
-	public void nextStep(EntityContext context) {
+	public void nextStep(EntityContext context, MoveCommand command) {
 		//nothing to do
 	}
 }

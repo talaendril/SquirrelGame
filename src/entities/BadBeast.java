@@ -2,6 +2,7 @@ package entities;
 
 import core.EntityContext;
 import location.XY;
+import ui.MoveCommand;
 
 public class BadBeast extends Character {
 	
@@ -20,11 +21,11 @@ public class BadBeast extends Character {
 		return "| BadBeast" + super.toString() + " Current Stepcount: " + this.stepCounter;
 	}
 	
-	public int getBiteCounter() {
+	public int getBiteCounterAndIncrement() {
 		return this.biteCounter++;
 	}
 	
-	public int getStepCounter() {
+	public int getStepCounterAndIncrement() {
 		if(this.stepCounter == 4) {
 			this.stepCounter = 0;
 		}
@@ -32,7 +33,7 @@ public class BadBeast extends Character {
 	}
 	
 	@Override
-	public void nextStep(EntityContext context) {
-		context.tryMove(this, XY.getVector(XY.randomNumber()));
+	public void nextStep(EntityContext context, MoveCommand command) {
+		context.tryMove(this, XY.getVector(command));
 	}
 }

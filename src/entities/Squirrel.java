@@ -15,7 +15,7 @@ public abstract class Squirrel extends Character {
 		return this.stunnedSteps;
 	}
 	
-	public boolean getStunned() {
+	public boolean getStunnedAndDecrement() {
 		if(this.stunned && this.stunnedSteps > 0) {
 			this.stunnedSteps--;
 			return true;

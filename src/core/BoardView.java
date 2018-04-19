@@ -1,5 +1,6 @@
 package core;
 
+import entities.Entity;
 import location.XY;
 
 public interface BoardView {
@@ -8,5 +9,5 @@ public interface BoardView {
 	
 	XY getSize();
 	
-	void printBoard();
+	Entity[][] getEntityMatrix();
 }

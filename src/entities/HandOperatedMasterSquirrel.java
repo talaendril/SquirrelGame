@@ -15,16 +15,11 @@ public class HandOperatedMasterSquirrel extends MasterSquirrel {
 		return "OPERATED " + super.toString();
 	}
 	
-	public void nextStepHOMS(EntityContext context, MoveCommand command) {
-		context.tryMove(this, XY.getVector(command));
-	}
-	
 	@Override
-	public void nextStep(EntityContext context) {
-		//nothing to do here, look at nextStepHOMS
-	}
-	
 	public void nextStep(EntityContext context, MoveCommand command) {
+		if(this.getStunnedAndDecrement()) {
+			return;
+		}
 		context.tryMove(this, XY.getVector(command));
 	}
 }

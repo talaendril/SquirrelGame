@@ -12,11 +12,14 @@ public class Board {
 	
 	private final int boardSizeX;
 	private final int boardSizeY;
-	private EntitySet es = new EntitySet(BoardConfig.totalEntities);
+	private EntitySet es;
+	private BoardConfig config;
 
-	public Board() {
-		this.boardSizeX = BoardConfig.size.getX();
-		this.boardSizeY = BoardConfig.size.getY();
+	public Board(BoardConfig config) {
+		this.config = config;
+		this.es = new EntitySet(config.getTotalEntities());
+		this.boardSizeX = config.getSize().getX();
+		this.boardSizeY = config.getSize().getY();
 		
 		generateEntities();
 	}
@@ -29,41 +32,45 @@ public class Board {
 		return this.boardSizeY;
 	}
 	
+	public EntitySet getEntitySet() {
+		return this.es;
+	}
+	
 	public void generateEntities() {
-		for(int i = 0; i < boardSizeY; i++) {
-			for(int j = 0; j < boardSizeX; j++) {
-				if((i == 0) || (j == 0) || (i == boardSizeY - 1) || (j == boardSizeX - 1)) {
+		for(int i = 0; i < this.boardSizeY; i++) {
+			for(int j = 0; j < this.boardSizeX; j++) {
+				if((i == 0) || (j == 0) || (i == this.boardSizeY - 1) || (j == this.boardSizeX - 1)) {
 					es.addEntity(new Wall(ID.getNewID(), new XY(j, i)));
 				}
 			}
 		}
-		for(int homsCount = 0; homsCount < BoardConfig.numberOfHandOperatedMasterSquirrels; homsCount++) {
+		for(int homsCount = 0; homsCount < this.config.getNumberOfHandOperatedMasterSquirrels(); homsCount++) {
 			es.addEntity(new HandOperatedMasterSquirrel(ID.getNewID(), getEmptyLocation()));
 		}
-		for(int masterSquirrelsCount = 0; masterSquirrelsCount < BoardConfig.numberOfMasterSquirrels; masterSquirrelsCount++) {
+		for(int masterSquirrelsCount = 0; masterSquirrelsCount < this.config.getNumberOfMasterSquirrels() - this.config.getNumberOfHandOperatedMasterSquirrels(); masterSquirrelsCount++) {
 			es.addEntity(new MasterSquirrel(ID.getNewID(), getEmptyLocation()));
 		}
-		for(int badBeastsCount = 0; badBeastsCount < BoardConfig.numberOfBadBeasts; badBeastsCount++) {
+		for(int badBeastsCount = 0; badBeastsCount < this.config.getNumberOfBadBeasts(); badBeastsCount++) {
 			es.addEntity(new BadBeast(ID.getNewID(), getEmptyLocation()));
 		}
-		for(int goodBeastsCount = 0; goodBeastsCount < BoardConfig.numberOfGoodBeasts; goodBeastsCount++) {
+		for(int goodBeastsCount = 0; goodBeastsCount < this.config.getNumberOfGoodBeasts(); goodBeastsCount++) {
 			es.addEntity(new GoodBeast(ID.getNewID(), getEmptyLocation()));
 		}
-		for(int badPlantsCount = 0; badPlantsCount < BoardConfig.numberOfBadPlants; badPlantsCount++) {
+		for(int badPlantsCount = 0; badPlantsCount < this.config.getNumberOfBadPlants(); badPlantsCount++) {
 			es.addEntity(new BadPlant(ID.getNewID(), getEmptyLocation()));
 		}
-		for(int goodPlantsCount = 0; goodPlantsCount < BoardConfig.numberOfGoodPlants; goodPlantsCount++) {
+		for(int goodPlantsCount = 0; goodPlantsCount < this.config.getNumberOfGoodPlants(); goodPlantsCount++) {
 			es.addEntity(new GoodPlant(ID.getNewID(), getEmptyLocation()));
 		}
-		for(int wallCount = 0; wallCount < BoardConfig.numberOfRandomWalls; wallCount++) {
+		for(int wallCount = 0; wallCount < this.config.getNumberOfRandomWalls(); wallCount++) {
 			es.addEntity(new Wall(ID.getNewID(), getEmptyLocation()));
 		}
 	}
 	
 	public XY getEmptyLocation() {
 		while (true) {
-			int randomX = new Random().nextInt(boardSizeX - 1);
-			int randomY = new Random().nextInt(boardSizeY - 1);
+			int randomX = new Random().nextInt(this.boardSizeX - 1);
+			int randomY = new Random().nextInt(this.boardSizeY - 1);
 			XY check = new XY(randomX, randomY);
 			if (es.getEntity(check) == null) {
 				return check;
@@ -72,34 +79,23 @@ public class Board {
 	}
 	
 	public FlattenedBoard flatten() {
-		return new FlattenedBoard(es, this);
+		return new FlattenedBoard(this);
 	}
 	
 	public void nextStep(MoveCommand command) {
 		for(Entity e : es.getEntities()) {
-			if(e != null) {
-				if (e instanceof Character) {
-					if (e instanceof HandOperatedMasterSquirrel) {
-						((HandOperatedMasterSquirrel) e).nextStepHOMS(this.flatten(), command);
-						continue;
-					}
-					e.nextStep(this.flatten());
-				 
+			if(e != null && e instanceof Character) {
+				if (e instanceof HandOperatedMasterSquirrel) {
+					((HandOperatedMasterSquirrel) e).nextStep(this.flatten(), command);
+					continue;
 				}
-			}
-		}
-	}
-	
-	public void nextStep() {
-		for(Entity e : es.getEntities()) {
-			if(e != null) {
-				e.nextStep(this.flatten());
+				e.nextStep(this.flatten(), MoveCommand.getRandomCommand());
 			}
 		}
 	}
 	
 	@Override
 	public String toString() {
-		return es.toString();
+		return this.es.toString();
 	}
 }

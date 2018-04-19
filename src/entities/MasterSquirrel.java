@@ -6,6 +6,7 @@ import java.util.List;
 import core.EntityContext;
 import idmanager.ID;
 import location.XY;
+import ui.MoveCommand;
 
 public class MasterSquirrel extends Squirrel {
 	
@@ -33,7 +34,10 @@ public class MasterSquirrel extends Squirrel {
 	}
 
 	@Override
-	public void nextStep(EntityContext context) {
-		context.tryMove(this, XY.getVector(XY.randomNumber()));
+	public void nextStep(EntityContext context, MoveCommand command) {
+		if(this.getStunnedAndDecrement()) {
+			return;
+		}
+		context.tryMove(this, XY.getVector(command));
 	}
 }

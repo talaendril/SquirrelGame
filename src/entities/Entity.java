@@ -1,8 +1,8 @@
 package entities;
 
 import core.EntityContext;
-import entities.Squirrel;
 import location.XY;
+import ui.MoveCommand;
 
 public abstract class Entity {
 
@@ -15,6 +15,8 @@ public abstract class Entity {
 		this.energy = energy;
 		this.location = xy;
 	}
+	
+	public abstract void nextStep(EntityContext context, MoveCommand command);
 	
 	public int getID() {
 		return this.id;
@@ -39,18 +41,9 @@ public abstract class Entity {
 		}
 	}
 	
-	//boolean here returns if MiniSquirrel should die
-	public boolean updateEnergy(int delta) {
-		if(this instanceof Squirrel) {
-			this.energy += delta;
-			if(this.energy < 0 && this instanceof MiniSquirrel) {
-				return false;
-			}
-		}
-		return true;
+	public void updateEnergy(int delta) {
+		this.energy += delta;
 	}
-	
-	public abstract void nextStep(EntityContext context);
 	
 	public void move(XY direction) {
 		this.location = new XY(this.location, direction);

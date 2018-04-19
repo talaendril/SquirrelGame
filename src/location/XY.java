@@ -48,39 +48,7 @@ public final class XY {
 		return this.x + " " + this.y;
 	}
 	
-	public static int randomNumber() {
-		while(true) {
-			int random = new Random().nextInt(9) + 1;
-			if(random != 5) {
-				return random;
-			}
-		}
-	}
-	
-	public static XY getVector(int number) {	//inverting down and up to make moving in the matrix better
-		switch(number) {						
-		case 1:
-			return UP_LEFT;
-		case 2:
-			return UP;
-		case 3:
-			return UP_RIGHT;
-		case 4:
-			return LEFT;
-		case 6:
-			return RIGHT;
-		case 7:
-			return DOWN_LEFT;
-		case 8:
-			return DOWN;
-		case 9:
-			return DOWN_RIGHT;
-		default:
-			return ORIGIN;
-		}
-	}
-	
-	public static XY getVector(MoveCommand command) {
+	public static XY getVector(MoveCommand command) {	//inverting down and up to make moving in the matrix better
 		switch(command) {
 		case DOWN_LEFT:
 			return UP_LEFT;
