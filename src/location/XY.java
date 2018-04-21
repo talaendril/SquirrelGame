@@ -10,7 +10,7 @@ public final class XY {
 	private final int y;
 	
 	public static final XY ORIGIN = new XY(0,0);
-	public static final XY UP = new XY(0, 1); //goes up in a coordinate system not in a matrix
+	public static final XY UP = new XY(0, 1); 
 	public static final XY DOWN = new XY(0, -1);
 	public static final XY RIGHT = new XY(1, 0);
 	public static final XY LEFT = new XY(-1, 0);
