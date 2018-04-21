@@ -14,7 +14,7 @@ public class CommandScanner {
 	public CommandScanner(CommandTypeInfo[] commandTypes, BufferedReader inputReader) {
 		this.commandTypeInfos = commandTypes;
 		this.inputReader = inputReader;
-		this.scanner = new Scanner(this.inputReader);		//TODO closing scanner
+		this.scanner = new Scanner(this.inputReader);
 	}
 	
 	public Command next() {
@@ -31,11 +31,11 @@ public class CommandScanner {
 			int param2 = scanner.nextInt();
 			return new Command(commandTypeInfos[2], new Object[] {param1, param2});
 		case "addf":
-			float parameter1 = scanner.nextFloat();
-			float parameter2 = scanner.nextFloat();
-			return new Command(commandTypeInfos[3], new Object[] {parameter1, parameter2});
+			String parameter1 = scanner.next();
+			String parameter2 = scanner.next();
+			return new Command(commandTypeInfos[3], new Object[] {Float.parseFloat(parameter1), Float.parseFloat(parameter2)});
 		case "echo":
-			String string = scanner.next();
+			String string = scanner.nextLine();
 			int times = scanner.nextInt();
 			return new Command(commandTypeInfos[4], new Object[] {string, times});
 		default:

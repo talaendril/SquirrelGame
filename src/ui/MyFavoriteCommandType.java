@@ -12,12 +12,12 @@ public enum MyFavoriteCommandType implements CommandTypeInfo {
 	private String helpText;
 	private Class<?> [] paramTypes;
 	
-	MyFavoriteCommandType(String name, String helpText) {
+	private MyFavoriteCommandType(String name, String helpText) {
 		this.name = name;
 		this.helpText = helpText;
 	}
 	
-	MyFavoriteCommandType(String name, String helpText, Class<?> param1, Class<?> param2) {
+	private MyFavoriteCommandType(String name, String helpText, Class<?> param1, Class<?> param2) {
 		this.name = name;
 		this.helpText = helpText;
 		this.paramTypes = new Class<?>[] {param1, param2};

@@ -12,11 +12,10 @@ public class MyFavoriteCommandsProcessor {
 	private static BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
 	
 	public static void process() {
-		 CommandScanner commandScanner = new CommandScanner(MyFavoriteCommandType.values(), inputReader);
+		 CommandScanner commandScanner = new CommandScanner(MyFavoriteCommandType.values(), inputReader);	//watchout for different type
 		 Command command;
 	        
 		 while (true) { // the loop over all commands with one input line for every command
-		     //TODO
 		     command = commandScanner.next();
 		     if(command == null) {
 		    	 System.out.println("Ungültiger Command");
