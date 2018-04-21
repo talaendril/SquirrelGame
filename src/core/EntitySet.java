@@ -1,6 +1,7 @@
 package core;
 
 import entities.Entity;
+import entities.MasterSquirrel;
 import entities.Wall;
 import location.XY;
 
@@ -64,6 +65,15 @@ public class EntitySet {
 				if(e.getLocation().equals(location)) {
 					return e;
 				}
+			}
+		}
+		return null;
+	}
+	
+	public MasterSquirrel getMaster() {
+		for(Entity e : entities) {
+			if(e != null && e instanceof MasterSquirrel) {
+				return (MasterSquirrel) e;
 			}
 		}
 		return null;

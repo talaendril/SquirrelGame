@@ -1,6 +1,6 @@
 package core;
 
-import ui.MoveCommand;
+import ui.Command;
 import ui.UI;
 
 public class Game {
@@ -8,7 +8,7 @@ public class Game {
 	private State state;
 	private Board board;
 	private UI ui;
-	private MoveCommand nextCommand;
+	private Command nextCommand;
 	
 	public Game(State state, Board board, UI ui) {
 		this.state = state;
@@ -26,12 +26,14 @@ public class Game {
 	
 	protected void render() {
 		ui.render(board.flatten());
+		System.out.println("");
 		System.out.println(board.toString());
 	}
 	
 	protected void processInput() {
-		nextCommand = ui.getCommand();
-		System.out.println(nextCommand);
+		//TODO maybe find a way to process the input we've gotten here instead of in State via GameCommandProcessor
+		this.nextCommand = this.ui.getCommand();
+		System.out.println(this.nextCommand.getCommandType().getName());
 	}
 	
 	protected void update() {

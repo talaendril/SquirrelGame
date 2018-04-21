@@ -6,6 +6,8 @@ import entities.GoodBeast;
 import entities.MasterSquirrel;
 import entities.MiniSquirrel;
 import entities.Squirrel;
+import exceptions.EntityNotFoundException;
+import exceptions.NotEnoughEnergyException;
 import entities.Character;
 import location.XY;
 import ui.MoveCommand;
@@ -135,7 +137,9 @@ public class FlattenedBoard implements EntityContext, BoardView {
 						} else {
 							e.updateEnergy(bb.getEnergy());
 						}
-					} 
+					} else if(EntityType.getEntityType(e) == EntityType.MASTERSQUIRREL || EntityType.getEntityType(e) == EntityType.HANDOPERATEDMASTERSQUIRREL) {
+						e.updateEnergy(bb.getEnergy());
+					}
 					if (bb.getBiteCounterAndIncrement() == BadBeast.MAXIMUM_BITECOUNT) {
 						this.killAndReplace(bb);
 					} else {
@@ -167,6 +171,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 						master.updateEnergy(MiniSquirrel.ENERGY_GAIN_NOT_MASTER);
 					}
 					this.kill(e);
+					master.move(direction);
 				} else {
 					if(EntityType.getEntityType(e) == EntityType.BADBEAST) {
 						if(((BadBeast) e).getBiteCounterAndIncrement() == BadBeast.MAXIMUM_BITECOUNT) {
@@ -190,17 +195,6 @@ public class FlattenedBoard implements EntityContext, BoardView {
 			}
 		} else {
 			master.move(direction);
-		}
-		//check if MiniSquirrel is spawnable
-		if(master.getEnergy() > MasterSquirrel.MINISQUIRREL_THRESHOLD) {
-			XY location = this.board.getEntitySet().getEmptyLocationAround(master.getLocation());
-			if(location == null) {
-				return;
-			} else {
-				MiniSquirrel newMS = master.spawnMiniSquirrel(location);
-				master.updateEnergy(-MasterSquirrel.ENERGY_GIVEN);
-				this.board.getEntitySet().addEntity(newMS);
-			}
 		}
 	}
 	
@@ -232,7 +226,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		return nearest;
 	}
 	
-	public XY bestVectorToEntity(BadBeast beast, Entity target) {	
+	public XY bestVectorToEntity(Entity beast, Entity target) {	
 		int deltaX = target.getLocation().getX() - beast.getLocation().getX();
 		int deltaY = target.getLocation().getY() - beast.getLocation().getY();
 		if(deltaX == 0 && deltaY > 0) {	//Squirrel is above you
@@ -262,42 +256,9 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		return XY.getVector(MoveCommand.getRandomCommand());
 	}
 	
-	public XY bestVectorAwayFromEntity(GoodBeast beast, Entity hunter) {
-		int deltaX = hunter.getLocation().getX() - beast.getLocation().getX();
-		int deltaY = hunter.getLocation().getY() - beast.getLocation().getY();
-		if(deltaX == 0 && deltaY > 0) {	//Squirrel is above you
-			return XY.getVector(MoveCommand.UP);
-		}
-		if(deltaX == 0 && deltaY < 0) {	//Squirrel is below you
-			return XY.getVector(MoveCommand.DOWN);
-		}
-		if(deltaX > 0 && deltaY == 0) {	//Squirrel is right of you
-			return XY.getVector(MoveCommand.LEFT);
-		}
-		if(deltaX < 0 && deltaY == 0) {	//Squirrel is left of you
-			return XY.getVector(MoveCommand.RIGHT);
-		}
-		if(deltaX > 0 && deltaY > 0) {	//Squirrel is up and right
-			return XY.getVector(MoveCommand.UP_LEFT);
-		}
-		if(deltaX < 0 && deltaY > 0) {	//Squirrel is up and left
-			return XY.getVector(MoveCommand.UP_RIGHT);
-		}
-		if(deltaX > 0 && deltaY < 0) {	//Squirrel is down and right
-			return XY.getVector(MoveCommand.DOWN_LEFT);
-		}
-		if(deltaX < 0 && deltaY < 0) {	//Squirrel is down and left
-			return XY.getVector(MoveCommand.DOWN_RIGHT);
-		}
-		return XY.getVector(MoveCommand.getRandomCommand());
-	}
-	
-	public XY miniSquirrelSpawnable(XY pos) {
-		XY location = null;
-		if((location = this.board.getEntitySet().getEmptyLocationAround(pos)) == null) {
-			return null;
-		}
-		return location;
+	public XY bestVectorAwayFromEntity(Entity beast, Entity hunter) {
+		XY vectorToEntity = this.bestVectorToEntity(beast, hunter);
+		return XY.invertVector(vectorToEntity);
 	}
 
 	@Override
@@ -316,5 +277,24 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		entity.setLocation(newLocation);
 		this.board.getEntitySet().addEntity(entity);
 		entityMatrix[entity.getLocation().getY()][entity.getLocation().getX()] = entity;
+	}
+
+	@Override
+	public void spawnMiniSquirrel(int energy) throws NotEnoughEnergyException {
+		MasterSquirrel ms = board.getMaster();
+		if(ms == null) {
+			throw new EntityNotFoundException("No MasterSquirrel in the EntitySet");	//TODO think about how to handle this situation
+		} else if (ms.getEnergy() < energy ){
+			throw new NotEnoughEnergyException();
+		} else {
+			XY location = this.board.getEntitySet().getEmptyLocationAround(ms.getLocation());
+			if(location == null) {
+				return;
+			} else {
+				MiniSquirrel newMS = ms.spawnMiniSquirrel(location, energy);
+				ms.updateEnergy(-energy);
+				this.board.getEntitySet().addEntity(newMS);
+			}
+		}
 	}
 }

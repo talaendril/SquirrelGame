@@ -13,7 +13,8 @@ public enum GameCommandType implements CommandTypeInfo {
 	UP("up", "  * MasterSquirrel goes up"),
 	UP_RIGHT("up_right", "  * MasterSquirrel goes up right"),
 	MASTER_ENERGY("master_energy", "  * get energy of MasterSquirrel"),
-	SPAWN_MINI("spawn_mini", "  * spawn a MiniSquirrel")
+	SPAWN_MINI("spawn_mini", "  * spawn a MiniSquirrel"),
+	DO_NOTHING("none", "  * MasterSquirrel doesn't move for a turn")
 	;
 	
 	private String name;
@@ -44,5 +45,11 @@ public enum GameCommandType implements CommandTypeInfo {
 	@Override
 	public Class<?>[] getParamTypes() {
 		return this.paramTypes;
+	}
+	
+	@Override
+	public String toString() {
+		return this.name + this.helpText;
+		//TODO add paramtypes if ever needed
 	}
 }

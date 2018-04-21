@@ -1,7 +1,7 @@
 package ui;
 
 import java.io.BufferedReader;
-import java.io.PrintStream;
+//import java.io.PrintStream;
 import java.util.Scanner;
 
 import exceptions.ScanException;
@@ -10,8 +10,8 @@ public class CommandScanner {
 	
 	private CommandTypeInfo[] commandTypeInfos;
 	private BufferedReader inputReader;
-	private PrintStream outputStream;
 	private Scanner scanner;
+	//private PrintStream outputStream;
 	
 	public CommandScanner(CommandTypeInfo[] commandTypes, BufferedReader inputReader) {
 		this.commandTypeInfos = commandTypes;

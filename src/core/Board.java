@@ -36,6 +36,10 @@ public class Board {
 		return this.es;
 	}
 	
+	public MasterSquirrel getMaster() {
+		return this.es.getMaster();
+	}
+	
 	public void generateEntities() {
 		for(int i = 0; i < this.boardSizeY; i++) {
 			for(int j = 0; j < this.boardSizeX; j++) {

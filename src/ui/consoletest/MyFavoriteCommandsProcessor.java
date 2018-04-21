@@ -2,7 +2,7 @@ package ui.consoletest;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
+//import java.io.PrintStream;
 
 import ui.Command;
 import ui.CommandScanner;
@@ -11,7 +11,7 @@ public class MyFavoriteCommandsProcessor {
 
 	//TODO REMOVE STATICS WHEN DONE TESTING
 	
-	private PrintStream outputStream = System.out;
+	//private PrintStream outputStream = System.out;
 	private static BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
 	
 	public static void process() {

@@ -80,4 +80,8 @@ public final class XY {
 		int deltaY = Math.abs(first.getY() - second.getY());
 		return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
 	}
+	
+	public static XY invertVector(XY vector) {
+		return new XY(vector.getX() * -1, vector.getY() * -1);
+	}
 }
