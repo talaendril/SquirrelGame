@@ -76,19 +76,10 @@ public class GameCommandProcessor {
 	}
 	
 	public void help() {
-		System.out.println("List of all Commands: ");
-		System.out.println("\t" + GameCommandType.ALL.toString());
-		System.out.println("\t" + GameCommandType.EXIT.toString());
-		System.out.println("\t" + GameCommandType.HELP.toString());
-		System.out.println("\t" + GameCommandType.MASTER_ENERGY.toString());
-		System.out.println("\t" + GameCommandType.SPAWN_MINI.toString());
-		System.out.println("\t" + GameCommandType.DOWN_LEFT.toString());
-		System.out.println("\t" + GameCommandType.DOWN.toString());
-		System.out.println("\t" + GameCommandType.DOWN_RIGHT.toString());
-		System.out.println("\t" + GameCommandType.LEFT.toString());
-		System.out.println("\t" + GameCommandType.RIGHT.toString());
-		System.out.println("\t" + GameCommandType.UP_LEFT.toString());
-		System.out.println("\t" + GameCommandType.UP.toString());
-		System.out.println("\t" + GameCommandType.UP_RIGHT.toString());
+		StringBuilder sb = new StringBuilder("List of all Commands: \n");
+		for(GameCommandType gct : GameCommandType.values()) {
+			sb.append("\t" + gct.toString() + "\n");
+		}
+		System.out.println(sb.toString());
 	}
 }

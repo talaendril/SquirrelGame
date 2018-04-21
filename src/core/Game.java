@@ -25,6 +25,7 @@ public class Game {
 	}
 	
 	protected void render() {
+		System.out.println("");
 		ui.render(board.flatten());
 		System.out.println("");
 		System.out.println(board.toString());
@@ -33,7 +34,6 @@ public class Game {
 	protected void processInput() {
 		//TODO maybe find a way to process the input we've gotten here instead of in State via GameCommandProcessor
 		this.nextCommand = this.ui.getCommand();
-		System.out.println(this.nextCommand.getCommandType().getName());
 	}
 	
 	protected void update() {
