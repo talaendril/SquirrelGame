@@ -18,10 +18,17 @@ public enum GameCommandType implements CommandTypeInfo {
 	
 	private String name;
 	private String helpText;
+	private Class<?>[] paramTypes = null;
 	
 	private GameCommandType(String name, String helpText) {
 		this.name = name;
 		this.helpText = helpText;
+	}
+	
+	private GameCommandType(String name, String helpText, Class<?>[] param) {
+		this.name = name;
+		this.helpText = helpText;
+		this.paramTypes = param;
 	}
 	
 	@Override
@@ -36,6 +43,6 @@ public enum GameCommandType implements CommandTypeInfo {
 	
 	@Override
 	public Class<?>[] getParamTypes() {
-		return null;	//nothing to return?
+		return this.paramTypes;
 	}
 }

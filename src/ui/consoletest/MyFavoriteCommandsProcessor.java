@@ -1,8 +1,11 @@
-package ui;
+package ui.consoletest;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+
+import ui.Command;
+import ui.CommandScanner;
 
 public class MyFavoriteCommandsProcessor {
 
@@ -34,20 +37,23 @@ public class MyFavoriteCommandsProcessor {
 		     case ADDI:
 		    	 int totalInt = 0;
 		    	 for(int i = 0; i < params.length; i++) {
-		    		 totalInt += (Integer) params[i];
+		    		 totalInt += Integer.parseInt((String) params[i]);
 		    	 }
 		    	 System.out.println(totalInt);
 		    	 break;
 		     case ADDF:
 		    	 float totalFloat = 0.f;
 		    	 for(int i = 0; i < params.length; i++) {
-		    		 totalFloat += (Float) params[i];
+		    		 totalFloat += Float.parseFloat((String) params[i]);
 		    	 }
 		    	 System.out.println(totalFloat);
 		    	 break;
 		     case ECHO:
-		    	 for(int i = 0; i < (Integer) params[1]; i++) {		//have to assume the second parameter is a number
-		    		 System.out.println(params[0]);					//and the first is a string
+		    	 for(int i = 0; i < Integer.parseInt((String) params[params.length - 1]); i++) {
+		    		 for(int j = 0; j < params.length - 1; j++) {
+		    			 System.out.print(params[j] + " ");
+		    		 }
+		    		 System.out.println("");
 		    	 }
 		    	 break;
 		     default:
