@@ -6,8 +6,6 @@ import entities.GoodBeast;
 import entities.MasterSquirrel;
 import entities.MiniSquirrel;
 import entities.Squirrel;
-import exceptions.EntityNotFoundException;
-import exceptions.NotEnoughEnergyException;
 import entities.Character;
 import location.XY;
 import ui.MoveCommand;
@@ -277,24 +275,5 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		entity.setLocation(newLocation);
 		this.board.getEntitySet().addEntity(entity);
 		entityMatrix[entity.getLocation().getY()][entity.getLocation().getX()] = entity;
-	}
-
-	@Override
-	public void spawnMiniSquirrel(int energy) throws NotEnoughEnergyException {
-		MasterSquirrel ms = board.getMaster();
-		if(ms == null) {
-			throw new EntityNotFoundException("No MasterSquirrel in the EntitySet");	//TODO think about how to handle this situation
-		} else if (ms.getEnergy() < energy ){
-			throw new NotEnoughEnergyException();
-		} else {
-			XY location = this.board.getEntitySet().getEmptyLocationAround(ms.getLocation());
-			if(location == null) {
-				return;
-			} else {
-				MiniSquirrel newMS = ms.spawnMiniSquirrel(location, energy);
-				ms.updateEnergy(-energy);
-				this.board.getEntitySet().addEntity(newMS);
-			}
-		}
 	}
 }

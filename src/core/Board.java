@@ -4,6 +4,8 @@ import java.util.Random;
 
 import entities.*;
 import entities.Character;
+import exceptions.EntityNotFoundException;
+import exceptions.NotEnoughEnergyException;
 import idmanager.ID;
 import location.XY;
 import ui.MoveCommand;
@@ -68,6 +70,24 @@ public class Board {
 		}
 		for(int wallCount = 0; wallCount < this.config.getNumberOfRandomWalls(); wallCount++) {
 			es.addEntity(new Wall(ID.getNewID(), getEmptyLocation()));
+		}
+	}
+	
+	public void spawnMiniSquirrel(int energy) throws NotEnoughEnergyException {
+		MasterSquirrel ms = this.getMaster();
+		if(ms == null) {
+			throw new EntityNotFoundException("No MasterSquirrel in the EntitySet");	//TODO think about how to handle this situation
+		} else if (ms.getEnergy() < energy ){
+			throw new NotEnoughEnergyException();
+		} else {
+			XY location = this.getEntitySet().getEmptyLocationAround(ms.getLocation());
+			if(location == null) {
+				return;
+			} else {
+				MiniSquirrel newMS = ms.spawnMiniSquirrel(location, energy);
+				ms.updateEnergy(-energy);
+				this.getEntitySet().addEntity(newMS);
+			}
 		}
 	}
 	

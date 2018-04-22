@@ -6,7 +6,6 @@ import entities.GoodBeast;
 import entities.MasterSquirrel;
 import entities.MiniSquirrel;
 import entities.Squirrel;
-import exceptions.NotEnoughEnergyException;
 import location.XY;
 
 public interface EntityContext {
@@ -28,6 +27,4 @@ public interface EntityContext {
 	void killAndReplace(Entity entity);
 	
 	EntityType getEntityType(XY xy);
-	
-	void spawnMiniSquirrel(int energy) throws NotEnoughEnergyException;
 }

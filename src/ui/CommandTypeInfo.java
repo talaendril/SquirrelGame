@@ -5,5 +5,7 @@ public interface CommandTypeInfo {
 	
 	String getHelpText();
 	
+	String getMethodToCall();
+	
 	Class<?>[] getParamTypes(); 
 }

@@ -15,7 +15,7 @@ public class State {
 	}
 	
 	public void update(Command command) {
-		gcp.process(command);
+		gcp.processReflection(command);
 	}
 	
 	public FlattenedBoard flattenedBoard() {

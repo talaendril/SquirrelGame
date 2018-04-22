@@ -2,16 +2,14 @@ package ui.consoletest;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-//import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import ui.Command;
 import ui.CommandScanner;
 
 public class MyFavoriteCommandsProcessor {
-
-	//TODO REMOVE STATICS WHEN DONE TESTING
 	
-	//private PrintStream outputStream = System.out;
 	private static BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
 	
 	public static void process() {
@@ -62,16 +60,58 @@ public class MyFavoriteCommandsProcessor {
 		 }
 	}
 	
-	private static void help() {
-		System.out.println("List of all Commands: ");
-		System.out.println("\t" + MyFavoriteCommandType.EXIT.toString());
-		System.out.println("\t" + MyFavoriteCommandType.HELP.toString());
-		System.out.println("\t" + MyFavoriteCommandType.ADDI.toString());
-		System.out.println("\t" + MyFavoriteCommandType.ADDF.toString());
-		System.out.println("\t" + MyFavoriteCommandType.ECHO.toString());
+	public static void processReflection() {
+		CommandScanner scanner = new CommandScanner(MyFavoriteCommandType.values(), inputReader);
+		Command command;
+		while(true) {
+			command = scanner.next();
+			if(command == null) {
+		    	 System.out.println("Ungültiger Command");
+		    	 continue;
+		     }
+			Object[] params = command.getParams();
+			for (MyFavoriteCommandType mfct : MyFavoriteCommandType.values()) {
+				if(command.getCommandType().getName().equals(mfct.getName())) {
+					MethodClass obj = new MethodClass();
+					try {
+						Method method;
+						if(params.length == 0) {
+							method = obj.getClass().getMethod(mfct.getMethodToCall());
+							method.invoke(obj);
+						} else {
+							method = obj.getClass().getMethod(mfct.getMethodToCall(), new Class[] {Object.class, Object.class});
+							method.invoke(obj, params[0], params[1]);
+						}
+					} catch (NoSuchMethodException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (SecurityException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+	
+	public static void help() {
+		StringBuilder sb = new StringBuilder("List of all Commands: \n");
+		for(MyFavoriteCommandType gct : MyFavoriteCommandType.values()) {
+			sb.append("\t" + gct.toString() + "\n");
+		}
+		System.out.println(sb.toString());
 	}
 	
 	public static void main(String[] args) {
-		process();
+		processReflection();
 	}
 }

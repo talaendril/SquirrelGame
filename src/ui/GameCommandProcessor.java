@@ -1,5 +1,8 @@
 package ui;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import core.Board;
 import entities.MasterSquirrel;
 import exceptions.EntityNotFoundException;
@@ -11,6 +14,37 @@ public class GameCommandProcessor {
 	
 	public GameCommandProcessor(Board board) {
 		this.board = board;
+	}
+	
+	public void processReflection(Command command) {
+		Object[] params = command.getParams();
+		for(GameCommandType gct : GameCommandType.values()) {
+			if(command.getCommandType().getName().equals(gct.getName())) {
+				Method method;
+				if(params.length == 0) {
+					try {
+						method = board.getClass().getMethod(gct.getMethodToCall());
+						method.invoke(board);
+					} catch (NoSuchMethodException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (SecurityException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalArgumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
+			}
+		}
 	}
 	
 	public void process(Command command) {		//HANDLED ALL EXCEPTIONS HERE
@@ -53,7 +87,7 @@ public class GameCommandProcessor {
 			this.help();
 			break;
 		case MASTER_ENERGY:	//TODO think about what happens with multiple MasterSquirrels
-			MasterSquirrel ms = board.getMaster();
+			MasterSquirrel ms = this.board.getMaster();
 			if(ms == null) {
 				throw new EntityNotFoundException("No MasterSquirrel in the EntitySet");	//TODO think about how to handle this situation
 			} else {
@@ -65,7 +99,7 @@ public class GameCommandProcessor {
 				throw new ScanException("No Energy given");	//TODO think about how to handle this situation
 			}
 			try {
-				board.flatten().spawnMiniSquirrel(Integer.parseInt((String) params[0]));
+				this.board.spawnMiniSquirrel(Integer.parseInt((String) params[0]));
 			} catch (NotEnoughEnergyException e) {
 				e.printStackTrace();
 			}
