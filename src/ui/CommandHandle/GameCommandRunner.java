@@ -1,10 +1,15 @@
-package ui;
+package ui.CommandHandle;
 
 import core.State;
 import exceptions.NotEnoughEnergyException;
 import exceptions.ScanException;
 
 public class GameCommandRunner {
+	/*
+	 * this class is used to work with the processed command
+	 * meaning it is used as the reflection and any method invoked in the GameCommandProcessor will be found and called here
+	 * this class then continues to call either Board, prints help, exit System, etc
+	 */
 
 	private State state;
 	
@@ -12,7 +17,7 @@ public class GameCommandRunner {
 		this.state = state;
 	}
 	
-	public void move(Object obj) {
+	public void move(Object obj) {	//needs a MoveCommand to work properly
 		MoveCommand command = MoveCommand.parseMoveCommand((String) obj);
 		if(command == null) {
 			throw new ScanException("Unknown Command");	//TODO think about how to change this
@@ -33,14 +38,16 @@ public class GameCommandRunner {
 	}
 	
 	public void all() {
-		//TODO nothing here
+		System.out.println("You have used a command which has no proper effect yet");
 	}
 	
-	public void spawnMiniSquirrel(Object energy) {	//parse needed
+	public void spawnMiniSquirrel(Object energy) {	//needs an int to work properly
 		try {
 			this.state.getBoard().spawnMiniSquirrel(Integer.parseInt((String) energy));
 		} catch (NotEnoughEnergyException e) {
 			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			throw new ScanException("No Energy specified!");
 		}
 	}
 	

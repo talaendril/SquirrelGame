@@ -7,7 +7,7 @@ import core.EntityContext;
 import exceptions.NotEnoughEnergyException;
 import idmanager.ID;
 import location.XY;
-import ui.MoveCommand;
+import ui.CommandHandle.MoveCommand;
 
 public class MasterSquirrel extends Squirrel {
 	

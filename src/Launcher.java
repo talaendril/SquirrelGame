@@ -5,9 +5,9 @@ import core.Board;
 import core.BoardConfig;
 import core.Game;
 import core.State;
-import ui.CommandScanner;
 import ui.ConsoleUI;
-import ui.GameCommandType;
+import ui.CommandHandle.CommandScanner;
+import ui.CommandHandle.GameCommandType;
 
 public class Launcher {
 

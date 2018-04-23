@@ -8,7 +8,7 @@ import entities.MiniSquirrel;
 import entities.Squirrel;
 import entities.Character;
 import location.XY;
-import ui.MoveCommand;
+import ui.CommandHandle.MoveCommand;
 
 public class FlattenedBoard implements EntityContext, BoardView {
 	
@@ -132,6 +132,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 					if(EntityType.getEntityType(e) == EntityType.MINISQUIRREL) {
 						if(e.getEnergy() < Math.abs(bb.getEnergy())) {
 							this.kill(e);
+							bb.move(vector);
 						} else {
 							e.updateEnergy(bb.getEnergy());
 						}

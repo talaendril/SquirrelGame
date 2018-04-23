@@ -1,6 +1,6 @@
 package ui.consoletest;
 
-import ui.CommandTypeInfo;
+import ui.CommandHandle.CommandTypeInfo;
 
 public enum MyFavoriteCommandType implements CommandTypeInfo {
 	HELP("help", "  * list all commands", "help"),

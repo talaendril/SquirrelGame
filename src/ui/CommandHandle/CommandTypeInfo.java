@@ -1,4 +1,4 @@
-package ui;
+package ui.CommandHandle;
 
 public interface CommandTypeInfo {
 	String getName();

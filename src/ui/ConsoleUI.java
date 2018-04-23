@@ -10,6 +10,8 @@ import entities.HandOperatedMasterSquirrel;
 import entities.MasterSquirrel;
 import entities.MiniSquirrel;
 import entities.Wall;
+import ui.CommandHandle.Command;
+import ui.CommandHandle.CommandScanner;
 
 public class ConsoleUI implements UI {
 	

@@ -2,7 +2,7 @@ package entities;
 
 import core.EntityContext;
 import location.XY;
-import ui.MoveCommand;
+import ui.CommandHandle.MoveCommand;
 
 public class BadBeast extends Character {
 	

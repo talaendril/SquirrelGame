@@ -1,8 +1,8 @@
 package core;
 
-import ui.Command;
-import ui.GameCommandProcessor;
 import ui.UI;
+import ui.CommandHandle.Command;
+import ui.CommandHandle.GameCommandProcessor;
 
 public class Game {
 	
@@ -38,6 +38,6 @@ public class Game {
 	
 	protected void update() {
 		GameCommandProcessor gcp = new GameCommandProcessor(this.state);
-		gcp.processReflection(nextCommand);
+		gcp.process(nextCommand);
 	}
 }

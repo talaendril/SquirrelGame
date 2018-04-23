@@ -1,4 +1,4 @@
-package ui;
+package ui.CommandHandle;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,7 +14,7 @@ public class GameCommandProcessor {
 		this.state = state;
 	}
 	
-	public void processReflection(Command command) {
+	public void process(Command command) {		//maybe put this code into update() of game opposed to instantiating a new Processor everytime we call update
 		Object[] params = command.getParams();
 		for(GameCommandType gct : GameCommandType.values()) {
 			if(command.getCommandType().getName().equals(gct.getName())) {
@@ -48,13 +48,5 @@ public class GameCommandProcessor {
 				}
 			}
 		}
-	}
-	
-	public void help() {
-		StringBuilder sb = new StringBuilder("List of all Commands: \n");
-		for(GameCommandType gct : GameCommandType.values()) {
-			sb.append("\t" + gct.toString() + "\n");
-		}
-		System.out.println(sb.toString());
 	}
 }

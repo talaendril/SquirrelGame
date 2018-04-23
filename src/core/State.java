@@ -1,6 +1,6 @@
 package core;
 
-import ui.MoveCommand;
+import ui.CommandHandle.MoveCommand;
 
 public class State {
 	

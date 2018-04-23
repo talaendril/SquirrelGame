@@ -1,4 +1,4 @@
-package ui;
+package ui.CommandHandle;
 
 import java.io.BufferedReader;
 //import java.io.PrintStream;
@@ -11,7 +11,6 @@ public class CommandScanner {
 	private CommandTypeInfo[] commandTypeInfos;
 	private BufferedReader inputReader;
 	private Scanner scanner;
-	//private PrintStream outputStream;
 	
 	public CommandScanner(CommandTypeInfo[] commandTypes, BufferedReader inputReader) {
 		this.commandTypeInfos = commandTypes;
@@ -33,7 +32,7 @@ public class CommandScanner {
 					parameters[j - 1] = tokens[j];
 				}
 				/*
-				 * the next 5 lines of code are simply called to ensure that any command will at most have 2 elements
+				 * the next 5 lines of code are simply to ensure that any command will at most have 2 elements
 				 * this is needed to ensure that our implemented reflection works without throwing exceptions as long as the input is valid
 				 */
 				String s = this.combineIntoOne(parameters, 1);	
@@ -47,7 +46,7 @@ public class CommandScanner {
 		throw new ScanException("Unknown Command");
 	}
 	
-	public String combineIntoOne(Object[] array, int startPosition) {
+	public String combineIntoOne(Object[] array, int startPosition) {	//combines all Objects of an array after startPosition into one String regardless of what that object actually is
 		StringBuilder combined = new StringBuilder("");
 		if(startPosition >= array.length) {
 			return null;

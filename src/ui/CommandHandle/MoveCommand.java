@@ -1,4 +1,4 @@
-package ui;
+package ui.CommandHandle;
 
 import java.util.Random;
 
@@ -38,7 +38,7 @@ public enum MoveCommand {
 	
 	public static MoveCommand parseMoveCommand(String s) {
 		for(MoveCommand mc : MoveCommand.values()) {
-			if(s.toLowerCase().equals(mc.name().toLowerCase())) {
+			if(s.toLowerCase().equals(mc.name().toLowerCase())) {	//compares s to all enum attribute names in lowercase
 				return mc;
 			}
 		}
