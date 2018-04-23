@@ -35,4 +35,13 @@ public enum MoveCommand {
 			}
 		}
 	}
+	
+	public static MoveCommand parseMoveCommand(String s) {
+		for(MoveCommand mc : MoveCommand.values()) {
+			if(s.toLowerCase().equals(mc.name().toLowerCase())) {
+				return mc;
+			}
+		}
+		return null;
+	}
 }

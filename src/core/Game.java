@@ -1,6 +1,7 @@
 package core;
 
 import ui.Command;
+import ui.GameCommandProcessor;
 import ui.UI;
 
 public class Game {
@@ -32,11 +33,11 @@ public class Game {
 	}
 	
 	protected void processInput() {
-		//TODO maybe find a way to process the input we've gotten here instead of in State via GameCommandProcessor
-		this.nextCommand = this.ui.getCommand();
+		nextCommand = this.ui.getCommand();
 	}
 	
 	protected void update() {
-		state.update(nextCommand);
+		GameCommandProcessor gcp = new GameCommandProcessor(this.state);
+		gcp.processReflection(nextCommand);
 	}
 }

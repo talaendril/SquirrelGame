@@ -1,21 +1,22 @@
 package core;
 
-import ui.Command;
-import ui.GameCommandProcessor;
+import ui.MoveCommand;
 
 public class State {
 	
 	//private int highscore = 0;
 	private Board board;
-	private GameCommandProcessor gcp;
 
 	public State(Board board) {
 		this.board = board;
-		gcp = new GameCommandProcessor(this.board);
 	}
 	
-	public void update(Command command) {
-		gcp.processReflection(command);
+	public Board getBoard() {
+		return this.board;
+	}
+	
+	public void update(MoveCommand command) {
+		this.board.nextStep(command);
 	}
 	
 	public FlattenedBoard flattenedBoard() {

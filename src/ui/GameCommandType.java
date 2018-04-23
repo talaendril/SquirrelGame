@@ -8,17 +8,9 @@ public enum GameCommandType implements CommandTypeInfo {
 	HELP("help", "  * list all commands", "help"),
 	EXIT("exit", "  * exit program", "exitSystem"),
 	ALL("all" , "  * no idea what this does yet", "all"),			//need to create?
-	DOWN_LEFT("down_left", "  * MasterSquirrel goes down left", "nextStep"),
-	DOWN("down", "  * MasterSquirrel goes down", "nextStep"),
-	DOWN_RIGHT("down_right", "  * MasterSquirrel goes down right", "nextStep"),
-	LEFT("left", "  * MasterSquirrel goes left", "nextStep"),
-	RIGHT("right", "  * MasterSquirrel goes right", "nextStep"),
-	UP_LEFT("up_left", "  * MasterSquirrel goes up left", "nextStep"),
-	UP("up", "  * MasterSquirrel goes up", "nextStep"),
-	UP_RIGHT("up_right", "  * MasterSquirrel goes up right", "nextStep"),
+	MOVE("move", "<param1>  * MasterSquirrels moves in the direction of param1", "move", MoveCommand.class),
 	MASTER_ENERGY("master_energy", "  * get energy of MasterSquirrel", "getMasterSquirrelEnergy"),		//need to create
-	SPAWN_MINI("spawn_mini", "  * spawn a MiniSquirrel", "spawnMiniSquirrel"),
-	DO_NOTHING("none", "  * MasterSquirrel doesn't move for a turn", "nextStep")
+	SPAWN_MINI("spawn_mini", "  * spawn a MiniSquirrel", "spawnMiniSquirrel", int.class)
 	;
 	
 	private String name;
@@ -26,13 +18,7 @@ public enum GameCommandType implements CommandTypeInfo {
 	private String methodToCall;
 	private Class<?>[] paramTypes = null;
 	
-	private GameCommandType(String name, String helpText, String method) {
-		this.name = name;
-		this.helpText = helpText;
-		this.methodToCall = method;
-	}
-	
-	private GameCommandType(String name, String helpText, String method, Class<?>[] param) {
+	private GameCommandType(String name, String helpText, String method, Class<?>...param) {
 		this.name = name;
 		this.helpText = helpText;
 		this.methodToCall = method;
