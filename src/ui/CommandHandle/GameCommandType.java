@@ -4,9 +4,9 @@ public enum GameCommandType implements CommandTypeInfo {
 	HELP("help", "\t\t  * list all commands", "help"),
 	EXIT("exit", "\t\t  * exit program", "exitSystem"),
 	ALL("all" , "\t\t  * has no use yet", "all"),
-	MOVE("move", " <param1>\t  * MasterSquirrels moves in the direction of param1", "move", MoveCommand.class),
+	MOVE("move", " <vector>\t  * MasterSquirrels moves in the direction of vector", "move", MoveCommand.class),
 	MASTER_ENERGY("master_energy", "\t  * get energy of MasterSquirrel", "getMasterSquirrelEnergy"),
-	SPAWN_MINI("spawn_mini", "\t  * spawn a MiniSquirrel", "spawnMiniSquirrel", int.class)
+	SPAWN_MINI("spawn_mini", " <E>\t  * spawn a MiniSquirrel initialized with E energy", "spawnMiniSquirrel", int.class)
 	;
 	
 	private String name;
