@@ -6,7 +6,8 @@ public enum GameCommandType implements CommandTypeInfo {
 	ALL("all" , "\t\t  * has no use yet", "all"),
 	MOVE("move", " <param1>\t  * MasterSquirrels moves in the direction of param1", "move", MoveCommand.class),
 	MASTER_ENERGY("master_energy", "\t  * get energy of MasterSquirrel", "getMasterSquirrelEnergy"),
-	SPAWN_MINI("spawn_mini", "\t  * spawn a MiniSquirrel", "spawnMiniSquirrel", int.class)
+	SPAWN_MINI("spawn_mini", "\t  * spawn a MiniSquirrel", "spawnMiniSquirrel", int.class), 
+	NOTHING("nothing", "\t  * do nothing", "doNothing")
 	;
 	
 	private String name;

@@ -54,4 +54,8 @@ public class GameCommandRunner {
 	public void getMasterSquirrelEnergy() {
 		System.out.println(this.state.getBoard().getMaster().getEnergy());
 	}
+	
+	public void doNothing() {
+		
+	}
 }

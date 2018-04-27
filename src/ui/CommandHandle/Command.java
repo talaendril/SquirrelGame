@@ -5,7 +5,7 @@ public final class Command {	//immutable?
 	private CommandTypeInfo commandType;
 	private Object[] params;
 	
-	public Command(CommandTypeInfo type, Object[] params) {
+	public Command(CommandTypeInfo type, Object...params) {
 		this.commandType = type;
 		this.params = params;
 	}

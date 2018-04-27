@@ -4,18 +4,15 @@ import location.XY;
 
 public class BoardConfig {
 	
-	//not sure about this implementation
-	//TODO think about something else
+	private final XY size = new XY(20, 20);
 	
-	private final XY size = new XY(10, 10);
-	
-	private final int numberOfGoodPlants = 1;
-	private final int numberOfBadPlants = 1;
+	private final int numberOfGoodPlants = 4;
+	private final int numberOfBadPlants = 3;
 	private final int numberOfBadBeasts = 2;
-	private final int numberOfGoodBeasts = 1;
+	private final int numberOfGoodBeasts = 6;
 	private final int numberOfHandOperatedMasterSquirrels = 1;
 	private final int numberOfMasterSquirrels = 0 + numberOfHandOperatedMasterSquirrels;
-	private final int numberOfRandomWalls = 3;
+	private final int numberOfRandomWalls = 8;
 	private final int numberOfWalls = 2 * size.getX() + 2 * size.getY() - 4 + numberOfRandomWalls;
 	private final int totalEntities = 
 			numberOfGoodPlants + numberOfBadPlants +

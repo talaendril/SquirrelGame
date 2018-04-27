@@ -6,7 +6,8 @@ public enum EntityType {
 	GOODBEAST, BADBEAST, 
 	GOODPLANT, BADPLANT, 
 	MASTERSQUIRREL, MINISQUIRREL, 
-	WALL, HANDOPERATEDMASTERSQUIRREL;
+	WALL, HANDOPERATEDMASTERSQUIRREL,
+	NONE;
 	
 	public static EntityType getEntityType(Entity e) {
 		if(e instanceof GoodBeast) {
@@ -26,7 +27,7 @@ public enum EntityType {
 		} else if(e instanceof MasterSquirrel) {
 			return EntityType.MASTERSQUIRREL;
 		} else {
-			return null;
+			return NONE;
 		}
 	}
 

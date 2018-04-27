@@ -18,7 +18,7 @@ public class CommandScanner {
 		this.scanner = new Scanner(this.inputReader);
 	}
 	
-	public Command next() throws ScanException {
+	public Command next() {
 		System.out.println("Gib den nächsten Command ein:");
 		String input = scanner.nextLine();
 		String[] tokens = input.split("\\s+");
