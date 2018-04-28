@@ -28,14 +28,11 @@ public class Game {
 //			update();
 //		}
 		render();
-		processInput();
-		update();
 	}
 	
 	protected void render() {
 		System.out.println("");
 		ui.render(board.flatten());
-		System.out.println("");
 		System.out.println(board.toString());
 	}
 	
@@ -52,7 +49,6 @@ public class Game {
 //        		gcp.process(nextCommand);
 //            }
 //        }, 0, 1000);
-        
         try {
 			Thread.sleep(1000);
 			gcp.process(nextCommand);

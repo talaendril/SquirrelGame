@@ -2,8 +2,8 @@ package ui.CommandHandle;
 
 public final class Command {	//immutable?
 	
-	private CommandTypeInfo commandType;
-	private Object[] params;
+	private final CommandTypeInfo commandType;
+	private final Object[] params;
 	
 	public Command(CommandTypeInfo type, Object...params) {
 		this.commandType = type;
@@ -16,5 +16,18 @@ public final class Command {	//immutable?
 
 	public Object[] getParams() {
 		return params;
+	}
+	
+	@Override
+	public String toString() {
+		if(params.length == 0) {
+			return this.commandType.getName() + " " + params[0].toString();
+		} else {
+			StringBuilder s = new StringBuilder("");
+			for(int i = 0; i < params.length; i++) {
+				s.append(params[i].toString() + " ");
+			}
+			return this.commandType.getName() + " " + s.toString();
+		}
 	}
 }

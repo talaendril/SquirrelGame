@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import location.XY;
@@ -17,6 +18,8 @@ import ui.UI;
 import ui.CommandHandle.Command;
 import ui.CommandHandle.GameCommandType;
 import ui.CommandHandle.MoveCommand;
+import ui.windows.InputWindow;
+import ui.windows.OutputWindow;
 
 public class FxUI extends Scene implements UI {
     private static final int CELL_SIZE = 25;
@@ -33,21 +36,25 @@ public class FxUI extends Scene implements UI {
     
     public static FxUI createInstance(XY boardSize) {
         Canvas boardCanvas = new Canvas(boardSize.getX() * CELL_SIZE, boardSize.getY() * CELL_SIZE);
-        Label statusLabel = new Label();
+        Label masterEnergy = new Label();
         VBox top = new VBox();
         top.getChildren().add(createMenuBar());
         top.getChildren().add(boardCanvas);
-        top.getChildren().add(statusLabel);
-        statusLabel.setText("Hallo Welt");
-        final FxUI fxUI = new FxUI(top, boardCanvas, statusLabel); 
+        top.getChildren().add(masterEnergy);
+        masterEnergy.setText("Hallo Welt");		//TODO show masterEnergy
+        final FxUI fxUI = new FxUI(top, boardCanvas, masterEnergy); 
         fxUI.setOnKeyPressed(value -> {
-        	System.out.println("Es wurde folgende Taste gedrückt: " + value.getCode() + " bitte behandeln!");
         	switch(value.getCode()) {
         	case W:
         		nextCommand = new Command(GameCommandType.MOVE, MoveCommand.UP);
         		break;
         	case A:
         		nextCommand = new Command(GameCommandType.MOVE, MoveCommand.LEFT);
+        		break;
+        	case S:
+        		if(nextCommand.getCommandType() == GameCommandType.NOTHING) {	//might cause a conflict if no other command is called and something like spawn Mini continues to spawn
+        			nextCommand = new Command(GameCommandType.MOVE, MoveCommand.NONE);
+        		} 
         		break;
         	case D:
         		nextCommand = new Command(GameCommandType.MOVE, MoveCommand.RIGHT);
@@ -70,6 +77,7 @@ public class FxUI extends Scene implements UI {
         	default:
         		break;
         	}
+        	System.out.println(nextCommand.toString());
         });
         return fxUI;
     }
@@ -79,19 +87,38 @@ public class FxUI extends Scene implements UI {
 		Menu file = new Menu("Game");
 		MenuItem help = new MenuItem("Help");
 		help.setOnAction(value -> {
-			//TODO: open a new window with all commands maybe
+			new OutputWindow(help(), "Help");
 		});
 		MenuItem exit = new MenuItem("Exit");
 		exit.setOnAction(value -> {
 			System.exit(0);
 		});
-		MenuItem pause = new MenuItem("Pause");
-		pause.setOnAction(value -> {
-			//TODO: pause the game
+		MenuItem spawnMiniSquirrel = new MenuItem("Spawn Mini");
+		spawnMiniSquirrel.setOnAction(value -> {
+			InputWindow spawnMS = new InputWindow("Spawn Minisquirrel", "Specify how much energy you want to give");
+			spawnMS.getEnterButton().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+				String input = spawnMS.getTextField().getText();
+				try {
+					int energy = Integer.parseInt(input);
+					nextCommand = new Command(GameCommandType.SPAWN_MINI, energy);
+					System.out.println(nextCommand.toString());
+				} catch(NumberFormatException e) {
+					new OutputWindow("Didn't specify a number", "Error");
+				}
+				spawnMS.close();
+			});
 		});
-		file.getItems().addAll(help, pause, exit);
+		file.getItems().addAll(help, spawnMiniSquirrel, exit);
 		mb.getMenus().add(file);
 		return mb;
+	}
+    
+    private static String help() {
+		StringBuilder sb = new StringBuilder("List of all Commands: \n");
+		for(GameCommandType gct : GameCommandType.values()) {
+			sb.append("\t" + gct.toString() + "\n");
+		}
+		return sb.toString();
 	}
 
     @Override
