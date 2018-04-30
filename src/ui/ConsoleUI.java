@@ -13,7 +13,7 @@ import entities.Wall;
 import ui.CommandHandle.Command;
 import ui.CommandHandle.CommandScanner;
 
-public class ConsoleUI implements UI {
+public class ConsoleUI implements UI{
 	
 	private CommandScanner scanner;
 	
@@ -55,6 +55,6 @@ public class ConsoleUI implements UI {
 	
 	@Override
 	public Command getCommand() {
-		return scanner.next();
+		return this.scanner.next();
 	}
 }

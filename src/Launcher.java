@@ -1,24 +1,35 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import core.Board;
 import core.BoardConfig;
 import core.Game;
 import core.State;
-import ui.ConsoleUI;
-import ui.CommandHandle.CommandScanner;
-import ui.CommandHandle.GameCommandType;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import ui.FxUI;
 
-public class Launcher {
+public class Launcher extends Application {
+	
+	private BoardConfig config = new BoardConfig();
+	private Board board = new Board(config);
+	private State state = new State(board);
 
+	@Override
+	public void start(Stage arg0) throws Exception {
+		Stage primaryStage = new Stage();
+		FxUI fxUI = FxUI.createInstance(config.getSize());
+        final Game game = new Game(state, board, fxUI);
+         
+        primaryStage.setScene(fxUI);
+        primaryStage.setTitle("Diligent Squirrel");
+        primaryStage.show();   
+        
+        startGame(game);   
+	}
+	
+	private void startGame(Game game) {
+		game.run();
+	}
+	
 	public static void main(String[] args) {
-		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-		CommandScanner cs = new CommandScanner(GameCommandType.values(), input);
-		ConsoleUI cui = new ConsoleUI(cs);
-		BoardConfig config = new BoardConfig();
-		Board board = new Board(config);
-		State state = new State(board);
-		Game newGame = new Game(state, board, cui);
-		newGame.run();
+		launch(args);
 	}
 }
