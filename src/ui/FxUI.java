@@ -23,8 +23,8 @@ import ui.windows.OutputWindow;
 
 public class FxUI extends Scene implements UI {
     private static final int CELL_SIZE = 25;
-    
     private static Command nextCommand = new Command(GameCommandType.NOTHING);
+    
 	private Canvas boardCanvas;
 	private Label msgLabel;
 
@@ -74,6 +74,19 @@ public class FxUI extends Scene implements UI {
         	case C:
         		nextCommand = new Command(GameCommandType.MOVE, MoveCommand.DOWN_RIGHT);
         		break;
+        	case P:
+        		InputWindow spawnMS = new InputWindow("Spawn Minisquirrel", "Specify how much energy you want to give");
+    			spawnMS.getEnterButton().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+    				String input = spawnMS.getTextField().getText();
+    				try {
+    					nextCommand = new Command(GameCommandType.SPAWN_MINI, input);
+    					System.out.println(nextCommand.toString());
+    				} catch(NumberFormatException e) {
+    					new OutputWindow("Didn't specify a number", "Error");
+    				}
+    				spawnMS.close();
+    			});
+    			break;
         	default:
         		break;
         	}
@@ -85,8 +98,9 @@ public class FxUI extends Scene implements UI {
     private static MenuBar createMenuBar() {
 		MenuBar mb = new MenuBar();
 		Menu file = new Menu("Game");
-		MenuItem help = new MenuItem("Help");
-		help.setOnAction(value -> {
+		Menu help = new Menu("Help");
+		MenuItem helpContents = new MenuItem("Help contents");
+		helpContents.setOnAction(value -> {
 			new OutputWindow(help(), "Help");
 		});
 		MenuItem exit = new MenuItem("Exit");
@@ -108,12 +122,13 @@ public class FxUI extends Scene implements UI {
 				spawnMS.close();
 			});
 		});
-		file.getItems().addAll(help, spawnMiniSquirrel, exit);
-		mb.getMenus().add(file);
+		help.getItems().add(helpContents);
+		file.getItems().addAll(spawnMiniSquirrel, exit);
+		mb.getMenus().addAll(file, help);
 		return mb;
 	}
     
-    private static String help() {
+    private static String help() {		//TODO think about location of this piece of code
 		StringBuilder sb = new StringBuilder("List of all Commands: \n");
 		for(GameCommandType gct : GameCommandType.values()) {
 			sb.append("\t" + gct.toString() + "\n");
@@ -128,7 +143,7 @@ public class FxUI extends Scene implements UI {
             public void run() {
                 repaintBoardCanvas(view);            
             }      
-        });  
+        });   
     }
     
     private void repaintBoardCanvas(BoardView view) {
@@ -141,35 +156,35 @@ public class FxUI extends Scene implements UI {
 				switch(view.getEntityType(b, a)) {
 				case WALL:
 					gc.setFill(Color.DARKSLATEGRAY);
-					gc.fillRect(i, j, CELL_SIZE, CELL_SIZE);
+					gc.fillRect(j, i, CELL_SIZE, CELL_SIZE);
 					break;
 				case BADBEAST:
 					gc.setFill(Color.RED);
-					gc.fillOval(i, j, CELL_SIZE, CELL_SIZE);
+					gc.fillOval(j, i, CELL_SIZE, CELL_SIZE);
 					break;
 				case BADPLANT:
 					gc.setFill(Color.RED);
-					gc.fillRect(i, j, CELL_SIZE, CELL_SIZE);
+					gc.fillRect(j, i, CELL_SIZE, CELL_SIZE);
 					break;
 				case GOODBEAST:
 					gc.setFill(Color.LAWNGREEN);
-					gc.fillOval(i, j, CELL_SIZE, CELL_SIZE);
+					gc.fillOval(j, i, CELL_SIZE, CELL_SIZE);
 					break;
 				case GOODPLANT:
 					gc.setFill(Color.LAWNGREEN);
-					gc.fillRect(i, j, CELL_SIZE, CELL_SIZE);
+					gc.fillRect(j, i, CELL_SIZE, CELL_SIZE);
 					break;
 				case HANDOPERATEDMASTERSQUIRREL:
 					gc.setFill(Color.BLUE);
-					gc.fillOval(i, j, CELL_SIZE, CELL_SIZE);
+					gc.fillOval(j, i, CELL_SIZE, CELL_SIZE);
 					break;
 				case MASTERSQUIRREL:
 					gc.setFill(Color.BLUE);
-					gc.fillOval(i, j, CELL_SIZE, CELL_SIZE);
+					gc.fillOval(j, i, CELL_SIZE, CELL_SIZE);
 					break;
 				case MINISQUIRREL:
 					gc.setFill(Color.AQUA);
-					gc.fillOval(i, j, CELL_SIZE, CELL_SIZE);
+					gc.fillOval(j, i, CELL_SIZE, CELL_SIZE);
 					break;
 				case NONE:
 					break;
@@ -191,6 +206,11 @@ public class FxUI extends Scene implements UI {
 
 	@Override
 	public Command getCommand() {
+		if(nextCommand.getCommandType() != GameCommandType.MOVE) {
+			Command returned = nextCommand;
+			nextCommand = new Command(GameCommandType.NOTHING);
+			return returned;
+		}
 		return nextCommand;
 	}
 }

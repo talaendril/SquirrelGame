@@ -23,7 +23,7 @@ public class CommandScanner {
 		String input = scanner.nextLine();
 		String[] tokens = input.split("\\s+");
 		if(tokens == null) {
-			return null;
+			return new Command(GameCommandType.NOTHING);
 		}
 		for(int i = 0; i < commandTypeInfos.length; i++) {
 			if(tokens[0].toLowerCase().equals(commandTypeInfos[i].getName())) {

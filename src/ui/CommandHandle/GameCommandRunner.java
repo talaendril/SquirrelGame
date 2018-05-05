@@ -18,9 +18,13 @@ public class GameCommandRunner {
 	}
 	
 	public void move(Object obj) {	//needs a MoveCommand to work properly
-		MoveCommand command = MoveCommand.parseMoveCommand((String) obj);
+		//MoveCommand command = MoveCommand.parseMoveCommand((String) obj);
+		MoveCommand command = (MoveCommand) obj;
 		if(command == null) {
-			throw new ScanException("Unknown Command");	//TODO think about how to change this
+			throw new ScanException("Unknown Direction");	//TODO think about how to change this
+		}
+		if(this.state == null) {
+			System.out.println("makes no sense");
 		}
 		this.state.update(command);
 	}
@@ -56,6 +60,6 @@ public class GameCommandRunner {
 	}
 	
 	public void doNothing() {
-		
+		System.out.println("Dont do anything");
 	}
 }
