@@ -41,7 +41,7 @@ public class FxUI extends Scene implements UI {
         top.getChildren().add(createMenuBar());
         top.getChildren().add(boardCanvas);
         top.getChildren().add(masterEnergy);
-        masterEnergy.setText("Hallo Welt");		//TODO show masterEnergy
+        masterEnergy.setText("Hello World");
         final FxUI fxUI = new FxUI(top, boardCanvas, masterEnergy); 
         fxUI.setOnKeyPressed(value -> {
         	switch(value.getCode()) {
@@ -52,7 +52,7 @@ public class FxUI extends Scene implements UI {
         		nextCommand = new Command(GameCommandType.MOVE, MoveCommand.LEFT);
         		break;
         	case S:
-        		if(nextCommand.getCommandType() == GameCommandType.NOTHING) {	//might cause a conflict if no other command is called and something like spawn Mini continues to spawn
+        		if(nextCommand.getCommandType() == GameCommandType.NOTHING) {
         			nextCommand = new Command(GameCommandType.MOVE, MoveCommand.NONE);
         		} 
         		break;
@@ -76,16 +76,7 @@ public class FxUI extends Scene implements UI {
         		break;
         	case P:
         		InputWindow spawnMS = new InputWindow("Spawn Minisquirrel", "Specify how much energy you want to give");
-    			spawnMS.getEnterButton().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-    				String input = spawnMS.getTextField().getText();
-    				try {
-    					nextCommand = new Command(GameCommandType.SPAWN_MINI, input);
-    					System.out.println(nextCommand.toString());
-    				} catch(NumberFormatException e) {
-    					new OutputWindow("Didn't specify a number", "Error");
-    				}
-    				spawnMS.close();
-    			});
+    			spawnMiniSquirrel(spawnMS);
     			break;
         	default:
         		break;
@@ -110,25 +101,28 @@ public class FxUI extends Scene implements UI {
 		MenuItem spawnMiniSquirrel = new MenuItem("Spawn Mini");
 		spawnMiniSquirrel.setOnAction(value -> {
 			InputWindow spawnMS = new InputWindow("Spawn Minisquirrel", "Specify how much energy you want to give");
-			spawnMS.getEnterButton().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-				String input = spawnMS.getTextField().getText();
-				try {
-					int energy = Integer.parseInt(input);
-					nextCommand = new Command(GameCommandType.SPAWN_MINI, energy);
-					System.out.println(nextCommand.toString());
-				} catch(NumberFormatException e) {
-					new OutputWindow("Didn't specify a number", "Error");
-				}
-				spawnMS.close();
-			});
+			spawnMiniSquirrel(spawnMS);
 		});
 		help.getItems().add(helpContents);
 		file.getItems().addAll(spawnMiniSquirrel, exit);
 		mb.getMenus().addAll(file, help);
 		return mb;
 	}
+
+	private static void spawnMiniSquirrel(InputWindow spawnMS) {
+		spawnMS.getEnterButton().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+			String input = spawnMS.getTextField().getText();
+			try {
+				nextCommand = new Command(GameCommandType.SPAWN_MINI, input);
+				System.out.println(nextCommand.toString());
+			} catch(NumberFormatException e) {
+				new OutputWindow("Didn't specify a number", "Error");
+			}
+			spawnMS.close();
+		});
+	}
     
-    private static String help() {		//TODO think about location of this piece of code
+    private static String help() {		//TODO change to actual help now
 		StringBuilder sb = new StringBuilder("List of all Commands: \n");
 		for(GameCommandType gct : GameCommandType.values()) {
 			sb.append("\t" + gct.toString() + "\n");

@@ -7,8 +7,11 @@ import exceptions.ScanException;
 public class GameCommandRunner {
 	/*
 	 * this class is used to work with the processed command
-	 * meaning it is used as the reflection and any method invoked in the GameCommandProcessor will be found and called here
+	 * meaning it is used as the reflection and any method invoked in Game will be called here
 	 * this class then continues to call either Board, prints help, exit System, etc
+	 * 
+	 * TODO needs cleanup since KeyEvents have been implemented in exercise 5 and certain commands arent called anymore
+	 * ALSO FIX GAMECOMMANDTYPE
 	 */
 
 	private State state;

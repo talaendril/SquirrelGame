@@ -16,8 +16,8 @@ public class Board {
 	private final int boardSizeY;
 	private EntitySet es;
 	private BoardConfig config;
-
-	public Board(BoardConfig config) {
+	
+	public Board(BoardConfig config, MasterSquirrel...masterSquirrels) {
 		this.config = config;
 		this.es = new EntitySet(config.getTotalEntities());
 		this.boardSizeX = config.getSize().getX();
@@ -56,6 +56,12 @@ public class Board {
 		for(int masterSquirrelsCount = 0; masterSquirrelsCount < this.config.getNumberOfMasterSquirrels() - this.config.getNumberOfHandOperatedMasterSquirrels(); masterSquirrelsCount++) {
 			es.addEntity(new MasterSquirrel(ID.getNewID(), getEmptyLocation()));
 		}
+		/*
+		for(int masterSquirrelCount = 0; masterSquirrelCount < masters.length; masterSquirrelCount++) {
+			masters[masterSquirrelCount].setLocation(getEmptyLocation());
+			es.addEntity(masters[masterSquirrelCount]);
+		}
+		*/
 		for(int badBeastsCount = 0; badBeastsCount < this.config.getNumberOfBadBeasts(); badBeastsCount++) {
 			es.addEntity(new BadBeast(ID.getNewID(), getEmptyLocation()));
 		}

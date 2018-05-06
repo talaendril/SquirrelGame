@@ -1,6 +1,7 @@
 import core.Board;
 import core.BoardConfig;
 import core.Game;
+import core.SinglePlayer;
 import core.State;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -16,7 +17,7 @@ public class Launcher extends Application {
 	public void start(Stage arg0) throws Exception {
 		Stage primaryStage = new Stage();
 		FxUI fxUI = FxUI.createInstance(config.getSize());
-        final Game game = new Game(state, board, fxUI);
+        final Game game = new SinglePlayer(state, board, fxUI);
          
         primaryStage.setScene(fxUI);
         primaryStage.setTitle("Diligent Squirrel");

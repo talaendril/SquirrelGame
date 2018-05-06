@@ -8,4 +8,6 @@ public interface UI {
 	void render(BoardView view);
 	
 	Command getCommand();
+	
+	void message(final String msg);
 }

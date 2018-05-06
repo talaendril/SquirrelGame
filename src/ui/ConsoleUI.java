@@ -57,4 +57,9 @@ public class ConsoleUI implements UI{
 	public Command getCommand() {
 		return this.scanner.next();
 	}
+
+	@Override
+	public void message(String msg) {
+		// TODO Auto-generated method stub
+	}
 }
