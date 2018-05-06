@@ -7,9 +7,9 @@ import java.util.TimerTask;
 
 import exceptions.ScanException;
 import ui.UI;
-import ui.CommandHandle.Command;
-import ui.CommandHandle.GameCommandRunner;
-import ui.CommandHandle.GameCommandType;
+import ui.commandhandle.Command;
+import ui.commandhandle.GameCommandRunner;
+import ui.commandhandle.GameCommandType;
 
 public class SinglePlayer extends Game {
 	

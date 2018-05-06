@@ -1,7 +1,7 @@
 package ui;
 
 import core.BoardView;
-import ui.CommandHandle.Command;
+import ui.commandhandle.Command;
 
 public interface UI {
 

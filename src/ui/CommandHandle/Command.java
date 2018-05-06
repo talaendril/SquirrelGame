@@ -1,4 +1,4 @@
-package ui.CommandHandle;
+package ui.commandhandle;
 
 public final class Command {	//immutable?
 	

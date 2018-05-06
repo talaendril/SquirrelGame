@@ -8,7 +8,7 @@ import exceptions.EntityNotFoundException;
 import exceptions.NotEnoughEnergyException;
 import idmanager.ID;
 import location.XY;
-import ui.CommandHandle.MoveCommand;
+import ui.commandhandle.MoveCommand;
 
 public class Board {
 	

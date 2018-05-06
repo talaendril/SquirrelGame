@@ -15,9 +15,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import location.XY;
 import ui.UI;
-import ui.CommandHandle.Command;
-import ui.CommandHandle.GameCommandType;
-import ui.CommandHandle.MoveCommand;
+import ui.commandhandle.Command;
+import ui.commandhandle.GameCommandType;
+import ui.commandhandle.MoveCommand;
 import ui.windows.InputWindow;
 import ui.windows.OutputWindow;
 
@@ -43,47 +43,50 @@ public class FxUI extends Scene implements UI {
         top.getChildren().add(masterEnergy);
         masterEnergy.setText("Hello World");
         final FxUI fxUI = new FxUI(top, boardCanvas, masterEnergy); 
-        fxUI.setOnKeyPressed(value -> {
-        	switch(value.getCode()) {
-        	case W:
-        		nextCommand = new Command(GameCommandType.MOVE, MoveCommand.UP);
-        		break;
-        	case A:
-        		nextCommand = new Command(GameCommandType.MOVE, MoveCommand.LEFT);
-        		break;
-        	case S:
-        		if(nextCommand.getCommandType() == GameCommandType.NOTHING) {
-        			nextCommand = new Command(GameCommandType.MOVE, MoveCommand.NONE);
-        		} 
-        		break;
-        	case D:
-        		nextCommand = new Command(GameCommandType.MOVE, MoveCommand.RIGHT);
-        		break;
-        	case X:
-        		nextCommand = new Command(GameCommandType.MOVE, MoveCommand.DOWN);
-        		break;
-        	case Q:
-        		nextCommand = new Command(GameCommandType.MOVE, MoveCommand.UP_LEFT);
-        		break;
-        	case E:
-        		nextCommand = new Command(GameCommandType.MOVE, MoveCommand.UP_RIGHT);
-        		break;
-        	case Y:
-        		nextCommand = new Command(GameCommandType.MOVE, MoveCommand.DOWN_LEFT);
-        		break;
-        	case C:
-        		nextCommand = new Command(GameCommandType.MOVE, MoveCommand.DOWN_RIGHT);
-        		break;
-        	case P:
-        		InputWindow spawnMS = new InputWindow("Spawn Minisquirrel", "Specify how much energy you want to give");
-    			spawnMiniSquirrel(spawnMS);
-    			break;
-        	default:
-        		break;
-        	}
-        	System.out.println(nextCommand.toString());
-        });
-        return fxUI;
+        synchronized (nextCommand) {
+			fxUI.setOnKeyPressed(value -> {
+				switch (value.getCode()) {
+				case W:
+					nextCommand = new Command(GameCommandType.MOVE, MoveCommand.UP);
+					break;
+				case A:
+					nextCommand = new Command(GameCommandType.MOVE, MoveCommand.LEFT);
+					break;
+				case S:
+					if (nextCommand.getCommandType() == GameCommandType.NOTHING) {
+						nextCommand = new Command(GameCommandType.MOVE, MoveCommand.NONE);
+					}
+					break;
+				case D:
+					nextCommand = new Command(GameCommandType.MOVE, MoveCommand.RIGHT);
+					break;
+				case X:
+					nextCommand = new Command(GameCommandType.MOVE, MoveCommand.DOWN);
+					break;
+				case Q:
+					nextCommand = new Command(GameCommandType.MOVE, MoveCommand.UP_LEFT);
+					break;
+				case E:
+					nextCommand = new Command(GameCommandType.MOVE, MoveCommand.UP_RIGHT);
+					break;
+				case Y:
+					nextCommand = new Command(GameCommandType.MOVE, MoveCommand.DOWN_LEFT);
+					break;
+				case C:
+					nextCommand = new Command(GameCommandType.MOVE, MoveCommand.DOWN_RIGHT);
+					break;
+				case P:
+					InputWindow spawnMS = new InputWindow("Spawn Minisquirrel",
+							"Specify how much energy you want to give");
+					spawnMiniSquirrel(spawnMS);
+					break;
+				default:
+					break;
+				}
+				System.out.println(nextCommand.toString());
+			});
+		}
+		return fxUI;
     }
 
     private static MenuBar createMenuBar() {
@@ -113,7 +116,9 @@ public class FxUI extends Scene implements UI {
 		spawnMS.getEnterButton().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
 			String input = spawnMS.getTextField().getText();
 			try {
-				nextCommand = new Command(GameCommandType.SPAWN_MINI, input);
+				synchronized(nextCommand) {
+					nextCommand = new Command(GameCommandType.SPAWN_MINI, input);
+				}
 				System.out.println(nextCommand.toString());
 			} catch(NumberFormatException e) {
 				new OutputWindow("Didn't specify a number", "Error");

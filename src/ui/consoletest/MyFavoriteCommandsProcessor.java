@@ -5,8 +5,8 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import ui.CommandHandle.Command;
-import ui.CommandHandle.CommandScanner;
+import ui.commandhandle.Command;
+import ui.commandhandle.CommandScanner;
 
 public class MyFavoriteCommandsProcessor {
 	

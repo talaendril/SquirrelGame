@@ -1,4 +1,4 @@
-package ui.CommandHandle;
+package ui.commandhandle;
 
 import java.io.BufferedReader;
 //import java.io.PrintStream;

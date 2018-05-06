@@ -1,4 +1,4 @@
-package ui.CommandHandle;
+package ui.commandhandle;
 
 import core.State;
 import exceptions.NotEnoughEnergyException;
