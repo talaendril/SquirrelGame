@@ -5,7 +5,11 @@ import java.lang.reflect.Method;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import entities.HandOperatedMasterSquirrel;
+import entities.MasterSquirrel;
 import exceptions.ScanException;
+import idmanager.ID;
+import location.XY;
 import ui.UI;
 import ui.commandhandle.Command;
 import ui.commandhandle.GameCommandRunner;
@@ -21,6 +25,10 @@ public class SinglePlayer extends Game {
 	
 	public SinglePlayer(State state, Board board, UI ui) {
 		super(state, board, ui);
+		MasterSquirrel master = new HandOperatedMasterSquirrel(ID.getNewID(), new XY(-1, -1));
+		MasterSquirrel[] masters = {master};
+		this.addMasters(masters);
+		this.getBoard().generateMasterSquirrels(masters);
 	}
 	
 	public void run() {
@@ -55,7 +63,12 @@ public class SinglePlayer extends Game {
 	}
 	
 	protected void setMessageToMasterEnergy() {
-		this.getUI().message("Master Energy: " + this.getBoard().getMaster().getEnergy());
+		StringBuilder sb = new StringBuilder("");
+		MasterSquirrel[] masters = this.getMasters();
+		for(int i = 0; i < masters.length; i++) {
+			sb.append("Master Energy" + i + ": " + masters[i].getEnergy() + "\n");
+		}
+		this.getUI().message(sb.toString());
 	}
 	
 	protected void processInput() {

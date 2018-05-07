@@ -43,4 +43,16 @@ public class MasterSquirrel extends Squirrel {
 		}
 		context.tryMove(this, XY.getVector(command));
 	}
+	
+	@Override 
+	public void updateEnergy(int delta) {
+		if(this.getEnergy() == 1 && delta < 0) {
+			return;
+		}
+		if(Math.abs(delta) >= this.getEnergy() && delta < 0) {
+			super.updateEnergy((-this.getEnergy()) + 1);
+		} else {
+			super.updateEnergy(delta);
+		}
+	}
 }

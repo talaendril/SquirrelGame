@@ -32,22 +32,6 @@ public class GameCommandRunner {
 		this.state.update(command);
 	}
 	
-	public void exitSystem() {
-		System.exit(0);
-	}
-	
-	public void help() {
-		StringBuilder sb = new StringBuilder("List of all Commands: \n");
-		for(GameCommandType gct : GameCommandType.values()) {
-			sb.append("\t" + gct.toString() + "\n");
-		}
-		System.out.println(sb.toString());
-	}
-	
-	public void all() {
-		System.out.println("You have used a command which has no proper effect yet");
-	}
-	
 	public void spawnMiniSquirrel(Object energy) {	//needs an int to work properly
 		try {
 			this.state.getBoard().spawnMiniSquirrel(Integer.parseInt((String) energy));
@@ -56,10 +40,6 @@ public class GameCommandRunner {
 		} catch (NumberFormatException e) {
 			throw new ScanException("No Energy specified!");
 		}
-	}
-	
-	public void getMasterSquirrelEnergy() {
-		System.out.println(this.state.getBoard().getMaster().getEnergy());
 	}
 	
 	public void doNothing() {

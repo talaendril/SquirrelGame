@@ -3,57 +3,82 @@ package core.bots;
 import botapi.BotController;
 import botapi.BotControllerFactory;
 import botapi.ControllerContext;
+import core.EntityContext;
 import core.EntityType;
 import entities.MasterSquirrel;
+import exceptions.NotEnoughEnergyException;
 import location.XY;
+import ui.commandhandle.MoveCommand;
 
-public class MasterSquirrelBot extends MasterSquirrel implements ControllerContext {
+public class MasterSquirrelBot extends MasterSquirrel  {
 	
-	private BotControllerFactory botControllerFactory;
-	private BotController masterBotController;
+	private final BotControllerFactory botControllerFactory = new BotControllerFactoryImpl();	//TODO change location maybe
+	private final BotController masterBotController = botControllerFactory.createMasterBotController();
+	private ControllerContext contContext;
 
 	public MasterSquirrelBot(int id, XY location) {
 		super(id, location);
-		// TODO Auto-generated constructor stub
 	}
 	
-	public void nextStep(ControllerContext context) {
-		//TODO:
+	private ControllerContext getControllerContext(EntityContext context) {
+		if(this.contContext == null) {
+			this.contContext = new ControllerContextImpl(context);
+		}
+		return this.contContext;
 	}
-
+	
 	@Override
-	public XY getViewLowerLeft() {
-		// TODO Auto-generated method stub
-		return null;
+	public void nextStep(EntityContext context, MoveCommand command) {
+		if(this.getStunnedAndDecrement()) {
+			return;
+		}
+		this.masterBotController.nextStep(getControllerContext(context));
 	}
-
-	@Override
-	public XY getViewUpperRight() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public EntityType getEnityAt(XY xy) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void move(XY direction) {
-		// TODO Auto-generated method stub
+	
+	private class ControllerContextImpl implements ControllerContext {
 		
-	}
-
-	@Override
-	public void spawnMiniBot(XY direction, int energy) {
-		// TODO Auto-generated method stub
+		private final EntityContext entContext;
 		
-	}
+		ControllerContextImpl(EntityContext context) {
+			this.entContext = context;
+		}
 
-	@Override
-	public int getEnergy() {
-		// TODO Auto-generated method stub
-		return 0;
+		@Override
+		public XY getViewLowerLeft() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public XY getViewUpperRight() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public EntityType getEnityAt(XY xy) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void move(XY direction) {
+			entContext.tryMove(MasterSquirrelBot.this, direction);
+		}
+
+		@Override
+		public void spawnMiniBot(XY direction, int energy) {
+			try {
+				spawnMiniSquirrel(direction, energy);
+			} catch (NotEnoughEnergyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		@Override
+		public int getEnergy() {
+			return MasterSquirrelBot.this.getEnergy();
+		}	
 	}
 }

@@ -1,5 +1,6 @@
 package core;
 
+import entities.MasterSquirrel;
 import ui.UI;
 
 public abstract class Game {
@@ -7,6 +8,8 @@ public abstract class Game {
 	private State state;
 	private Board board;
 	private UI ui;
+	
+	private MasterSquirrel[] masters;
 	
 	public Game(State state, Board board, UI ui) {
 		this.state = state;
@@ -24,6 +27,14 @@ public abstract class Game {
 	
 	public UI getUI() {
 		return this.ui;
+	}
+	
+	public void addMasters(MasterSquirrel[] masters) {
+		this.masters = masters;
+	}
+	
+	public MasterSquirrel[] getMasters() {
+		return this.masters;
 	}
 	
 	public abstract void run();

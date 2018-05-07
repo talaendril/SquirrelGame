@@ -1,5 +1,6 @@
 package core;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import entities.*;
@@ -17,7 +18,9 @@ public class Board {
 	private EntitySet es;
 	private BoardConfig config;
 	
-	public Board(BoardConfig config, MasterSquirrel...masterSquirrels) {
+	private ArrayList<MasterSquirrel> masters = new ArrayList<>();
+	
+	public Board(BoardConfig config) {
 		this.config = config;
 		this.es = new EntitySet(config.getTotalEntities());
 		this.boardSizeX = config.getSize().getX();
@@ -38,10 +41,6 @@ public class Board {
 		return this.es;
 	}
 	
-	public MasterSquirrel getMaster() {
-		return this.es.getMaster();
-	}
-	
 	public void generateEntities() {
 		for(int i = 0; i < this.boardSizeY; i++) {
 			for(int j = 0; j < this.boardSizeX; j++) {
@@ -50,18 +49,6 @@ public class Board {
 				}
 			}
 		}
-		for(int homsCount = 0; homsCount < this.config.getNumberOfHandOperatedMasterSquirrels(); homsCount++) {
-			es.addEntity(new HandOperatedMasterSquirrel(ID.getNewID(), getEmptyLocation()));
-		}
-		for(int masterSquirrelsCount = 0; masterSquirrelsCount < this.config.getNumberOfMasterSquirrels() - this.config.getNumberOfHandOperatedMasterSquirrels(); masterSquirrelsCount++) {
-			es.addEntity(new MasterSquirrel(ID.getNewID(), getEmptyLocation()));
-		}
-		/*
-		for(int masterSquirrelCount = 0; masterSquirrelCount < masters.length; masterSquirrelCount++) {
-			masters[masterSquirrelCount].setLocation(getEmptyLocation());
-			es.addEntity(masters[masterSquirrelCount]);
-		}
-		*/
 		for(int badBeastsCount = 0; badBeastsCount < this.config.getNumberOfBadBeasts(); badBeastsCount++) {
 			es.addEntity(new BadBeast(ID.getNewID(), getEmptyLocation()));
 		}
@@ -79,8 +66,16 @@ public class Board {
 		}
 	}
 	
+	public void generateMasterSquirrels(MasterSquirrel[] masters) {
+		for(MasterSquirrel ms : masters) {
+			ms.setLocation(getEmptyLocation());
+			es.addEntity(ms);
+			this.masters.add(ms);
+		}
+	}
+	
 	public void spawnMiniSquirrel(int energy) throws NotEnoughEnergyException {
-		MasterSquirrel ms = this.getMaster();
+		MasterSquirrel ms = this.masters.get(0);
 		if(ms == null) {
 			throw new EntityNotFoundException("No MasterSquirrel in the EntitySet");	//TODO think about how to handle this situation
 		} else if (ms.getEnergy() < energy ){
