@@ -39,7 +39,7 @@ public class SinglePlayer extends Game {
 			public void run() {
 				processInput();
 			}
-		}, 0, 1000);
+		}, 0, 500);
 		
 		Timer updateTimer = new Timer();
 		updateTimer.scheduleAtFixedRate(new TimerTask() {
@@ -47,7 +47,7 @@ public class SinglePlayer extends Game {
 			public void run() {
 				update();
 			}
-		}, 1000, 1000);
+		}, 950, 1000);
 	}
 	
 	protected void render() {

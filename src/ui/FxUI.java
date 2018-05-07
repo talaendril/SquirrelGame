@@ -76,14 +76,11 @@ public class FxUI extends Scene implements UI {
 					nextCommand = new Command(GameCommandType.MOVE, MoveCommand.DOWN_RIGHT);
 					break;
 				case P:
-					InputWindow spawnMS = new InputWindow("Spawn Minisquirrel",
-							"Specify how much energy you want to give");
-					spawnMiniSquirrel(spawnMS);
+					nextCommand = new Command(GameCommandType.SPAWN_MINI, "100");
 					break;
 				default:
 					break;
 				}
-				System.out.println(nextCommand.toString());
 			});
 		}
 		return fxUI;
@@ -128,10 +125,16 @@ public class FxUI extends Scene implements UI {
 	}
     
     private static String help() {		//TODO change to actual help now
-		StringBuilder sb = new StringBuilder("List of all Commands: \n");
-		for(GameCommandType gct : GameCommandType.values()) {
-			sb.append("\t" + gct.toString() + "\n");
-		}
+		StringBuilder sb = new StringBuilder("Help: \n");
+		sb.append("Q move up left\n");
+		sb.append("W move up\n");
+		sb.append("E move up right\n");
+		sb.append("A move left\n");
+		sb.append("D move right\n");
+		sb.append("Y move down left\n");
+		sb.append("X move down\n");
+		sb.append("C move down right\n");
+		sb.append("P spawn MiniSquirrel with 100 energy\n");
 		return sb.toString();
 	}
 
@@ -195,11 +198,8 @@ public class FxUI extends Scene implements UI {
     }
     
     public void message(final String msg) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                msgLabel.setText(msg);            
-            }      
+        Platform.runLater(() -> {
+        	msgLabel.setText(msg); 
         });         
     }
 

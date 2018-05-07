@@ -63,6 +63,6 @@ public class GameCommandRunner {
 	}
 	
 	public void doNothing() {
-		System.out.println("Dont do anything");
+		this.state.update(MoveCommand.NONE);
 	}
 }

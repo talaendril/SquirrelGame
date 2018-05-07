@@ -4,7 +4,6 @@ import ui.commandhandle.MoveCommand;
 
 public class State {
 	
-	//private int highscore = 0;
 	private Board board;
 
 	public State(Board board) {

@@ -32,5 +32,4 @@ public class KIGame extends Game {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

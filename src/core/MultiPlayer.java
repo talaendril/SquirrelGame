@@ -32,5 +32,4 @@ public class MultiPlayer extends Game {
 		// TODO Auto-generated method stub
 		
 	}
-
 }
