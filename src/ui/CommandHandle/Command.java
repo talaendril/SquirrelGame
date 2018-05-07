@@ -1,4 +1,4 @@
-package ui.CommandHandle;
+package ui.commandhandle;
 
 public final class Command {	//immutable?
 	
@@ -21,7 +21,7 @@ public final class Command {	//immutable?
 	@Override
 	public String toString() {
 		if(params.length == 0) {
-			return this.commandType.getName() + " " + params[0].toString();
+			return this.commandType.getName();
 		} else {
 			StringBuilder s = new StringBuilder("");
 			for(int i = 0; i < params.length; i++) {

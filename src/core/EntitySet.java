@@ -70,7 +70,7 @@ public class EntitySet {
 		return null;
 	}
 	
-	public MasterSquirrel getMaster() {
+	public MasterSquirrel getMaster() {		//returns the first MasterSquirrel found, works in singleplayer
 		for(Entity e : entities) {
 			if(e != null && e instanceof MasterSquirrel) {
 				return (MasterSquirrel) e;

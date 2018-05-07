@@ -2,7 +2,7 @@ package entities;
 
 import core.EntityContext;
 import location.XY;
-import ui.CommandHandle.MoveCommand;
+import ui.commandhandle.MoveCommand;
 
 public class GoodPlant extends Entity {
 

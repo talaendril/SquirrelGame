@@ -2,7 +2,7 @@ package location;
 
 import java.util.Random;
 
-import ui.CommandHandle.MoveCommand;
+import ui.commandhandle.MoveCommand;
 
 public final class XY {
 	

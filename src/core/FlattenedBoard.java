@@ -8,7 +8,7 @@ import entities.MiniSquirrel;
 import entities.Squirrel;
 import entities.Character;
 import location.XY;
-import ui.CommandHandle.MoveCommand;
+import ui.commandhandle.MoveCommand;
 
 public class FlattenedBoard implements EntityContext, BoardView {
 	

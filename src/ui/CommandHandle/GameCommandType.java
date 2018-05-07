@@ -1,4 +1,4 @@
-package ui.CommandHandle;
+package ui.commandhandle;
 
 public enum GameCommandType implements CommandTypeInfo {
 	HELP("help", "\t\t  * list all commands", "help"),
