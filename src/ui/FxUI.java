@@ -41,7 +41,7 @@ public class FxUI extends Scene implements UI {
 		top.getChildren().add(createMenuBar());
 		top.getChildren().add(boardCanvas);
 		top.getChildren().add(masterEnergy);
-		masterEnergy.setText("Hello World");
+		masterEnergy.setText("");
 		final FxUI fxUI = new FxUI(top, boardCanvas, masterEnergy);
 		fxUI.setOnKeyPressed(value -> {
 			switch (value.getCode()) {
