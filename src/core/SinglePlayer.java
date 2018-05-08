@@ -1,25 +1,24 @@
 package core;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import entities.HandOperatedMasterSquirrel;
 import entities.MasterSquirrel;
+import exceptions.NotEnoughEnergyException;
 import exceptions.ScanException;
 import idmanager.ID;
 import location.XY;
 import ui.UI;
 import ui.commandhandle.Command;
-import ui.commandhandle.GameCommandRunner;
 import ui.commandhandle.GameCommandType;
+import ui.commandhandle.MoveCommand;
 
 public class SinglePlayer extends Game {
 	
 	private final int FPS = 10;
 	
-	private static int processingCount = 0;		//TODO remove once down debugging
+	//private static int processingCount = 0;		//TODO remove once down debugging
 
 	private Command nextCommand = new Command(GameCommandType.NOTHING);
 	
@@ -77,47 +76,33 @@ public class SinglePlayer extends Game {
 	}
 	
 	protected void update() {
-		Object[] params = nextCommand.getParams();
-		for(GameCommandType gct : GameCommandType.values()) {
-			if(nextCommand.getCommandType().getName().equals(gct.getName())) {
-				Method method = null;
-				try {
-					processingCount++;
-					GameCommandRunner gcr = new GameCommandRunner(this.getState());
-					if(params.length == 0) {		//using keyevents this probably doesnt happen, but needs more testing
-						System.out.println(processingCount + " COMMAND NAME " + gct.getName());
-						method = gcr.getClass().getMethod(gct.getMethodToCall());
-						System.out.println(processingCount + " TRYING TO INVOKE " + method.toString());
-						method.invoke(gcr);
-					} else if(params.length == 1) {
-						System.out.println(processingCount + " COMMAND NAME " + gct.getName() + " PARAMETER " + params[0].toString());
-						method = gcr.getClass().getMethod(gct.getMethodToCall(), Object.class);
-						System.out.println(processingCount + " TRYING TO INVOKE " + method.toString() + " " + params[0].toString());
-						method.invoke(gcr, params[0]);
-					} else {
-						throw new ScanException("Wrong Number of Parameters"); //TODO think about changing this
-					}
-				} catch (NoSuchMethodException e) {
-					if(params.length == 0) {
-						System.out.println(processingCount + " Either method name or parameter wasnt correct");
-					} else {
-						System.out.println(processingCount + " " + params[0].toString());
-					}
-					e.printStackTrace();
-				} catch (SecurityException e) {
-					// TODO Auto-generated catch block
-				e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					System.out.println(processingCount + " " + method.toString() + " parameter was null or incorrect");
-					e.printStackTrace();
-				}
+		Object params[] = nextCommand.getParams();
+		GameCommandType type = (GameCommandType) nextCommand.getCommandType();
+		switch(type) {
+		case MOVE:
+			if(params.length != 1) {
+				throw new ScanException("Wrong Number of Parameters");
 			}
+			this.getState().update(MoveCommand.parseMoveCommand(params[0].toString()));
+			break;
+		case NOTHING:
+			this.getState().update(MoveCommand.NONE);
+			break;
+		case SPAWN_MINI:
+			if(params.length != 1) {
+				throw new ScanException("Wrong Number of Parameters");
+			}
+			try {
+				MasterSquirrel[] masters = this.getMasters();
+				this.getBoard().spawnMiniSquirrel(masters[0], Integer.parseInt((String) params[0]));
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			} catch (NotEnoughEnergyException e) {
+				e.printStackTrace();
+			}
+			break;
+		default:
+			break;
 		}
 	}
 }

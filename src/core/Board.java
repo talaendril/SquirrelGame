@@ -74,8 +74,8 @@ public class Board {
 		}
 	}
 	
-	public void spawnMiniSquirrel(int energy) throws NotEnoughEnergyException {
-		MasterSquirrel ms = this.masters.get(0);
+	public void spawnMiniSquirrel(MasterSquirrel ms, int energy) throws NotEnoughEnergyException {
+		//MasterSquirrel ms = this.masters.get(0);
 		if(ms == null) {
 			throw new EntityNotFoundException("No MasterSquirrel in the EntitySet");	//TODO think about how to handle this situation
 		} else if (ms.getEnergy() < energy ){

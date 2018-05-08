@@ -1,6 +1,7 @@
 package ui.commandhandle;
 
 import core.State;
+import entities.MasterSquirrel;
 import exceptions.NotEnoughEnergyException;
 import exceptions.ScanException;
 
@@ -26,15 +27,12 @@ public class GameCommandRunner {
 		if(command == null) {
 			throw new ScanException("Unknown Direction");	//TODO think about how to change this
 		}
-		if(this.state == null) {
-			System.out.println("makes no sense");
-		}
 		this.state.update(command);
 	}
 	
-	public void spawnMiniSquirrel(Object energy) {	//needs an int to work properly
+	public void spawnMiniSquirrel(Object master, Object energy) {	//needs an int to work properly
 		try {
-			this.state.getBoard().spawnMiniSquirrel(Integer.parseInt((String) energy));
+			this.state.getBoard().spawnMiniSquirrel((MasterSquirrel) master, Integer.parseInt((String) energy));
 		} catch (NotEnoughEnergyException e) {
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
