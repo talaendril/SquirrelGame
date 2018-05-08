@@ -21,7 +21,7 @@ public class Launcher extends Application {
 		Stage primaryStage = new Stage();
 		FxUI fxUI = FxUI.createInstance(config.getSize());
 		
-		String name = "singleplayer";
+		String name = "kigame";
         final Game game = createGame(name, fxUI);
          
         primaryStage.setScene(fxUI);

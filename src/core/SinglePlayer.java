@@ -5,6 +5,7 @@ import java.util.TimerTask;
 
 import entities.HandOperatedMasterSquirrel;
 import entities.MasterSquirrel;
+import exceptions.BelowThresholdException;
 import exceptions.NotEnoughEnergyException;
 import exceptions.ScanException;
 import idmanager.ID;
@@ -99,7 +100,7 @@ public class SinglePlayer extends Game {
 				e.printStackTrace();
 			} catch (NotEnoughEnergyException e) {
 				e.printStackTrace();
-			}
+			} catch (BelowThresholdException e) {}
 			break;
 		default:
 			break;

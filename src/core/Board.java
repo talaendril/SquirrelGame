@@ -5,6 +5,7 @@ import java.util.Random;
 
 import entities.*;
 import entities.Character;
+import exceptions.BelowThresholdException;
 import exceptions.EntityNotFoundException;
 import exceptions.NotEnoughEnergyException;
 import idmanager.ID;
@@ -74,7 +75,7 @@ public class Board {
 		}
 	}
 	
-	public void spawnMiniSquirrel(MasterSquirrel ms, int energy) throws NotEnoughEnergyException {
+	public void spawnMiniSquirrel(MasterSquirrel ms, int energy) throws NotEnoughEnergyException, BelowThresholdException {
 		//MasterSquirrel ms = this.masters.get(0);
 		if(ms == null) {
 			throw new EntityNotFoundException("No MasterSquirrel in the EntitySet");	//TODO think about how to handle this situation

@@ -7,6 +7,7 @@ import core.EntityContext;
 import core.EntityType;
 import entities.MasterSquirrel;
 import entities.MiniSquirrel;
+import exceptions.BelowThresholdException;
 import exceptions.NotEnoughEnergyException;
 import location.XY;
 import ui.commandhandle.MoveCommand;
@@ -34,7 +35,6 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 			return;
 		}
 		this.masterBotController.nextStep(getControllerContext(context));
-		//this.contContext.spawnMiniBot(direction, 100);
 	}
 	
 	private class ControllerContextImpl implements ControllerContext {
@@ -72,10 +72,12 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 		public void spawnMiniBot(XY direction, int energy) {
 			try {
 				MiniSquirrel ms = spawnMiniSquirrel(new XY(MasterSquirrelBot.this.getLocation(), direction), energy);
+				MasterSquirrelBot.this.updateEnergy(-energy);
+				this.entContext.addMiniSquirrel(ms);
 			} catch (NotEnoughEnergyException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			} catch (BelowThresholdException e) {}
 		}
 
 		@Override

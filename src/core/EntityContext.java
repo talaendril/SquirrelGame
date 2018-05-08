@@ -22,6 +22,8 @@ public interface EntityContext {
 	
 	Squirrel nearestPlayerEntity(XY pos);
 	
+	void addMiniSquirrel(MiniSquirrel ms);
+	
 	void kill(Entity entity);
 	
 	void killAndReplace(Entity entity);

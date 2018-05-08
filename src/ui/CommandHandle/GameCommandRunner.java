@@ -2,6 +2,7 @@ package ui.commandhandle;
 
 import core.State;
 import entities.MasterSquirrel;
+import exceptions.BelowThresholdException;
 import exceptions.NotEnoughEnergyException;
 import exceptions.ScanException;
 
@@ -37,7 +38,7 @@ public class GameCommandRunner {
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
 			throw new ScanException("No Energy specified!");
-		}
+		} catch (BelowThresholdException e) {}
 	}
 	
 	public void doNothing() {
