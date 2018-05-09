@@ -39,8 +39,8 @@ public class Launcher extends Application {
 			return new MultiPlayer(state, board, fxUI);
 		case "kigame":
 			return new KIGame(state, board, fxUI);
-			default:
-				return null;
+		default:
+			return null;
 		}
 	}
 	

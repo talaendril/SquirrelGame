@@ -10,7 +10,7 @@ public class BoardConfig {
 	private final int numberOfBadPlants = 3;
 	private final int numberOfBadBeasts = 2;
 	private final int numberOfGoodBeasts = 6;
-	private final int numberOfHandOperatedMasterSquirrels = 1;
+	private final int numberOfHandOperatedMasterSquirrels = 0;	//we are adding MasterSquirrels in the constructor of a game so this is probbaly useless
 	private final int numberOfMasterSquirrels = 0 + numberOfHandOperatedMasterSquirrels;
 	private final int numberOfRandomWalls = 8;
 	private final int numberOfWalls = 2 * size.getX() + 2 * size.getY() - 4 + numberOfRandomWalls;
