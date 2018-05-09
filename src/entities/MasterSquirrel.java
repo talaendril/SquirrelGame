@@ -59,4 +59,12 @@ public class MasterSquirrel extends Squirrel {
 			super.updateEnergy(delta);
 		}
 	}
+	
+	@Override
+	public void move(XY direction) {
+		System.out.println("MASTERSQUIRREL" + this.getID() 
+		+ " moves from " + this.getLocation().toString() 
+		+ " in a direction of " + direction.toString());
+		super.move(direction);
+	}
 }

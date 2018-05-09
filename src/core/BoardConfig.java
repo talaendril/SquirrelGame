@@ -4,7 +4,7 @@ import location.XY;
 
 public class BoardConfig {
 	
-	private final XY size = new XY(20, 20);
+	private final XY size = new XY(25, 25);
 	
 	private final int numberOfGoodPlants = 4;
 	private final int numberOfBadPlants = 3;

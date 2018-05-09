@@ -1,8 +1,9 @@
-package core.bots;
+package entities.squirrelbots;
 
 import botapi.BotController;
 import botapi.BotControllerFactory;
 import botapi.ControllerContext;
+import botimpl.BotControllerFactoryImpl;
 import core.EntityContext;
 import core.EntityType;
 import entities.MasterSquirrel;

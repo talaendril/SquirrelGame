@@ -24,7 +24,6 @@ public class MultiPlayer extends Game {
 	@Override
 	protected void processInput() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

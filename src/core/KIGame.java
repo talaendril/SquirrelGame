@@ -3,8 +3,8 @@ package core;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import core.bots.MasterSquirrelBot;
 import entities.MasterSquirrel;
+import entities.squirrelbots.MasterSquirrelBot;
 import idmanager.ID;
 import location.XY;
 import ui.UI;
@@ -41,6 +41,7 @@ public class KIGame extends Game {
 		}, 950, 1000);
 	}
 	
+	@Override
 	protected void render() {
 		this.getUI().render(this.getBoard().flatten());
 	}
@@ -54,6 +55,7 @@ public class KIGame extends Game {
 		this.getUI().message(sb.toString());
 	}
 	
+	@Override
 	protected void update() {
 		this.getState().update(MoveCommand.NONE);
 	}

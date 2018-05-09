@@ -27,6 +27,7 @@ public class EntitySet {
 				entities = this.doubleArraySize();
 			}
 			entities[currentArrayPosition++] = entity;
+			System.out.println("ADDED AN ENTITY AT " + System.nanoTime());
 		}
 	}
 	

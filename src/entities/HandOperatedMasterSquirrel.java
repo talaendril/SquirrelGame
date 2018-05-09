@@ -17,9 +17,6 @@ public class HandOperatedMasterSquirrel extends MasterSquirrel {
 	
 	@Override
 	public void nextStep(EntityContext context, MoveCommand command) {
-		if(this.getStunnedAndDecrement()) {
-			return;
-		}
-		context.tryMove(this, XY.getVector(command));
+		super.nextStep(context, command);
 	}
 }

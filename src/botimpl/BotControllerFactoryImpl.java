@@ -1,4 +1,4 @@
-package core.bots;
+package botimpl;
 
 import botapi.BotController;
 import botapi.BotControllerFactory;

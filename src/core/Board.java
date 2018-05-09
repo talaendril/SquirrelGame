@@ -76,7 +76,6 @@ public class Board {
 	}
 	
 	public void spawnMiniSquirrel(MasterSquirrel ms, int energy) throws NotEnoughEnergyException, BelowThresholdException {
-		//MasterSquirrel ms = this.masters.get(0);
 		if(ms == null) {
 			throw new EntityNotFoundException("No MasterSquirrel in the EntitySet");	//TODO think about how to handle this situation
 		} else if (ms.getEnergy() < energy ){
@@ -111,6 +110,7 @@ public class Board {
 	public void nextStep(MoveCommand command) {
 		for(Entity e : es.getEntities()) {
 			if(e != null && e instanceof Character) {
+				System.out.println(e.toString());
 				if (e instanceof HandOperatedMasterSquirrel) {
 					((HandOperatedMasterSquirrel) e).nextStep(this.flatten(), command);
 					continue;
