@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.EntityContext;
+import exceptions.BelowThresholdException;
 import exceptions.NotEnoughEnergyException;
 import idmanager.ID;
 import location.XY;
@@ -12,10 +13,10 @@ import ui.commandhandle.MoveCommand;
 public class MasterSquirrel extends Squirrel {
 	
 	List<MiniSquirrel> production = new ArrayList<>();
-	public static final int MINISQUIRREL_THRESHOLD = 1500;
+	public static final int MINISQUIRREL_THRESHOLD = 999;
 	
 	public MasterSquirrel(int id, XY location) {
-		super(id, 1600, location);
+		super(id, 1000, location);
 	}
 	
 	@Override
@@ -23,7 +24,10 @@ public class MasterSquirrel extends Squirrel {
 		return "| MasterSquirrel" + super.toString();
 	}
 	
-	public MiniSquirrel spawnMiniSquirrel(XY pos, int energy) throws NotEnoughEnergyException {
+	public MiniSquirrel spawnMiniSquirrel(XY pos, int energy) throws NotEnoughEnergyException, BelowThresholdException {
+		if(this.getEnergy() < MINISQUIRREL_THRESHOLD) {
+			throw new BelowThresholdException();
+		}
 		if(this.getEnergy() < energy) {
 			throw new NotEnoughEnergyException();
 		}
@@ -54,5 +58,13 @@ public class MasterSquirrel extends Squirrel {
 		} else {
 			super.updateEnergy(delta);
 		}
+	}
+	
+	@Override
+	public void move(XY direction) {
+		System.out.println("MASTERSQUIRREL" + this.getID() 
+		+ " moves from " + this.getLocation().toString() 
+		+ " in a direction of " + direction.toString());
+		super.move(direction);
 	}
 }

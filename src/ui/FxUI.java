@@ -201,7 +201,7 @@ public class FxUI extends Scene implements UI {
 
 	@Override
 	public Command getCommand() {
-		if (nextCommand.getCommandType() != GameCommandType.MOVE) {
+		if (nextCommand.getCommandType() == GameCommandType.SPAWN_MINI) {
 			Command returned = nextCommand;
 			nextCommand = new Command(GameCommandType.NOTHING);
 			return returned;

@@ -197,6 +197,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		}
 	}
 	
+	@Override
 	public Squirrel nearestPlayerEntity(XY pos) {
 		Squirrel[] array = new Squirrel[36];
 		int arrayPosition = 0;
@@ -223,6 +224,11 @@ public class FlattenedBoard implements EntityContext, BoardView {
 			}
 		}
 		return nearest;
+	}
+	
+	@Override
+	public void addMiniSquirrel(MiniSquirrel ms) {
+		this.board.getEntitySet().addEntity(ms);
 	}
 	
 	public XY bestVectorToEntity(Entity beast, Entity target) {	

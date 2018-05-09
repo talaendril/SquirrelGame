@@ -21,7 +21,7 @@ public class Launcher extends Application {
 		Stage primaryStage = new Stage();
 		FxUI fxUI = FxUI.createInstance(config.getSize());
 		
-		String name = "kigame";
+		String name = "singleplayer";
         final Game game = createGame(name, fxUI);
          
         primaryStage.setScene(fxUI);
@@ -32,15 +32,15 @@ public class Launcher extends Application {
 	}
 	
 	private Game createGame(String name, FxUI fxUI) {
-		switch(name) {
+		switch(name.toLowerCase()) {
 		case "singleplayer":
 			return new SinglePlayer(state, board, fxUI); 
 		case "multiplayer":
 			return new MultiPlayer(state, board, fxUI);
 		case "kigame":
 			return new KIGame(state, board, fxUI);
-			default:
-				return null;
+		default:
+			return null;
 		}
 	}
 	

@@ -1,6 +1,8 @@
 package ui.commandhandle;
 
 import core.State;
+import entities.MasterSquirrel;
+import exceptions.BelowThresholdException;
 import exceptions.NotEnoughEnergyException;
 import exceptions.ScanException;
 
@@ -20,26 +22,33 @@ public class GameCommandRunner {
 		this.state = state;
 	}
 	
-	public void move(Object obj) {	//needs a MoveCommand to work properly
+	public void move(Object[] obj) {	//needs a MoveCommand to work properly
 		//MoveCommand command = MoveCommand.parseMoveCommand((String) obj);
-		MoveCommand command = (MoveCommand) obj;
+		System.out.println("entered move");
+		if(obj.length != 1) {
+			throw new ScanException("Too many Parameters");
+		}
+		MoveCommand command = (MoveCommand) obj[0];
 		if(command == null) {
 			throw new ScanException("Unknown Direction");	//TODO think about how to change this
-		}
-		if(this.state == null) {
-			System.out.println("makes no sense");
 		}
 		this.state.update(command);
 	}
 	
-	public void spawnMiniSquirrel(Object energy) {	//needs an int to work properly
+	public void spawnMiniSquirrel(Object[] params) {
+		if(params.length != 2) {
+			throw new ScanException("Wrong Number of Parameters");
+		}
 		try {
-			this.state.getBoard().spawnMiniSquirrel(Integer.parseInt((String) energy));
+			this.state.getBoard().spawnMiniSquirrel((MasterSquirrel) params[0], Integer.parseInt((String) params[1]));
+			/*
+			 * TODO maybe add a check for wrong order
+			 */
 		} catch (NotEnoughEnergyException e) {
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
 			throw new ScanException("No Energy specified!");
-		}
+		} catch (BelowThresholdException e) {}
 	}
 	
 	public void doNothing() {
