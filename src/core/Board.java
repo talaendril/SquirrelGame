@@ -2,6 +2,8 @@ package core;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import entities.*;
 import entities.Character;
@@ -13,6 +15,8 @@ import location.XY;
 import ui.commandhandle.MoveCommand;
 
 public class Board {
+	
+	private static final Logger LOGGER = Logger.getLogger(Board.class.getName());
 	
 	private final int boardSizeX;
 	private final int boardSizeY;
@@ -77,14 +81,16 @@ public class Board {
 	
 	public void spawnMiniSquirrel(MasterSquirrel ms, int energy) throws NotEnoughEnergyException, BelowThresholdException {
 		if(ms == null) {
-			throw new EntityNotFoundException("No MasterSquirrel in the EntitySet");	//TODO think about how to handle this situation
+			throw new EntityNotFoundException("No MasterSquirrel in the EntitySet");
 		} else if (ms.getEnergy() < energy ){
 			throw new NotEnoughEnergyException();
 		} else {
 			XY location = this.getEntitySet().getEmptyLocationAround(ms.getLocation());
 			if(location == null) {
+				LOGGER.log(Level.INFO, "couldn't find a location for the MiniSquirrel to spawn");
 				return;
 			} else {
+				LOGGER.entering(Board.class.getName(), "spawnMiniSquirrel(MasterSquirrel, int)");
 				MiniSquirrel newMS = ms.spawnMiniSquirrel(location, energy);
 				ms.updateEnergy(-energy);
 				this.getEntitySet().addEntity(newMS);
@@ -110,7 +116,7 @@ public class Board {
 	public void nextStep(MoveCommand command) {
 		for(Entity e : es.getEntities()) {
 			if(e != null && e instanceof Character) {
-				System.out.println(e.toString());
+				LOGGER.info(e.toString());
 				if (e instanceof HandOperatedMasterSquirrel) {
 					((HandOperatedMasterSquirrel) e).nextStep(this.flatten(), command);
 					continue;

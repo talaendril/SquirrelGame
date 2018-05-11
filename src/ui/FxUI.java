@@ -1,5 +1,8 @@
 package ui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import core.BoardView;
 import javafx.application.Platform;
 import javafx.scene.Parent;
@@ -22,6 +25,7 @@ import ui.windows.InputWindow;
 import ui.windows.OutputWindow;
 
 public class FxUI extends Scene implements UI {
+	private static final Logger LOGGER = Logger.getLogger(FxUI.class.getName());
 	private static final int CELL_SIZE = 25;
 	private static Command nextCommand = new Command(GameCommandType.NOTHING);
 
@@ -94,6 +98,7 @@ public class FxUI extends Scene implements UI {
 		});
 		MenuItem exit = new MenuItem("Exit");
 		exit.setOnAction(value -> {
+			LOGGER.log(Level.INFO, "stopped game");
 			System.exit(0);
 		});
 		MenuItem spawnMiniSquirrel = new MenuItem("Spawn Mini");
@@ -112,8 +117,8 @@ public class FxUI extends Scene implements UI {
 			String input = spawnMS.getTextField().getText();
 			try {
 				nextCommand = new Command(GameCommandType.SPAWN_MINI, input);
-				System.out.println(nextCommand.toString());
 			} catch (NumberFormatException e) {
+				LOGGER.log(Level.WARNING, "Didn't specify a number for the MiniSquirrel", e);
 				new OutputWindow("Didn't specify a number", "Error");
 			}
 			spawnMS.close();
@@ -185,7 +190,6 @@ public class FxUI extends Scene implements UI {
 					gc.fillOval(j, i, CELL_SIZE, CELL_SIZE);
 					break;
 				case NONE:
-					break;
 				default:
 					break;
 				}

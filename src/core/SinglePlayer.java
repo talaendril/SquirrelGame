@@ -2,6 +2,8 @@ package core;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import entities.HandOperatedMasterSquirrel;
 import entities.MasterSquirrel;
@@ -16,7 +18,8 @@ import ui.commandhandle.GameCommandType;
 import ui.commandhandle.MoveCommand;
 
 public class SinglePlayer extends Game {
-
+	
+	private static final Logger LOGGER = Logger.getLogger(SinglePlayer.class.getName());
 	private final int FPS = 15;
 
 	private Command nextCommand = new Command(GameCommandType.MOVE, MoveCommand.UP);
@@ -66,7 +69,7 @@ public class SinglePlayer extends Game {
 	@Override
 	protected void processInput() {
 		nextCommand = this.getUI().getCommand();
-		System.err.println(nextCommand.toString());
+		LOGGER.info(nextCommand.toString());
 	}
 
 	@Override
@@ -92,10 +95,13 @@ public class SinglePlayer extends Game {
 				this.getBoard().spawnMiniSquirrel(masters[0], Integer.parseInt((String) params[0]));
 				break;
 			} catch (NumberFormatException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
 				e.printStackTrace();
 			} catch (NotEnoughEnergyException e) {
+				LOGGER.info("MasterSquirrel doesn't have enough energy to spawn a MiniSquirrel");
 				e.printStackTrace();
 			} catch (BelowThresholdException e) {
+				LOGGER.info("MasterSquirrel doesn't have enough energy to hit the threshold");
 			}
 		default:
 			break;

@@ -1,4 +1,7 @@
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import core.Board;
 import core.BoardConfig;
 import core.Game;
@@ -9,8 +12,11 @@ import core.State;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import ui.FxUI;
+import ui.UI;
 
 public class Launcher extends Application {
+	
+	private static final Logger LOGGER = Logger.getLogger(Launcher.class.getName());
 	
 	private BoardConfig config = new BoardConfig();
 	private Board board = new Board(config);
@@ -18,6 +24,8 @@ public class Launcher extends Application {
 
 	@Override
 	public void start(Stage arg0) throws Exception {
+		LOGGER.log(Level.INFO, "starting new game with JavaFX");
+		
 		Stage primaryStage = new Stage();
 		FxUI fxUI = FxUI.createInstance(config.getSize());
 		
@@ -31,14 +39,17 @@ public class Launcher extends Application {
         startGame(game);   
 	}
 	
-	private Game createGame(String name, FxUI fxUI) {
+	private Game createGame(String name, UI ui) {
 		switch(name.toLowerCase()) {
 		case "singleplayer":
-			return new SinglePlayer(state, board, fxUI); 
+			LOGGER.log(Level.INFO, "initialized singleplayer game");
+			return new SinglePlayer(state, board, ui); 
 		case "multiplayer":
-			return new MultiPlayer(state, board, fxUI);
+			LOGGER.log(Level.INFO, "initialized multiplayer game");
+			return new MultiPlayer(state, board, ui);
 		case "kigame":
-			return new KIGame(state, board, fxUI);
+			LOGGER.log(Level.INFO, "initiliazed kigame game");
+			return new KIGame(state, board, ui);
 		default:
 			return null;
 		}
@@ -53,6 +64,7 @@ public class Launcher extends Application {
 	}
 	
 	public void stop() {
+		LOGGER.log(Level.INFO, "stopped game");
 		System.exit(0);
 	}
 }

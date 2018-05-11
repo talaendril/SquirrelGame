@@ -1,10 +1,14 @@
 package core;
 
+import java.util.logging.Logger;
+
 import entities.Entity;
 import entities.Wall;
 import location.XY;
 
 public class EntitySet {
+	
+	private static final Logger LOGGER = Logger.getLogger(EntitySet.class.getName());
 	
 	private Entity[] entities;
 	private int currentArrayPosition = 0;
@@ -27,7 +31,7 @@ public class EntitySet {
 				entities = this.doubleArraySize();
 			}
 			entities[currentArrayPosition++] = entity;
-			System.out.println("ADDED AN ENTITY AT " + System.nanoTime());
+			LOGGER.info("added entity " + entity.toString());
 		}
 	}
 	

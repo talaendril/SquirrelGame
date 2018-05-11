@@ -24,7 +24,6 @@ public class GameCommandRunner {
 	
 	public void move(Object[] obj) {	//needs a MoveCommand to work properly
 		//MoveCommand command = MoveCommand.parseMoveCommand((String) obj);
-		System.out.println("entered move");
 		if(obj.length != 1) {
 			throw new ScanException("Too many Parameters");
 		}

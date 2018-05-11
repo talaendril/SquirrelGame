@@ -1,5 +1,7 @@
 package entities.squirrelbots;
 
+import java.util.logging.Logger;
+
 import botapi.BotController;
 import botapi.BotControllerFactory;
 import botapi.ControllerContext;
@@ -14,6 +16,8 @@ import location.XY;
 import ui.commandhandle.MoveCommand;
 
 public class MasterSquirrelBot extends MasterSquirrel  {
+	
+	private static final Logger LOGGER = Logger.getLogger(MasterSquirrelBot.class.getName());
 	
 	private final BotControllerFactory botControllerFactory = new BotControllerFactoryImpl();	//TODO change location maybe
 	private final BotController masterBotController = botControllerFactory.createMasterBotController();
@@ -72,13 +76,16 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 		@Override
 		public void spawnMiniBot(XY direction, int energy) {
 			try {
+				LOGGER.entering(MasterSquirrelBot.class.getName(), "spawnMiniBot(XY, int)");
 				MiniSquirrel ms = spawnMiniSquirrel(new XY(MasterSquirrelBot.this.getLocation(), direction), energy);
 				MasterSquirrelBot.this.updateEnergy(-energy);
 				this.entContext.addMiniSquirrel(ms);
 			} catch (NotEnoughEnergyException e) {
-				// TODO Auto-generated catch block
+				LOGGER.info("MasterSquirrel doesn't have enough energy to spawn a MiniSquirrel");
 				e.printStackTrace();
-			} catch (BelowThresholdException e) {}
+			} catch (BelowThresholdException e) {
+				LOGGER.info("MasterSquirrel doesn't have enough energy to hit the threshold");
+			}
 		}
 
 		@Override

@@ -1,5 +1,7 @@
 package core;
 
+import java.util.logging.Logger;
+
 import entities.BadBeast;
 import entities.Entity;
 import entities.GoodBeast;
@@ -11,6 +13,8 @@ import location.XY;
 import ui.commandhandle.MoveCommand;
 
 public class FlattenedBoard implements EntityContext, BoardView {
+	
+	private static final Logger LOGGER = Logger.getLogger(FlattenedBoard.class.getName());
 	
 	private Board board;
 	private Entity[][] entityMatrix;
@@ -50,6 +54,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	public void tryMove(MiniSquirrel ms, XY direction) {
 		ms.updateEnergy(-1);
 		Entity e = this.board.getEntitySet().getEntity(new XY(ms.getLocation(), direction));
+		LOGGER.info("MiniSquirrel" + ms.getID() + " tries to move from " + ms.getLocation().toString() + " in a direction of " + direction.toString());
 		if (e != null) {
 			if (e instanceof Character) {
 				if (EntityType.getEntityType(e) == EntityType.MASTERSQUIRREL) {
@@ -102,7 +107,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 			vector = this.bestVectorAwayFromEntity(gb, squirrel);
 		} 
 		if (gb.getStepCounterAndIncrement() == GoodBeast.MAXIMUM_STEPCOUNT) {
-			System.out.println("GoodBeast" + gb.getID() + " tries to move from " + gb.getLocation().toString() + " in a direction of " + vector.toString());
+			LOGGER.info("GoodBeast" + gb.getID() + " tries to move from " + gb.getLocation().toString() + " in a direction of " + vector.toString());
 			Entity e = this.board.getEntitySet().getEntity(new XY(gb.getLocation(), vector));
 			if (e != null) {
 				if (e instanceof Squirrel) {
@@ -125,7 +130,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 			vector = this.bestVectorToEntity(bb, squirrel);
 		} 
 		if (bb.getStepCounterAndIncrement() == BadBeast.MAXIMUM_STEPCOUNT) {
-			System.out.println("BadBeast" + bb.getID() + " tries to move from " + bb.getLocation().toString() + " in a direction of " + vector.toString());
+			LOGGER.info("BadBeast" + bb.getID() + " tries to move from " + bb.getLocation().toString() + " in a direction of " + vector.toString());
 			Entity e = this.board.getEntitySet().getEntity(new XY(bb.getLocation(), vector));
 			if (e != null) {
 				if (e instanceof Squirrel) {
