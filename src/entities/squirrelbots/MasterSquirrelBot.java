@@ -8,6 +8,7 @@ import botapi.ControllerContext;
 import botimpl.BotControllerFactoryImpl;
 import core.EntityContext;
 import core.EntityType;
+import core.logging.LoggingProxyFactory;
 import entities.MasterSquirrel;
 import entities.MiniSquirrel;
 import exceptions.BelowThresholdException;
@@ -29,7 +30,8 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 	
 	private ControllerContext getControllerContext(EntityContext context) {
 		if(this.contContext == null) {
-			this.contContext = new ControllerContextImpl(context);
+			ControllerContextImpl contContext = new ControllerContextImpl(context);
+			this.contContext = (ControllerContext) LoggingProxyFactory.create(contContext, Integer.toString(this.getID()));
 		}
 		return this.contContext;
 	}
@@ -39,7 +41,7 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 		if(this.getStunnedAndDecrement()) {
 			return;
 		}
-		this.masterBotController.nextStep(getControllerContext(context));
+		this.masterBotController.nextStep(this.getControllerContext(context));
 	}
 	
 	private class ControllerContextImpl implements ControllerContext {
