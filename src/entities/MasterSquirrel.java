@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import core.EntityContext;
+import entities.squirrelbots.MiniSquirrelBot;
 import exceptions.BelowThresholdException;
 import exceptions.NotEnoughEnergyException;
 import idmanager.ID;
@@ -19,7 +20,7 @@ public class MasterSquirrel extends Squirrel {
 	public static final int MINISQUIRREL_THRESHOLD = 999;
 	
 	public MasterSquirrel(int id, XY location) {
-		super(id, 1000, location);
+		super(id, 1100, location);
 	}
 	
 	@Override
@@ -34,10 +35,14 @@ public class MasterSquirrel extends Squirrel {
 		if(this.getEnergy() < energy) {
 			throw new NotEnoughEnergyException();
 		}
-		MiniSquirrel newMS = new MiniSquirrel(ID.getNewID(), energy, new XY(pos.getX(), pos.getY()), this);
+		MiniSquirrel newMS = new MiniSquirrelBot(ID.getNewID(), energy, new XY(pos.getX(), pos.getY()), this);
 		production.add(newMS);
 		LOGGER.exiting(MasterSquirrel.class.getName(), "spawnMiniSquirrel(XY, int)");
 		return newMS;	
+	}
+	
+	public List<MiniSquirrel> getProduction() {
+		return this.production;
 	}
 	
 	public boolean checkEntityInProduction(Entity entity) {

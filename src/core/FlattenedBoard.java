@@ -10,7 +10,6 @@ import entities.MiniSquirrel;
 import entities.Squirrel;
 import entities.Character;
 import location.XY;
-import ui.commandhandle.MoveCommand;
 
 public class FlattenedBoard implements EntityContext, BoardView {
 	
@@ -237,38 +236,83 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	}
 	
 	public XY bestVectorToEntity(Entity beast, Entity target) {	
-		int deltaX = target.getLocation().getX() - beast.getLocation().getX();
-		int deltaY = target.getLocation().getY() - beast.getLocation().getY();
-		if(deltaX == 0 && deltaY > 0) {	//Squirrel is above you
-			return XY.getVector(MoveCommand.DOWN);
-		}
-		if(deltaX == 0 && deltaY < 0) {	//Squirrel is below you
-			return XY.getVector(MoveCommand.UP);
-		}
-		if(deltaX > 0 && deltaY == 0) {	//Squirrel is right of you
-			return XY.getVector(MoveCommand.RIGHT);
-		}
-		if(deltaX < 0 && deltaY == 0) {	//Squirrel is left of you
-			return XY.getVector(MoveCommand.LEFT);
-		}
-		if(deltaX > 0 && deltaY > 0) {	//Squirrel is up and right
-			return XY.getVector(MoveCommand.DOWN_RIGHT);
-		}
-		if(deltaX < 0 && deltaY > 0) {	//Squirrel is up and left
-			return XY.getVector(MoveCommand.DOWN_LEFT);
-		}
-		if(deltaX > 0 && deltaY < 0) {	//Squirrel is down and right
-			return XY.getVector(MoveCommand.UP_RIGHT);
-		}
-		if(deltaX < 0 && deltaY < 0) {	//Squirrel is down and left
-			return XY.getVector(MoveCommand.UP_LEFT);
-		}
-		return XY.getVector(MoveCommand.getRandomCommand());
+		return XY.getVectorBetween(beast.getLocation(), target.getLocation());
 	}
 	
 	public XY bestVectorAwayFromEntity(Entity beast, Entity hunter) {
 		XY vectorToEntity = this.bestVectorToEntity(beast, hunter);
 		return XY.invertVector(vectorToEntity);
+	}
+	
+	@Override
+	public void implode(MiniSquirrel ms, int impactRadius) {
+		XY msLoc = ms.getLocation();
+		double accumulatedEnergy = 0;
+		for(int i = msLoc.getY() - impactRadius; i < msLoc.getY() + impactRadius; i++) {
+			for(int j = msLoc.getX() - impactRadius; j < msLoc.getX() + impactRadius; j++) {
+				Entity entity = this.board.getEntitySet().getEntity(new XY(j, i));
+				if(entity == null) {
+					continue;
+				}
+				double distance = XY.distanceBetween(ms.getLocation(), entity.getLocation());
+				if(distance < impactRadius) {
+					double impactArea = impactRadius * impactRadius * Math.PI;
+					double energyLoss = 200 * (ms.getEnergy()/impactArea) * (1 - distance/impactRadius);
+					accumulatedEnergy += this.updateEntityAfterImplosion(ms, entity, energyLoss);
+				}
+			}
+		}
+		this.kill(ms);
+		ms.getMaster().updateEnergy((int) accumulatedEnergy); 
+	}
+	
+	public double updateEntityAfterImplosion(MiniSquirrel ms, Entity entity, double energyLoss) {
+		if(entity == null) 
+			return 0;
+		int delta = (int) -energyLoss;
+		EntityType type = EntityType.getEntityType(entity);
+		switch(type) {
+		case MASTERSQUIRREL:
+			MasterSquirrel master = ms.getMaster();
+			if(entity.equals(master)) {
+				return 0;
+			}
+			entity.updateEnergy(delta);
+			return energyLoss;
+		case MINISQUIRREL:
+			master = ms.getMaster();
+			if(master.checkEntityInProduction(entity)) {
+				return 0;
+			}
+			if(energyLoss > entity.getEnergy()) {
+				this.kill(entity);
+				return entity.getEnergy();
+			} else {
+				entity.updateEnergy(delta);
+				return energyLoss;
+			}
+		case GOODBEAST:
+		case GOODPLANT:
+			if(energyLoss > entity.getEnergy()) {
+				this.killAndReplace(entity);
+				return entity.getEnergy();
+			} else {
+				entity.updateEnergy(delta);
+				return energyLoss;
+			}
+		case BADBEAST:
+		case BADPLANT:
+			if(energyLoss > Math.abs(entity.getEnergy())) {
+				this.killAndReplace(entity);
+			} else {
+				entity.updateEnergy(-delta);
+			}
+			return 0;
+		case WALL:
+			return 0;
+		default:
+			return 0;
+		}
 	}
 
 	@Override

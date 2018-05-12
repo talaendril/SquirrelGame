@@ -3,6 +3,7 @@ package entities.squirrelbots;
 import botapi.BotController;
 import botapi.BotControllerFactory;
 import botapi.ControllerContext;
+import botimpl.BotControllerFactoryImpl;
 import core.EntityContext;
 import core.EntityType;
 import entities.MasterSquirrel;
@@ -12,8 +13,8 @@ import ui.commandhandle.MoveCommand;
 
 public class MiniSquirrelBot extends MiniSquirrel {
 	
-	private BotControllerFactory botControllerFactory;
-	private BotController miniBotController;
+	private BotControllerFactory botControllerFactory = new BotControllerFactoryImpl();
+	private BotController miniBotController = this.botControllerFactory.createMiniBotController();
 	private ControllerContext contContext;
 
 	public MiniSquirrelBot(int id, int energy, XY location, MasterSquirrel master) {
@@ -37,9 +38,15 @@ public class MiniSquirrelBot extends MiniSquirrel {
 	private class ControllerContextImpl implements ControllerContext {
 		
 		private final EntityContext entContext;
+		private final int sightRange = 10;
 		
 		ControllerContextImpl(EntityContext context) {
 			this.entContext = context;
+		}
+		
+		@Override
+		public void implode(int impactRadius) {
+			this.entContext.implode(MiniSquirrelBot.this, impactRadius);
 		}
 
 		@Override
@@ -55,15 +62,13 @@ public class MiniSquirrelBot extends MiniSquirrel {
 		}
 
 		@Override
-		public EntityType getEnityAt(XY xy) {
-			// TODO Auto-generated method stub
-			return null;
+		public EntityType getEntityAt(XY xy) {
+			return this.entContext.getEntityType(xy);
 		}
 
 		@Override
 		public void move(XY direction) {
-			// TODO Auto-generated method stub
-			
+			this.entContext.tryMove(MiniSquirrelBot.this, direction);
 		}
 
 		@Override
@@ -73,9 +78,31 @@ public class MiniSquirrelBot extends MiniSquirrel {
 
 		@Override
 		public int getEnergy() {
+			return MiniSquirrelBot.this.getEnergy();
+		}
+
+		@Override
+		public XY locate() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public boolean isMine(XY xy) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public XY directionOfMaster() {
+			MasterSquirrel master = MiniSquirrelBot.this.getMaster();
+			return XY.getVectorBetween(MiniSquirrelBot.this.getLocation(), master.getLocation());
+		}
+
+		@Override
+		public long getRemainingSteps() {
 			// TODO Auto-generated method stub
 			return 0;
 		}
-		
 	}
 }

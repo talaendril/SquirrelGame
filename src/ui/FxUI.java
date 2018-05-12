@@ -28,7 +28,7 @@ public class FxUI extends Scene implements UI {
 	private static final Logger LOGGER = Logger.getLogger(FxUI.class.getName());
 	private static final int CELL_SIZE = 25;
 	private static Command nextCommand = new Command(GameCommandType.NOTHING);
-
+	
 	private Canvas boardCanvas;
 	private Label msgLabel;
 
@@ -78,6 +78,9 @@ public class FxUI extends Scene implements UI {
 			case C:
 				nextCommand = new Command(GameCommandType.MOVE, MoveCommand.DOWN_RIGHT);
 				break;
+			case I:
+				nextCommand = new Command(GameCommandType.IMPLODE_MINI, "3");
+				break;
 			case P:
 				nextCommand = new Command(GameCommandType.SPAWN_MINI, "100");
 				break;
@@ -125,7 +128,7 @@ public class FxUI extends Scene implements UI {
 		});
 	}
 
-	private static String help() { // TODO change to actual help now
+	private static String help() {
 		StringBuilder sb = new StringBuilder("Help: \n");
 		sb.append("Q move up left\n");
 		sb.append("W move up\n");
@@ -196,7 +199,15 @@ public class FxUI extends Scene implements UI {
 			}
 		}
 	}
+	
+	@Override
+	public void implode(XY location, int impactRadius) {
+		GraphicsContext gc = boardCanvas.getGraphicsContext2D();
+		gc.setFill(Color.AQUA);
+		gc.fillOval(location.getX()*CELL_SIZE, location.getY()*CELL_SIZE, CELL_SIZE*impactRadius, CELL_SIZE*impactRadius);
+	}
 
+	@Override
 	public void message(final String msg) {
 		Platform.runLater(() -> {
 			msgLabel.setText(msg);

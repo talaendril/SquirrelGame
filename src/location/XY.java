@@ -84,4 +84,20 @@ public final class XY {
 	public static XY invertVector(XY vector) {
 		return new XY(vector.getX() * -1, vector.getY() * -1);
 	}
+	
+	public static XY getVectorBetween(XY location, XY direction) {
+		int deltaX = direction.getX() - location.getX();
+		int deltaY = direction.getY() - location.getY();
+		return new XY(normalize(deltaX), normalize(deltaY));
+	}
+	
+	public static int normalize(int number) {
+		if(number < 0) {
+			return -1;
+		}
+		if(number > 0) {
+			return 1;
+		}
+		return 0;
+	}
 }

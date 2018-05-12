@@ -22,9 +22,11 @@ public class LoggingHandler implements InvocationHandler {
 		s.append("(");
 		
 		if(args != null) {
-			for(Object obj : args) {
-				s.append(obj.toString());
-				s.append(",");
+			for(int i = 0; i < args.length; i++) {
+				if(i > 0) {
+					s.append(", ");
+				}
+				s.append(args[i].toString());
 			}
 		}
 		s.append(")");

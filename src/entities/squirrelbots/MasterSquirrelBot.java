@@ -47,6 +47,7 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 	private class ControllerContextImpl implements ControllerContext {
 		
 		private final EntityContext entContext;
+		private final int sightRange = 15;
 		
 		ControllerContextImpl(EntityContext context) {
 			this.entContext = context;
@@ -65,9 +66,8 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 		}
 
 		@Override
-		public EntityType getEnityAt(XY xy) {
-			// TODO Auto-generated method stub
-			return null;
+		public EntityType getEntityAt(XY xy) {
+			return this.entContext.getEntityType(xy);
 		}
 
 		@Override
@@ -93,6 +93,35 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 		@Override
 		public int getEnergy() {
 			return MasterSquirrelBot.this.getEnergy();
+		}
+
+		@Override
+		public void implode(int impactRadius) {
+			// should never be called
+		}
+
+		@Override
+		public XY locate() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public boolean isMine(XY xy) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public XY directionOfMaster() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public long getRemainingSteps() {
+			// TODO Auto-generated method stub
+			return 0;
 		}	
 	}
 }
