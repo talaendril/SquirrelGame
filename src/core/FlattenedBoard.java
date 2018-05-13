@@ -10,6 +10,7 @@ import entities.MiniSquirrel;
 import entities.Squirrel;
 import entities.Character;
 import location.XY;
+import location.XYSupport;
 
 public class FlattenedBoard implements EntityContext, BoardView {
 	
@@ -221,7 +222,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		double newDistance;
 		for(int i = 0; i < array.length; i++) {
 			if(array[i] != null) {
-				if((newDistance = XY.distanceBetween(array[i].getLocation(), pos)) < shortestDistance) {
+				if((newDistance = XYSupport.distanceBetween(array[i].getLocation(), pos)) < shortestDistance) {
 					shortestDistance = newDistance;
 					nearest = array[i];
 				}
@@ -236,12 +237,12 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	}
 	
 	public XY bestVectorToEntity(Entity beast, Entity target) {	
-		return XY.getVectorBetween(beast.getLocation(), target.getLocation());
+		return XYSupport.getVectorBetween(beast.getLocation(), target.getLocation());
 	}
 	
 	public XY bestVectorAwayFromEntity(Entity beast, Entity hunter) {
 		XY vectorToEntity = this.bestVectorToEntity(beast, hunter);
-		return XY.invertVector(vectorToEntity);
+		return XYSupport.invertVector(vectorToEntity);
 	}
 	
 	@Override
@@ -254,7 +255,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 				if(entity == null) {
 					continue;
 				}
-				double distance = XY.distanceBetween(ms.getLocation(), entity.getLocation());
+				double distance = XYSupport.distanceBetween(ms.getLocation(), entity.getLocation());
 				if(distance < impactRadius) {
 					double impactArea = impactRadius * impactRadius * Math.PI;
 					double energyLoss = 200 * (ms.getEnergy()/impactArea) * (1 - distance/impactRadius);
@@ -326,7 +327,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		this.kill(entity);
 		XY newLocation;
 		do {
-			newLocation = XY.getRandomLocationBetween(board.getBoardSizeX() - 1, board.getBoardSizeY() - 1);
+			newLocation = XYSupport.getRandomLocationBetween(board.getBoardSizeX() - 1, board.getBoardSizeY() - 1);
 		} while(this.board.getEntitySet().getEntity(newLocation) != null);
 		entity.setLocation(newLocation);
 		this.board.getEntitySet().addEntity(entity);

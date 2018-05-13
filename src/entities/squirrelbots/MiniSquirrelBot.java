@@ -9,6 +9,7 @@ import core.EntityType;
 import entities.MasterSquirrel;
 import entities.MiniSquirrel;
 import location.XY;
+import location.XYSupport;
 import ui.commandhandle.MoveCommand;
 
 public class MiniSquirrelBot extends MiniSquirrel {
@@ -96,7 +97,7 @@ public class MiniSquirrelBot extends MiniSquirrel {
 		@Override
 		public XY directionOfMaster() {
 			MasterSquirrel master = MiniSquirrelBot.this.getMaster();
-			return XY.getVectorBetween(MiniSquirrelBot.this.getLocation(), master.getLocation());
+			return XYSupport.getVectorBetween(MiniSquirrelBot.this.getLocation(), master.getLocation());
 		}
 
 		@Override

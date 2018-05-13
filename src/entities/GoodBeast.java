@@ -2,6 +2,7 @@ package entities;
 
 import core.EntityContext;
 import location.XY;
+import location.XYSupport;
 import ui.commandhandle.MoveCommand;
 
 public class GoodBeast extends Character {
@@ -28,6 +29,6 @@ public class GoodBeast extends Character {
 	
 	@Override
 	public void nextStep(EntityContext context, MoveCommand command) {
-		context.tryMove(this, XY.getVector(command));
+		context.tryMove(this, XYSupport.getVector(command));
 	}
 }

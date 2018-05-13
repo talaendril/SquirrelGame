@@ -10,6 +10,7 @@ import exceptions.BelowThresholdException;
 import exceptions.NotEnoughEnergyException;
 import idmanager.ID;
 import location.XY;
+import location.XYSupport;
 import ui.commandhandle.MoveCommand;
 
 public class MasterSquirrel extends Squirrel {
@@ -54,7 +55,7 @@ public class MasterSquirrel extends Squirrel {
 		if(this.getStunnedAndDecrement()) {
 			return;
 		}
-		context.tryMove(this, XY.getVector(command));
+		context.tryMove(this, XYSupport.getVector(command));
 	}
 	
 	@Override 

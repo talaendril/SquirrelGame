@@ -2,6 +2,7 @@ package entities;
 
 import core.EntityContext;
 import location.XY;
+import location.XYSupport;
 import ui.commandhandle.MoveCommand;
 
 public class MiniSquirrel extends Squirrel {
@@ -29,6 +30,6 @@ public class MiniSquirrel extends Squirrel {
 		if(this.getStunnedAndDecrement()) {
 			return;
 		}
-		context.tryMove(this, XY.getVector(command));
+		context.tryMove(this, XYSupport.getVector(command));
 	}
 }
