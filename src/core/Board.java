@@ -28,8 +28,8 @@ public class Board {
 	public Board(BoardConfig config) {
 		this.config = config;
 		this.es = new EntitySet(config.getTotalEntities());
-		this.boardSizeX = config.getSize().getX();
-		this.boardSizeY = config.getSize().getY();
+		this.boardSizeX = config.getSize().x;
+		this.boardSizeY = config.getSize().y;
 		
 		generateEntities();
 	}

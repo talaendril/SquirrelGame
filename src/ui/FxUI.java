@@ -39,7 +39,7 @@ public class FxUI extends Scene implements UI {
 	}
 
 	public static FxUI createInstance(XY boardSize) {
-		Canvas boardCanvas = new Canvas(boardSize.getX() * CELL_SIZE, boardSize.getY() * CELL_SIZE);
+		Canvas boardCanvas = new Canvas(boardSize.x * CELL_SIZE, boardSize.y * CELL_SIZE);
 		Label masterEnergy = new Label();
 		VBox top = new VBox();
 		top.getChildren().add(createMenuBar());
@@ -157,8 +157,8 @@ public class FxUI extends Scene implements UI {
 		gc.clearRect(0, 0, boardCanvas.getWidth(), boardCanvas.getHeight());
 		XY size = view.getSize();
 
-		for (int i = 0, a = 0; i < size.getY() * CELL_SIZE; i += CELL_SIZE, a++) {
-			for (int j = 0, b = 0; j < size.getX() * CELL_SIZE; j += CELL_SIZE, b++) {
+		for (int i = 0, a = 0; i < size.y * CELL_SIZE; i += CELL_SIZE, a++) {
+			for (int j = 0, b = 0; j < size.x * CELL_SIZE; j += CELL_SIZE, b++) {
 				switch (view.getEntityType(b, a)) {
 				case WALL:
 					gc.setFill(Color.DARKSLATEGRAY);
@@ -197,10 +197,10 @@ public class FxUI extends Scene implements UI {
 	}
 	
 	@Override
-	public void implode(XY location, int impactRadius) {
+	public void implode(XY location, int impactRadius) {	//TODO show for more than 1 frame
 		GraphicsContext gc = boardCanvas.getGraphicsContext2D();
 		gc.setFill(Color.AQUA);
-		gc.fillOval(location.getX()*CELL_SIZE, location.getY()*CELL_SIZE, CELL_SIZE*impactRadius, CELL_SIZE*impactRadius);
+		gc.fillOval(location.x * CELL_SIZE, location.y * CELL_SIZE, CELL_SIZE * impactRadius, CELL_SIZE * impactRadius);
 	}
 
 	@Override

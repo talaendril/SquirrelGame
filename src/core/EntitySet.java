@@ -75,17 +75,17 @@ public class EntitySet {
 	}
 	
 	public XY getEmptyLocationAround(XY pos) {
-		if(this.getEntity(new XY(pos.getX() - 1, pos.getY())) == null) {
-			return new XY(pos.getX() - 1, pos.getY());
+		if(this.getEntity(new XY(pos.x - 1, pos.y)) == null) {
+			return new XY(pos.x - 1, pos.y);
 		}
-		if(this.getEntity(new XY(pos.getX() - 1, pos.getY())) == null) {
-			return new XY(pos.getX() + 1, pos.getY());
+		if(this.getEntity(new XY(pos.x - 1, pos.y)) == null) {
+			return new XY(pos.x + 1, pos.y);
 		}
-		if(this.getEntity(new XY(pos.getX() - 1, pos.getY())) == null) {
-			return new XY(pos.getX(), pos.getY() - 1);
+		if(this.getEntity(new XY(pos.x - 1, pos.y)) == null) {
+			return new XY(pos.x, pos.y - 1);
 		}
-		if(this.getEntity(new XY(pos.getX() - 1, pos.getY())) == null) {
-			return new XY(pos.getX(), pos.getY() + 1);
+		if(this.getEntity(new XY(pos.x - 1, pos.y)) == null) {
+			return new XY(pos.x, pos.y + 1);
 		} 
 		return null;
 	}

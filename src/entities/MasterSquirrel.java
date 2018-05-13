@@ -36,7 +36,7 @@ public class MasterSquirrel extends Squirrel {
 		if(this.getEnergy() < energy) {
 			throw new NotEnoughEnergyException();
 		}
-		MiniSquirrel newMS = new MiniSquirrelBot(ID.getNewID(), energy, new XY(pos.getX(), pos.getY()), this);
+		MiniSquirrel newMS = new MiniSquirrelBot(ID.getNewID(), energy, new XY(pos.x, pos.y), this);
 		production.add(newMS);
 		LOGGER.exiting(MasterSquirrel.class.getName(), "spawnMiniSquirrel(XY, int)");
 		return newMS;	

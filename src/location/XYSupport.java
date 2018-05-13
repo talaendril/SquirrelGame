@@ -58,5 +58,4 @@ public class XYSupport {
 			return XY.ZERO_ZERO;
 		}
 	}
-
 }

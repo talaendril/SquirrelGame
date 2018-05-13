@@ -38,13 +38,9 @@ public final class XY {
 		return 0;
 	}
 	
-	public int getX() {
-		return this.x;
-	}
-	
-	public int getY() {
-		return this.y;
-	}
+//	public int getX() {
+//		return this.x;
+//	}
 
     /**
      * 

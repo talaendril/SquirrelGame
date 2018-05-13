@@ -25,7 +25,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		
 		for(Entity e : this.board.getEntitySet().getEntities()) {
 			if (e != null) {
-				entityMatrix[e.getLocation().getY()][e.getLocation().getX()] = e;
+				entityMatrix[e.getLocation().y][e.getLocation().x] = e;
 			}
 		}
 	}
@@ -206,8 +206,8 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	public Squirrel nearestPlayerEntity(XY pos) {
 		Squirrel[] array = new Squirrel[36];
 		int arrayPosition = 0;
-		for(int i = pos.getY() - 6; i < pos.getY() + 6; i++) {
-			for(int j = pos.getX() - 6; j < pos.getX() + 6; j++) {
+		for(int i = pos.y - 6; i < pos.y + 6; i++) {
+			for(int j = pos.x - 6; j < pos.x + 6; j++) {
 				Entity e = this.board.getEntitySet().getEntity(new XY(j, i));
 				if(e instanceof Squirrel) {
 					array[arrayPosition++] = (Squirrel) e;
@@ -249,8 +249,8 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	public void implode(MiniSquirrel ms, int impactRadius) {
 		XY msLoc = ms.getLocation();
 		double accumulatedEnergy = 0;
-		for(int i = msLoc.getY() - impactRadius; i < msLoc.getY() + impactRadius; i++) {
-			for(int j = msLoc.getX() - impactRadius; j < msLoc.getX() + impactRadius; j++) {
+		for(int i = msLoc.y - impactRadius; i < msLoc.y + impactRadius; i++) {
+			for(int j = msLoc.x - impactRadius; j < msLoc.x + impactRadius; j++) {
 				Entity entity = this.board.getEntitySet().getEntity(new XY(j, i));
 				if(entity == null) {
 					continue;
@@ -319,7 +319,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	@Override
 	public void kill(Entity entity) {
 		this.board.getEntitySet().removeEntity(entity);
-		entityMatrix[entity.getLocation().getY()][entity.getLocation().getX()] = null;
+		entityMatrix[entity.getLocation().y][entity.getLocation().x] = null;
 	}
 
 	@Override
@@ -331,6 +331,6 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		} while(this.board.getEntitySet().getEntity(newLocation) != null);
 		entity.setLocation(newLocation);
 		this.board.getEntitySet().addEntity(entity);
-		entityMatrix[entity.getLocation().getY()][entity.getLocation().getX()] = entity;
+		entityMatrix[entity.getLocation().y][entity.getLocation().x] = entity;
 	}
 }
