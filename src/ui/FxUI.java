@@ -164,31 +164,27 @@ public class FxUI extends Scene implements UI {
 					gc.setFill(Color.DARKSLATEGRAY);
 					gc.fillRect(j, i, CELL_SIZE, CELL_SIZE);
 					break;
-				case BADBEAST:
+				case BAD_BEAST:
 					gc.setFill(Color.RED);
 					gc.fillOval(j, i, CELL_SIZE, CELL_SIZE);
 					break;
-				case BADPLANT:
+				case BAD_PLANT:
 					gc.setFill(Color.RED);
 					gc.fillRect(j, i, CELL_SIZE, CELL_SIZE);
 					break;
-				case GOODBEAST:
+				case GOOD_BEAST:
 					gc.setFill(Color.LAWNGREEN);
 					gc.fillOval(j, i, CELL_SIZE, CELL_SIZE);
 					break;
-				case GOODPLANT:
+				case GOOD_PLANT:
 					gc.setFill(Color.LAWNGREEN);
 					gc.fillRect(j, i, CELL_SIZE, CELL_SIZE);
 					break;
-				case HANDOPERATEDMASTERSQUIRREL:
+				case MASTER_SQUIRREL:
 					gc.setFill(Color.BLUE);
 					gc.fillOval(j, i, CELL_SIZE, CELL_SIZE);
 					break;
-				case MASTERSQUIRREL:
-					gc.setFill(Color.BLUE);
-					gc.fillOval(j, i, CELL_SIZE, CELL_SIZE);
-					break;
-				case MINISQUIRREL:
+				case MINI_SQUIRREL:
 					gc.setFill(Color.AQUA);
 					gc.fillOval(j, i, CELL_SIZE, CELL_SIZE);
 					break;

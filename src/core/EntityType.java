@@ -3,29 +3,26 @@ package core;
 import entities.*;
 
 public enum EntityType {
-	GOODBEAST, BADBEAST, 
-	GOODPLANT, BADPLANT, 
-	MASTERSQUIRREL, MINISQUIRREL, 
-	WALL, HANDOPERATEDMASTERSQUIRREL,
-	NONE;
+	GOOD_BEAST, BAD_BEAST, 
+	GOOD_PLANT, BAD_PLANT, 
+	MASTER_SQUIRREL, MINI_SQUIRREL, 
+	WALL, NONE;
 	
 	public static EntityType getEntityType(Entity e) {
 		if(e instanceof GoodBeast) {
-			return EntityType.GOODBEAST;
+			return EntityType.GOOD_BEAST;
 		} else if(e instanceof BadBeast) {
-			return EntityType.BADBEAST;
+			return EntityType.BAD_BEAST;
 		} else if(e instanceof GoodPlant) {
-			return EntityType.GOODPLANT;
+			return EntityType.GOOD_PLANT;
 		} else if(e instanceof BadPlant) {
-			return EntityType.BADPLANT;
-		} else if(e instanceof HandOperatedMasterSquirrel){
-			return EntityType.HANDOPERATEDMASTERSQUIRREL; 
+			return EntityType.BAD_PLANT;
 		} else if(e instanceof MiniSquirrel) {
-			return EntityType.MINISQUIRREL;
+			return EntityType.MINI_SQUIRREL;
 		} else if(e instanceof Wall) {
 			return EntityType.WALL;
 		} else if(e instanceof MasterSquirrel) {
-			return EntityType.MASTERSQUIRREL;
+			return EntityType.MASTER_SQUIRREL;
 		} else {
 			return NONE;
 		}

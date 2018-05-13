@@ -56,17 +56,17 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		LOGGER.info("MiniSquirrel" + ms.getID() + " tries to move from " + ms.getLocation().toString() + " in a direction of " + direction.toString());
 		if (e != null) {
 			if (e instanceof Character) {
-				if (EntityType.getEntityType(e) == EntityType.MASTERSQUIRREL) {
+				if (EntityType.getEntityType(e) == EntityType.MASTER_SQUIRREL) {
 					if (e.equals(ms.getMaster())) {
 						ms.getMaster().updateEnergy(ms.getEnergy());
 					} else {
 						e.updateEnergy(MiniSquirrel.ENERGY_GAIN_NOT_MASTER);
 					}
 					this.kill(ms);
-				} else if (EntityType.getEntityType(e) == EntityType.MINISQUIRREL) {
+				} else if (EntityType.getEntityType(e) == EntityType.MINI_SQUIRREL) {
 					this.kill(e);
 					this.kill(ms);
-				} else if (EntityType.getEntityType(e) == EntityType.BADBEAST) {
+				} else if (EntityType.getEntityType(e) == EntityType.BAD_BEAST) {
 					if(ms.getEnergy() < Math.abs(e.getEnergy())) {
 						this.kill(ms);
 					} else {
@@ -76,7 +76,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 						this.killAndReplace(e);
 						ms.move(direction);
 					}
-				} else if (EntityType.getEntityType(e) == EntityType.GOODBEAST) {
+				} else if (EntityType.getEntityType(e) == EntityType.GOOD_BEAST) {
 					ms.updateEnergy(e.getEnergy());
 					this.killAndReplace(e);
 				} 
@@ -133,14 +133,14 @@ public class FlattenedBoard implements EntityContext, BoardView {
 			Entity e = this.board.getEntitySet().getEntity(new XY(bb.getLocation(), vector));
 			if (e != null) {
 				if (e instanceof Squirrel) {
-					if(EntityType.getEntityType(e) == EntityType.MINISQUIRREL) {
+					if(EntityType.getEntityType(e) == EntityType.MINI_SQUIRREL) {
 						if(e.getEnergy() < Math.abs(bb.getEnergy())) {
 							this.kill(e);
 							bb.move(vector);
 						} else {
 							e.updateEnergy(bb.getEnergy());
 						}
-					} else if(EntityType.getEntityType(e) == EntityType.MASTERSQUIRREL || EntityType.getEntityType(e) == EntityType.HANDOPERATEDMASTERSQUIRREL) {
+					} else if(EntityType.getEntityType(e) == EntityType.MASTER_SQUIRREL) {
 						e.updateEnergy(bb.getEnergy());
 					}
 					if (bb.getBiteCounterAndIncrement() == BadBeast.MAXIMUM_BITECOUNT) {
@@ -165,9 +165,9 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		Entity e = this.board.getEntitySet().getEntity(new XY(master.getLocation(), direction));
 		if(e != null) {
 			if(e instanceof Character) {
-				if(EntityType.getEntityType(e) == EntityType.MASTERSQUIRREL) {
+				if(EntityType.getEntityType(e) == EntityType.MASTER_SQUIRREL) {
 					//do nothing
-				} else if(EntityType.getEntityType(e) == EntityType.MINISQUIRREL) {
+				} else if(EntityType.getEntityType(e) == EntityType.MINI_SQUIRREL) {
 					if(master.checkEntityInProduction(e)) {
 						master.updateEnergy(e.getEnergy()); 
 					} else {
@@ -176,7 +176,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 					this.kill(e);
 					master.move(direction);
 				} else {
-					if(EntityType.getEntityType(e) == EntityType.BADBEAST) {
+					if(EntityType.getEntityType(e) == EntityType.BAD_BEAST) {
 						if(((BadBeast) e).getBiteCounterAndIncrement() == BadBeast.MAXIMUM_BITECOUNT) {
 							this.killAndReplace(e);
 							master.move(direction);
@@ -272,14 +272,14 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		int delta = (int) -energyLoss;
 		EntityType type = EntityType.getEntityType(entity);
 		switch(type) {
-		case MASTERSQUIRREL:
+		case MASTER_SQUIRREL:
 			MasterSquirrel master = ms.getMaster();
 			if(entity.equals(master)) {
 				return 0;
 			}
 			entity.updateEnergy(delta);
 			return energyLoss;
-		case MINISQUIRREL:
+		case MINI_SQUIRREL:
 			master = ms.getMaster();
 			if(master.checkEntityInProduction(entity)) {
 				return 0;
@@ -291,8 +291,8 @@ public class FlattenedBoard implements EntityContext, BoardView {
 				entity.updateEnergy(delta);
 				return energyLoss;
 			}
-		case GOODBEAST:
-		case GOODPLANT:
+		case GOOD_BEAST:
+		case GOOD_PLANT:
 			if(energyLoss > entity.getEnergy()) {
 				this.killAndReplace(entity);
 				return entity.getEnergy();
@@ -300,8 +300,8 @@ public class FlattenedBoard implements EntityContext, BoardView {
 				entity.updateEnergy(delta);
 				return energyLoss;
 			}
-		case BADBEAST:
-		case BADPLANT:
+		case BAD_BEAST:
+		case BAD_PLANT:
 			if(energyLoss > Math.abs(entity.getEnergy())) {
 				this.killAndReplace(entity);
 			} else {
