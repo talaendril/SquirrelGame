@@ -14,6 +14,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import location.XY;
@@ -41,6 +42,7 @@ public class FxUI extends Scene implements UI {
 	public static FxUI createInstance(XY boardSize) {
 		Canvas boardCanvas = new Canvas(boardSize.x * CELL_SIZE, boardSize.y * CELL_SIZE);
 		Label masterEnergy = new Label();
+		AnchorPane.setBottomAnchor(masterEnergy, 10.0);
 		VBox top = new VBox();
 		top.getChildren().add(createMenuBar());
 		top.getChildren().add(boardCanvas);
@@ -183,6 +185,7 @@ public class FxUI extends Scene implements UI {
 				case MASTER_SQUIRREL:
 					gc.setFill(Color.BLUE);
 					gc.fillOval(j, i, CELL_SIZE, CELL_SIZE);
+					gc.fillText(Integer.toString(view.getEntity(b, a).getID()), j, i, CELL_SIZE);	//still scuffed
 					break;
 				case MINI_SQUIRREL:
 					gc.setFill(Color.AQUA);

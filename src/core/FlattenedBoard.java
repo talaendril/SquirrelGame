@@ -34,6 +34,11 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	public Entity[][] getEntityMatrix() {
 		return entityMatrix;
 	}
+	
+	@Override
+	public Entity getEntity(int x, int y) {
+		return this.board.getEntitySet().getEntity(new XY(x, y));
+	}
 
 	@Override
 	public EntityType getEntityType(int x, int y) {

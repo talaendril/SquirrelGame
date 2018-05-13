@@ -60,15 +60,6 @@ public class SinglePlayer extends Game {
 		this.getUI().render(this.getBoard().flatten());
 	}
 
-	protected void setMessageToMasterEnergy() {
-		StringBuilder sb = new StringBuilder("");
-		MasterSquirrel[] masters = this.getMasters();
-		for (int i = 0; i < masters.length; i++) {
-			sb.append("Master Energy" + i + ": " + masters[i].getEnergy() + "\n");
-		}
-		this.getUI().message(sb.toString());
-	}
-
 	@Override
 	protected void processInput() {
 		nextCommand = this.getUI().getCommand();
