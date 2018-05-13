@@ -37,11 +37,6 @@ public final class XY {
 		//TODO:
 		return 0;
 	}
-	
-//	public int getX() {
-//		return this.x;
-//	}
-
     /**
      * 
      * @param xy a second coordinate pair
