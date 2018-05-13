@@ -52,7 +52,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	@Override
 	public void tryMove(MiniSquirrel ms, XY direction) {
 		ms.updateEnergy(-1);
-		Entity e = this.board.getEntitySet().getEntity(new XY(ms.getLocation(), direction));
+		Entity e = this.board.getEntitySet().getEntity(ms.getLocation().plus(direction));
 		LOGGER.info("MiniSquirrel" + ms.getID() + " tries to move from " + ms.getLocation().toString() + " in a direction of " + direction.toString());
 		if (e != null) {
 			if (e instanceof Character) {
@@ -107,7 +107,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		} 
 		if (gb.getStepCounterAndIncrement() == GoodBeast.MAXIMUM_STEPCOUNT) {
 			LOGGER.info("GoodBeast" + gb.getID() + " tries to move from " + gb.getLocation().toString() + " in a direction of " + vector.toString());
-			Entity e = this.board.getEntitySet().getEntity(new XY(gb.getLocation(), vector));
+			Entity e = this.board.getEntitySet().getEntity(gb.getLocation().plus(vector));
 			if (e != null) {
 				if (e instanceof Squirrel) {
 					e.updateEnergy(gb.getEnergy());
@@ -130,7 +130,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		} 
 		if (bb.getStepCounterAndIncrement() == BadBeast.MAXIMUM_STEPCOUNT) {
 			LOGGER.info("BadBeast" + bb.getID() + " tries to move from " + bb.getLocation().toString() + " in a direction of " + vector.toString());
-			Entity e = this.board.getEntitySet().getEntity(new XY(bb.getLocation(), vector));
+			Entity e = this.board.getEntitySet().getEntity(bb.getLocation().plus(vector));
 			if (e != null) {
 				if (e instanceof Squirrel) {
 					if(EntityType.getEntityType(e) == EntityType.MINI_SQUIRREL) {
@@ -159,10 +159,10 @@ public class FlattenedBoard implements EntityContext, BoardView {
 
 	@Override
 	public void tryMove(MasterSquirrel master, XY direction) {
-		if(direction == XY.ORIGIN) {
+		if(direction == XY.ZERO_ZERO) {
 			return;
 		}
-		Entity e = this.board.getEntitySet().getEntity(new XY(master.getLocation(), direction));
+		Entity e = this.board.getEntitySet().getEntity(master.getLocation().plus(direction));
 		if(e != null) {
 			if(e instanceof Character) {
 				if(EntityType.getEntityType(e) == EntityType.MASTER_SQUIRREL) {

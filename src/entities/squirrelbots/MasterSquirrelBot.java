@@ -79,7 +79,7 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 		public void spawnMiniBot(XY direction, int energy) {
 			try {
 				LOGGER.entering(MasterSquirrelBot.class.getName(), "spawnMiniBot(XY, int)");
-				MiniSquirrel ms = spawnMiniSquirrel(new XY(MasterSquirrelBot.this.getLocation(), direction), energy);
+				MiniSquirrel ms = spawnMiniSquirrel(MasterSquirrelBot.this.getLocation().plus(direction), energy);
 				MasterSquirrelBot.this.updateEnergy(-energy);
 				this.entContext.addMiniSquirrel(ms);
 			} catch (NotEnoughEnergyException e) {

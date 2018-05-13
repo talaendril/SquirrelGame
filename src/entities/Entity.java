@@ -46,7 +46,7 @@ public abstract class Entity {
 	}
 	
 	public void move(XY direction) {
-		this.location = new XY(this.location, direction);
+		this.location = this.location.plus(direction);
 	}
 	
 	public boolean equals(Entity entity) {

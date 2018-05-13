@@ -9,26 +9,23 @@ public final class XY {
 	private final int x;
 	private final int y;
 	
-	public static final XY ORIGIN = new XY(0,0);
-	public static final XY UP = new XY(0, 1); 
-	public static final XY DOWN = new XY(0, -1);
-	public static final XY RIGHT = new XY(1, 0);
-	public static final XY LEFT = new XY(-1, 0);
-	public static final XY UP_RIGHT = new XY(1, 1);
-	public static final XY UP_LEFT = new XY(-1, 1);
-	public static final XY DOWN_RIGHT = new XY(1, -1);
-	public static final XY DOWN_LEFT = new XY(-1, -1);
+	public static final XY ZERO_ZERO = new XY(0, 0);
+    public static final XY RIGHT = new XY(1, 0);
+    public static final XY LEFT = new XY(-1, 0);
+    public static final XY UP = new XY(0, -1);
+    public static final XY DOWN = new XY(0, 1);
+    public static final XY RIGHT_UP = new XY(1, -1);
+    public static final XY RIGHT_DOWN = new XY(1, 1);
+    public static final XY LEFT_UP = new XY(-1, -1);
+    public static final XY LEFT_DOWN = new XY(-1, 1);
 	
 	public XY(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
-	
-	public XY(XY location, XY vector) {
-		int newX = location.getX() + vector.getX();
-		int newY = location.getY() + vector.getY();
-		this.x = (newX < 0) ? 0 : newX;
-		this.y = (newY < 0) ? 0 : newY;
+
+	public XY plus(XY xy) {
+		return new XY(this.x + xy.x, this.y + xy.y);
 	}
 	
 	public int getX() {
@@ -48,26 +45,26 @@ public final class XY {
 		return this.x + " " + this.y;
 	}
 	
-	public static XY getVector(MoveCommand command) {	//inverting down and up to make moving in the matrix better
+	public static XY getVector(MoveCommand command) {
 		switch(command) {
 		case DOWN_LEFT:
-			return UP_LEFT;
+			return LEFT_DOWN;
 		case DOWN:
-			return UP;
+			return DOWN;
 		case DOWN_RIGHT:
-			return UP_RIGHT;
+			return RIGHT_DOWN;
 		case LEFT:
 			return LEFT;
 		case RIGHT:
 			return RIGHT;
 		case UP_LEFT:
-			return DOWN_LEFT;
+			return LEFT_UP;
 		case UP:
-			return DOWN;
+			return UP;
 		case UP_RIGHT:
-			return DOWN_RIGHT;
+			return RIGHT_UP;
 		default:
-			return ORIGIN;
+			return ZERO_ZERO;
 		}
 	}
 	
