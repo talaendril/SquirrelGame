@@ -29,4 +29,6 @@ public interface EntityContext {
 	void killAndReplace(Entity entity);
 	
 	EntityType getEntityType(XY xy);
+	
+	void implode(MiniSquirrel ms, int impactRadius);
 }

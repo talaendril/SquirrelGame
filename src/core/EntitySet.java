@@ -1,10 +1,14 @@
 package core;
 
+import java.util.logging.Logger;
+
 import entities.Entity;
 import entities.Wall;
 import location.XY;
 
 public class EntitySet {
+	
+	private static final Logger LOGGER = Logger.getLogger(EntitySet.class.getName());
 	
 	private Entity[] entities;
 	private int currentArrayPosition = 0;
@@ -27,7 +31,7 @@ public class EntitySet {
 				entities = this.doubleArraySize();
 			}
 			entities[currentArrayPosition++] = entity;
-			System.out.println("ADDED AN ENTITY AT " + System.nanoTime());
+			LOGGER.info("added entity " + entity.toString());
 		}
 	}
 	
@@ -71,17 +75,17 @@ public class EntitySet {
 	}
 	
 	public XY getEmptyLocationAround(XY pos) {
-		if(this.getEntity(new XY(pos.getX() - 1, pos.getY())) == null) {
-			return new XY(pos.getX() - 1, pos.getY());
+		if(this.getEntity(new XY(pos.x - 1, pos.y)) == null) {
+			return new XY(pos.x - 1, pos.y);
 		}
-		if(this.getEntity(new XY(pos.getX() - 1, pos.getY())) == null) {
-			return new XY(pos.getX() + 1, pos.getY());
+		if(this.getEntity(new XY(pos.x - 1, pos.y)) == null) {
+			return new XY(pos.x + 1, pos.y);
 		}
-		if(this.getEntity(new XY(pos.getX() - 1, pos.getY())) == null) {
-			return new XY(pos.getX(), pos.getY() - 1);
+		if(this.getEntity(new XY(pos.x - 1, pos.y)) == null) {
+			return new XY(pos.x, pos.y - 1);
 		}
-		if(this.getEntity(new XY(pos.getX() - 1, pos.getY())) == null) {
-			return new XY(pos.getX(), pos.getY() + 1);
+		if(this.getEntity(new XY(pos.x - 1, pos.y)) == null) {
+			return new XY(pos.x, pos.y + 1);
 		} 
 		return null;
 	}

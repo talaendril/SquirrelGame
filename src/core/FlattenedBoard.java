@@ -1,5 +1,7 @@
 package core;
 
+import java.util.logging.Logger;
+
 import entities.BadBeast;
 import entities.Entity;
 import entities.GoodBeast;
@@ -8,9 +10,11 @@ import entities.MiniSquirrel;
 import entities.Squirrel;
 import entities.Character;
 import location.XY;
-import ui.commandhandle.MoveCommand;
+import location.XYSupport;
 
 public class FlattenedBoard implements EntityContext, BoardView {
+	
+	private static final Logger LOGGER = Logger.getLogger(FlattenedBoard.class.getName());
 	
 	private Board board;
 	private Entity[][] entityMatrix;
@@ -21,7 +25,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		
 		for(Entity e : this.board.getEntitySet().getEntities()) {
 			if (e != null) {
-				entityMatrix[e.getLocation().getY()][e.getLocation().getX()] = e;
+				entityMatrix[e.getLocation().y][e.getLocation().x] = e;
 			}
 		}
 	}
@@ -29,6 +33,11 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	@Override
 	public Entity[][] getEntityMatrix() {
 		return entityMatrix;
+	}
+	
+	@Override
+	public Entity getEntity(int x, int y) {
+		return this.board.getEntitySet().getEntity(new XY(x, y));
 	}
 
 	@Override
@@ -49,20 +58,21 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	@Override
 	public void tryMove(MiniSquirrel ms, XY direction) {
 		ms.updateEnergy(-1);
-		Entity e = this.board.getEntitySet().getEntity(new XY(ms.getLocation(), direction));
+		Entity e = this.board.getEntitySet().getEntity(ms.getLocation().plus(direction));
+		LOGGER.info("MiniSquirrel" + ms.getID() + " tries to move from " + ms.getLocation().toString() + " in a direction of " + direction.toString());
 		if (e != null) {
 			if (e instanceof Character) {
-				if (EntityType.getEntityType(e) == EntityType.MASTERSQUIRREL) {
+				if (EntityType.getEntityType(e) == EntityType.MASTER_SQUIRREL) {
 					if (e.equals(ms.getMaster())) {
 						ms.getMaster().updateEnergy(ms.getEnergy());
 					} else {
 						e.updateEnergy(MiniSquirrel.ENERGY_GAIN_NOT_MASTER);
 					}
 					this.kill(ms);
-				} else if (EntityType.getEntityType(e) == EntityType.MINISQUIRREL) {
+				} else if (EntityType.getEntityType(e) == EntityType.MINI_SQUIRREL) {
 					this.kill(e);
 					this.kill(ms);
-				} else if (EntityType.getEntityType(e) == EntityType.BADBEAST) {
+				} else if (EntityType.getEntityType(e) == EntityType.BAD_BEAST) {
 					if(ms.getEnergy() < Math.abs(e.getEnergy())) {
 						this.kill(ms);
 					} else {
@@ -72,7 +82,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 						this.killAndReplace(e);
 						ms.move(direction);
 					}
-				} else if (EntityType.getEntityType(e) == EntityType.GOODBEAST) {
+				} else if (EntityType.getEntityType(e) == EntityType.GOOD_BEAST) {
 					ms.updateEnergy(e.getEnergy());
 					this.killAndReplace(e);
 				} 
@@ -102,8 +112,8 @@ public class FlattenedBoard implements EntityContext, BoardView {
 			vector = this.bestVectorAwayFromEntity(gb, squirrel);
 		} 
 		if (gb.getStepCounterAndIncrement() == GoodBeast.MAXIMUM_STEPCOUNT) {
-			System.out.println("GoodBeast" + gb.getID() + " tries to move from " + gb.getLocation().toString() + " in a direction of " + vector.toString());
-			Entity e = this.board.getEntitySet().getEntity(new XY(gb.getLocation(), vector));
+			LOGGER.info("GoodBeast" + gb.getID() + " tries to move from " + gb.getLocation().toString() + " in a direction of " + vector.toString());
+			Entity e = this.board.getEntitySet().getEntity(gb.getLocation().plus(vector));
 			if (e != null) {
 				if (e instanceof Squirrel) {
 					e.updateEnergy(gb.getEnergy());
@@ -125,18 +135,18 @@ public class FlattenedBoard implements EntityContext, BoardView {
 			vector = this.bestVectorToEntity(bb, squirrel);
 		} 
 		if (bb.getStepCounterAndIncrement() == BadBeast.MAXIMUM_STEPCOUNT) {
-			System.out.println("BadBeast" + bb.getID() + " tries to move from " + bb.getLocation().toString() + " in a direction of " + vector.toString());
-			Entity e = this.board.getEntitySet().getEntity(new XY(bb.getLocation(), vector));
+			LOGGER.info("BadBeast" + bb.getID() + " tries to move from " + bb.getLocation().toString() + " in a direction of " + vector.toString());
+			Entity e = this.board.getEntitySet().getEntity(bb.getLocation().plus(vector));
 			if (e != null) {
 				if (e instanceof Squirrel) {
-					if(EntityType.getEntityType(e) == EntityType.MINISQUIRREL) {
+					if(EntityType.getEntityType(e) == EntityType.MINI_SQUIRREL) {
 						if(e.getEnergy() < Math.abs(bb.getEnergy())) {
 							this.kill(e);
 							bb.move(vector);
 						} else {
 							e.updateEnergy(bb.getEnergy());
 						}
-					} else if(EntityType.getEntityType(e) == EntityType.MASTERSQUIRREL || EntityType.getEntityType(e) == EntityType.HANDOPERATEDMASTERSQUIRREL) {
+					} else if(EntityType.getEntityType(e) == EntityType.MASTER_SQUIRREL) {
 						e.updateEnergy(bb.getEnergy());
 					}
 					if (bb.getBiteCounterAndIncrement() == BadBeast.MAXIMUM_BITECOUNT) {
@@ -155,15 +165,15 @@ public class FlattenedBoard implements EntityContext, BoardView {
 
 	@Override
 	public void tryMove(MasterSquirrel master, XY direction) {
-		if(direction == XY.ORIGIN) {
+		if(direction == XY.ZERO_ZERO) {
 			return;
 		}
-		Entity e = this.board.getEntitySet().getEntity(new XY(master.getLocation(), direction));
+		Entity e = this.board.getEntitySet().getEntity(master.getLocation().plus(direction));
 		if(e != null) {
 			if(e instanceof Character) {
-				if(EntityType.getEntityType(e) == EntityType.MASTERSQUIRREL) {
+				if(EntityType.getEntityType(e) == EntityType.MASTER_SQUIRREL) {
 					//do nothing
-				} else if(EntityType.getEntityType(e) == EntityType.MINISQUIRREL) {
+				} else if(EntityType.getEntityType(e) == EntityType.MINI_SQUIRREL) {
 					if(master.checkEntityInProduction(e)) {
 						master.updateEnergy(e.getEnergy()); 
 					} else {
@@ -172,7 +182,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 					this.kill(e);
 					master.move(direction);
 				} else {
-					if(EntityType.getEntityType(e) == EntityType.BADBEAST) {
+					if(EntityType.getEntityType(e) == EntityType.BAD_BEAST) {
 						if(((BadBeast) e).getBiteCounterAndIncrement() == BadBeast.MAXIMUM_BITECOUNT) {
 							this.killAndReplace(e);
 							master.move(direction);
@@ -201,8 +211,8 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	public Squirrel nearestPlayerEntity(XY pos) {
 		Squirrel[] array = new Squirrel[36];
 		int arrayPosition = 0;
-		for(int i = pos.getY() - 6; i < pos.getY() + 6; i++) {
-			for(int j = pos.getX() - 6; j < pos.getX() + 6; j++) {
+		for(int i = pos.y - 6; i < pos.y + 6; i++) {
+			for(int j = pos.x - 6; j < pos.x + 6; j++) {
 				Entity e = this.board.getEntitySet().getEntity(new XY(j, i));
 				if(e instanceof Squirrel) {
 					array[arrayPosition++] = (Squirrel) e;
@@ -217,7 +227,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		double newDistance;
 		for(int i = 0; i < array.length; i++) {
 			if(array[i] != null) {
-				if((newDistance = XY.distanceBetween(array[i].getLocation(), pos)) < shortestDistance) {
+				if((newDistance = XYSupport.distanceBetween(array[i].getLocation(), pos)) < shortestDistance) {
 					shortestDistance = newDistance;
 					nearest = array[i];
 				}
@@ -232,44 +242,89 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	}
 	
 	public XY bestVectorToEntity(Entity beast, Entity target) {	
-		int deltaX = target.getLocation().getX() - beast.getLocation().getX();
-		int deltaY = target.getLocation().getY() - beast.getLocation().getY();
-		if(deltaX == 0 && deltaY > 0) {	//Squirrel is above you
-			return XY.getVector(MoveCommand.DOWN);
-		}
-		if(deltaX == 0 && deltaY < 0) {	//Squirrel is below you
-			return XY.getVector(MoveCommand.UP);
-		}
-		if(deltaX > 0 && deltaY == 0) {	//Squirrel is right of you
-			return XY.getVector(MoveCommand.RIGHT);
-		}
-		if(deltaX < 0 && deltaY == 0) {	//Squirrel is left of you
-			return XY.getVector(MoveCommand.LEFT);
-		}
-		if(deltaX > 0 && deltaY > 0) {	//Squirrel is up and right
-			return XY.getVector(MoveCommand.DOWN_RIGHT);
-		}
-		if(deltaX < 0 && deltaY > 0) {	//Squirrel is up and left
-			return XY.getVector(MoveCommand.DOWN_LEFT);
-		}
-		if(deltaX > 0 && deltaY < 0) {	//Squirrel is down and right
-			return XY.getVector(MoveCommand.UP_RIGHT);
-		}
-		if(deltaX < 0 && deltaY < 0) {	//Squirrel is down and left
-			return XY.getVector(MoveCommand.UP_LEFT);
-		}
-		return XY.getVector(MoveCommand.getRandomCommand());
+		return XYSupport.getVectorBetween(beast.getLocation(), target.getLocation());
 	}
 	
 	public XY bestVectorAwayFromEntity(Entity beast, Entity hunter) {
 		XY vectorToEntity = this.bestVectorToEntity(beast, hunter);
-		return XY.invertVector(vectorToEntity);
+		return XYSupport.invertVector(vectorToEntity);
+	}
+	
+	@Override
+	public void implode(MiniSquirrel ms, int impactRadius) {
+		XY msLoc = ms.getLocation();
+		double accumulatedEnergy = 0;
+		for(int i = msLoc.y - impactRadius; i < msLoc.y + impactRadius; i++) {
+			for(int j = msLoc.x - impactRadius; j < msLoc.x + impactRadius; j++) {
+				Entity entity = this.board.getEntitySet().getEntity(new XY(j, i));
+				if(entity == null) {
+					continue;
+				}
+				double distance = XYSupport.distanceBetween(ms.getLocation(), entity.getLocation());
+				if(distance < impactRadius) {
+					double impactArea = impactRadius * impactRadius * Math.PI;
+					double energyLoss = 200 * (ms.getEnergy()/impactArea) * (1 - distance/impactRadius);
+					accumulatedEnergy += this.updateEntityAfterImplosion(ms, entity, energyLoss);
+				}
+			}
+		}
+		this.kill(ms);
+		ms.getMaster().updateEnergy((int) accumulatedEnergy); 
+	}
+	
+	public double updateEntityAfterImplosion(MiniSquirrel ms, Entity entity, double energyLoss) {
+		if(entity == null) 
+			return 0;
+		int delta = (int) -energyLoss;
+		EntityType type = EntityType.getEntityType(entity);
+		switch(type) {
+		case MASTER_SQUIRREL:
+			MasterSquirrel master = ms.getMaster();
+			if(entity.equals(master)) {
+				return 0;
+			}
+			entity.updateEnergy(delta);
+			return energyLoss;
+		case MINI_SQUIRREL:
+			master = ms.getMaster();
+			if(master.checkEntityInProduction(entity)) {
+				return 0;
+			}
+			if(energyLoss > entity.getEnergy()) {
+				this.kill(entity);
+				return entity.getEnergy();
+			} else {
+				entity.updateEnergy(delta);
+				return energyLoss;
+			}
+		case GOOD_BEAST:
+		case GOOD_PLANT:
+			if(energyLoss > entity.getEnergy()) {
+				this.killAndReplace(entity);
+				return entity.getEnergy();
+			} else {
+				entity.updateEnergy(delta);
+				return energyLoss;
+			}
+		case BAD_BEAST:
+		case BAD_PLANT:
+			if(energyLoss > Math.abs(entity.getEnergy())) {
+				this.killAndReplace(entity);
+			} else {
+				entity.updateEnergy(-delta);
+			}
+			return 0;
+		case WALL:
+			return 0;
+		default:
+			return 0;
+		}
 	}
 
 	@Override
 	public void kill(Entity entity) {
 		this.board.getEntitySet().removeEntity(entity);
-		entityMatrix[entity.getLocation().getY()][entity.getLocation().getX()] = null;
+		entityMatrix[entity.getLocation().y][entity.getLocation().x] = null;
 	}
 
 	@Override
@@ -277,10 +332,10 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		this.kill(entity);
 		XY newLocation;
 		do {
-			newLocation = XY.getRandomLocationBetween(board.getBoardSizeX() - 1, board.getBoardSizeY() - 1);
+			newLocation = XYSupport.getRandomLocationBetween(board.getBoardSizeX() - 1, board.getBoardSizeY() - 1);
 		} while(this.board.getEntitySet().getEntity(newLocation) != null);
 		entity.setLocation(newLocation);
 		this.board.getEntitySet().addEntity(entity);
-		entityMatrix[entity.getLocation().getY()][entity.getLocation().getX()] = entity;
+		entityMatrix[entity.getLocation().y][entity.getLocation().x] = entity;
 	}
 }

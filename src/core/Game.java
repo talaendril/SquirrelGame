@@ -39,6 +39,15 @@ public abstract class Game {
 	
 	public abstract void run();
 	
+	protected void setMessageToMasterEnergy() {
+		StringBuilder sb = new StringBuilder("");
+		MasterSquirrel[] masters = this.getMasters();
+		for(int i = 0; i < masters.length; i++) {
+			sb.append("Master Energy" + masters[i].getID() + ": " + masters[i].getEnergy() + "\n");
+		}
+		this.getUI().message(sb.toString());
+	}
+	
 	protected abstract void render();
 	
 	protected abstract void processInput();

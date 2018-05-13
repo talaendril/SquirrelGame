@@ -3,6 +3,7 @@ package ui.commandhandle;
 public enum GameCommandType implements CommandTypeInfo {
 	MOVE("move", " <vector>\t  * MasterSquirrels moves in the direction of vector", "move", MoveCommand.class),
 	SPAWN_MINI("spawn_mini", " <E>\t  * spawn a MiniSquirrel initialized with E energy", "spawnMiniSquirrel", int.class),
+	IMPLODE_MINI("implode_mini", "<E>\t implodes the specified MiniSquirrel with radius E", "implode"),
 	NOTHING("nothing", "\t  * do nothing", "doNothing")
 	;
 	

@@ -16,8 +16,9 @@ public class KIGame extends Game {
 	
 	public KIGame(State state, Board board, UI ui) {
 		super(state, board, ui);
-		MasterSquirrel master = new MasterSquirrelBot(ID.getNewID(), new XY(-1, -1));
-		MasterSquirrel[] masters = {master};
+		MasterSquirrel master1 = new MasterSquirrelBot(ID.getNewID(), new XY(-1, -1));
+		MasterSquirrel master2 = new MasterSquirrelBot(ID.getNewID(), new XY(-2, -2));
+		MasterSquirrel[] masters = {master1, master2};
 		this.addMasters(masters);
 		this.getBoard().generateMasterSquirrels(masters);
 	}
@@ -44,15 +45,6 @@ public class KIGame extends Game {
 	@Override
 	protected void render() {
 		this.getUI().render(this.getBoard().flatten());
-	}
-	
-	protected void setMessageToMasterEnergy() {
-		StringBuilder sb = new StringBuilder("");
-		MasterSquirrel[] masters = this.getMasters();
-		for(int i = 0; i < masters.length; i++) {
-			sb.append("Master Energy" + i + ": " + masters[i].getEnergy() + "\n");
-		}
-		this.getUI().message(sb.toString());
 	}
 	
 	@Override

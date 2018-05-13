@@ -1,5 +1,8 @@
 package ui;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import core.BoardView;
 import javafx.application.Platform;
 import javafx.scene.Parent;
@@ -11,6 +14,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import location.XY;
@@ -22,9 +26,10 @@ import ui.windows.InputWindow;
 import ui.windows.OutputWindow;
 
 public class FxUI extends Scene implements UI {
+	private static final Logger LOGGER = Logger.getLogger(FxUI.class.getName());
 	private static final int CELL_SIZE = 25;
 	private static Command nextCommand = new Command(GameCommandType.NOTHING);
-
+	
 	private Canvas boardCanvas;
 	private Label msgLabel;
 
@@ -35,8 +40,9 @@ public class FxUI extends Scene implements UI {
 	}
 
 	public static FxUI createInstance(XY boardSize) {
-		Canvas boardCanvas = new Canvas(boardSize.getX() * CELL_SIZE, boardSize.getY() * CELL_SIZE);
+		Canvas boardCanvas = new Canvas(boardSize.x * CELL_SIZE, boardSize.y * CELL_SIZE);
 		Label masterEnergy = new Label();
+		AnchorPane.setBottomAnchor(masterEnergy, 10.0);
 		VBox top = new VBox();
 		top.getChildren().add(createMenuBar());
 		top.getChildren().add(boardCanvas);
@@ -74,6 +80,9 @@ public class FxUI extends Scene implements UI {
 			case C:
 				nextCommand = new Command(GameCommandType.MOVE, MoveCommand.DOWN_RIGHT);
 				break;
+			case I:
+				nextCommand = new Command(GameCommandType.IMPLODE_MINI, "3");
+				break;
 			case P:
 				nextCommand = new Command(GameCommandType.SPAWN_MINI, "100");
 				break;
@@ -94,6 +103,7 @@ public class FxUI extends Scene implements UI {
 		});
 		MenuItem exit = new MenuItem("Exit");
 		exit.setOnAction(value -> {
+			LOGGER.log(Level.INFO, "stopped game");
 			System.exit(0);
 		});
 		MenuItem spawnMiniSquirrel = new MenuItem("Spawn Mini");
@@ -112,15 +122,15 @@ public class FxUI extends Scene implements UI {
 			String input = spawnMS.getTextField().getText();
 			try {
 				nextCommand = new Command(GameCommandType.SPAWN_MINI, input);
-				System.out.println(nextCommand.toString());
 			} catch (NumberFormatException e) {
+				LOGGER.log(Level.WARNING, "Didn't specify a number for the MiniSquirrel", e);
 				new OutputWindow("Didn't specify a number", "Error");
 			}
 			spawnMS.close();
 		});
 	}
 
-	private static String help() { // TODO change to actual help now
+	private static String help() {
 		StringBuilder sb = new StringBuilder("Help: \n");
 		sb.append("Q move up left\n");
 		sb.append("W move up\n");
@@ -149,50 +159,54 @@ public class FxUI extends Scene implements UI {
 		gc.clearRect(0, 0, boardCanvas.getWidth(), boardCanvas.getHeight());
 		XY size = view.getSize();
 
-		for (int i = 0, a = 0; i < size.getY() * CELL_SIZE; i += CELL_SIZE, a++) {
-			for (int j = 0, b = 0; j < size.getX() * CELL_SIZE; j += CELL_SIZE, b++) {
+		for (int i = 0, a = 0; i < size.y * CELL_SIZE; i += CELL_SIZE, a++) {
+			for (int j = 0, b = 0; j < size.x * CELL_SIZE; j += CELL_SIZE, b++) {
 				switch (view.getEntityType(b, a)) {
 				case WALL:
 					gc.setFill(Color.DARKSLATEGRAY);
 					gc.fillRect(j, i, CELL_SIZE, CELL_SIZE);
 					break;
-				case BADBEAST:
+				case BAD_BEAST:
 					gc.setFill(Color.RED);
 					gc.fillOval(j, i, CELL_SIZE, CELL_SIZE);
 					break;
-				case BADPLANT:
+				case BAD_PLANT:
 					gc.setFill(Color.RED);
 					gc.fillRect(j, i, CELL_SIZE, CELL_SIZE);
 					break;
-				case GOODBEAST:
+				case GOOD_BEAST:
 					gc.setFill(Color.LAWNGREEN);
 					gc.fillOval(j, i, CELL_SIZE, CELL_SIZE);
 					break;
-				case GOODPLANT:
+				case GOOD_PLANT:
 					gc.setFill(Color.LAWNGREEN);
 					gc.fillRect(j, i, CELL_SIZE, CELL_SIZE);
 					break;
-				case HANDOPERATEDMASTERSQUIRREL:
+				case MASTER_SQUIRREL:
 					gc.setFill(Color.BLUE);
 					gc.fillOval(j, i, CELL_SIZE, CELL_SIZE);
+					gc.fillText(Integer.toString(view.getEntity(b, a).getID()), j, i, CELL_SIZE);	//still scuffed
 					break;
-				case MASTERSQUIRREL:
-					gc.setFill(Color.BLUE);
-					gc.fillOval(j, i, CELL_SIZE, CELL_SIZE);
-					break;
-				case MINISQUIRREL:
+				case MINI_SQUIRREL:
 					gc.setFill(Color.AQUA);
 					gc.fillOval(j, i, CELL_SIZE, CELL_SIZE);
 					break;
 				case NONE:
-					break;
 				default:
 					break;
 				}
 			}
 		}
 	}
+	
+	@Override
+	public void implode(XY location, int impactRadius) {	//TODO show for more than 1 frame
+		GraphicsContext gc = boardCanvas.getGraphicsContext2D();
+		gc.setFill(Color.AQUA);
+		gc.fillOval(location.x * CELL_SIZE, location.y * CELL_SIZE, CELL_SIZE * impactRadius, CELL_SIZE * impactRadius);
+	}
 
+	@Override
 	public void message(final String msg) {
 		Platform.runLater(() -> {
 			msgLabel.setText(msg);

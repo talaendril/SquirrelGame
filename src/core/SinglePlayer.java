@@ -1,10 +1,15 @@
 package core;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import entities.HandOperatedMasterSquirrel;
 import entities.MasterSquirrel;
+import entities.MiniSquirrel;
 import exceptions.BelowThresholdException;
 import exceptions.NotEnoughEnergyException;
 import exceptions.ScanException;
@@ -16,7 +21,8 @@ import ui.commandhandle.GameCommandType;
 import ui.commandhandle.MoveCommand;
 
 public class SinglePlayer extends Game {
-
+	
+	private static final Logger LOGGER = Logger.getLogger(SinglePlayer.class.getName());
 	private final int FPS = 15;
 
 	private Command nextCommand = new Command(GameCommandType.MOVE, MoveCommand.UP);
@@ -54,19 +60,10 @@ public class SinglePlayer extends Game {
 		this.getUI().render(this.getBoard().flatten());
 	}
 
-	protected void setMessageToMasterEnergy() {
-		StringBuilder sb = new StringBuilder("");
-		MasterSquirrel[] masters = this.getMasters();
-		for (int i = 0; i < masters.length; i++) {
-			sb.append("Master Energy" + i + ": " + masters[i].getEnergy() + "\n");
-		}
-		this.getUI().message(sb.toString());
-	}
-
 	@Override
 	protected void processInput() {
 		nextCommand = this.getUI().getCommand();
-		System.err.println(nextCommand.toString());
+		LOGGER.info(nextCommand.toString());
 	}
 
 	@Override
@@ -88,15 +85,33 @@ public class SinglePlayer extends Game {
 				throw new ScanException("Wrong Number of Parameters");
 			}
 			try {
-				MasterSquirrel[] masters = this.getMasters();
+				MasterSquirrel[] masters = this.getMasters();	//this works if only one MasterSquirrel is in the game
 				this.getBoard().spawnMiniSquirrel(masters[0], Integer.parseInt((String) params[0]));
 				break;
 			} catch (NumberFormatException e) {
+				LOGGER.log(Level.SEVERE, e.toString(), e);
 				e.printStackTrace();
 			} catch (NotEnoughEnergyException e) {
+				LOGGER.info("MasterSquirrel doesn't have enough energy to spawn a MiniSquirrel");
 				e.printStackTrace();
 			} catch (BelowThresholdException e) {
+				LOGGER.info("MasterSquirrel doesn't have enough energy to hit the threshold");
 			}
+		case IMPLODE_MINI:
+			if(params.length != 1) {
+				throw new ScanException("Wrong Number of Parameters");
+			}
+			MasterSquirrel[] masters = this.getMasters();
+			List<MiniSquirrel> list = masters[0].getProduction();
+			Iterator<MiniSquirrel> iterator = list.iterator();
+			while(iterator.hasNext()) {
+				MiniSquirrel ms = iterator.next();
+				int impactRadius = Integer.parseInt((String) params[0]);
+				this.getBoard().flatten().implode(ms, impactRadius); 
+				this.getUI().implode(ms.getLocation(), impactRadius);;
+			}
+			nextCommand = new Command(GameCommandType.NOTHING);
+			break;
 		default:
 			break;
 		}

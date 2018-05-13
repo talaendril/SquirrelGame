@@ -1,87 +1,68 @@
 package location;
 
-import java.util.Random;
-
-import ui.commandhandle.MoveCommand;
-
 public final class XY {
 	
-	private final int x;
-	private final int y;
+	public final int x;
+	public final int y;
 	
-	public static final XY ORIGIN = new XY(0,0);
-	public static final XY UP = new XY(0, 1); 
-	public static final XY DOWN = new XY(0, -1);
-	public static final XY RIGHT = new XY(1, 0);
-	public static final XY LEFT = new XY(-1, 0);
-	public static final XY UP_RIGHT = new XY(1, 1);
-	public static final XY UP_LEFT = new XY(-1, 1);
-	public static final XY DOWN_RIGHT = new XY(1, -1);
-	public static final XY DOWN_LEFT = new XY(-1, -1);
+	public static final XY ZERO_ZERO = new XY(0, 0);
+    public static final XY RIGHT = new XY(1, 0);
+    public static final XY LEFT = new XY(-1, 0);
+    public static final XY UP = new XY(0, -1);
+    public static final XY DOWN = new XY(0, 1);
+    public static final XY RIGHT_UP = new XY(1, -1);
+    public static final XY RIGHT_DOWN = new XY(1, 1);
+    public static final XY LEFT_UP = new XY(-1, -1);
+    public static final XY LEFT_DOWN = new XY(-1, 1);
 	
 	public XY(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
-	
-	public XY(XY location, XY vector) {
-		int newX = location.getX() + vector.getX();
-		int newY = location.getY() + vector.getY();
-		this.x = (newX < 0) ? 0 : newX;
-		this.y = (newY < 0) ? 0 : newY;
+
+	public XY plus(XY xy) {
+		return new XY(this.x + xy.x, this.y + xy.y);
 	}
 	
-	public int getX() {
-		return this.x;
+	public XY minus(XY xy) {
+		return new XY(this.x + xy.x, this.y + xy.y);
 	}
 	
-	public int getY() {
-		return this.y;
+	public XY times(int factor) {
+		//not certain about this impl
+		return new XY(this.x * factor, this.y * factor);
 	}
 	
-	public boolean equals(XY location) {
-		return (location.getX() == this.x && location.getY() == this.y);
+	public double length() {
+		//TODO:
+		return 0;
+	}
+    /**
+     * 
+     * @param xy a second coordinate pair
+     * @return the euklidian distance (pythagoras)
+     */
+    public double distanceFrom(XY xy) {
+    	int deltaX = Math.abs(this.x - xy.x);
+		int deltaY = Math.abs(this.y - xy.y);
+		return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+    }
+    
+    public int hashCode() {
+    	//TODO
+    	return 0;
+    }
+    
+    public boolean equals(Object obj) {
+		if(obj instanceof XY) {
+			XY location = (XY) obj;
+			return (location.x == this.x && location.y == this.y);
+		} 
+		return false;
 	}
 	
 	@Override
 	public String toString() {
 		return this.x + " " + this.y;
-	}
-	
-	public static XY getVector(MoveCommand command) {	//inverting down and up to make moving in the matrix better
-		switch(command) {
-		case DOWN_LEFT:
-			return UP_LEFT;
-		case DOWN:
-			return UP;
-		case DOWN_RIGHT:
-			return UP_RIGHT;
-		case LEFT:
-			return LEFT;
-		case RIGHT:
-			return RIGHT;
-		case UP_LEFT:
-			return DOWN_LEFT;
-		case UP:
-			return DOWN;
-		case UP_RIGHT:
-			return DOWN_RIGHT;
-		default:
-			return ORIGIN;
-		}
-	}
-	
-	public static XY getRandomLocationBetween(int maxX, int maxY) {
-		return new XY(new Random().nextInt(maxX), new Random().nextInt(maxY));
-	}
-	
-	public static double distanceBetween(XY first, XY second) {
-		int deltaX = Math.abs(first.getX() - second.getX());
-		int deltaY = Math.abs(first.getY() - second.getY());
-		return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
-	}
-	
-	public static XY invertVector(XY vector) {
-		return new XY(vector.getX() * -1, vector.getY() * -1);
 	}
 }

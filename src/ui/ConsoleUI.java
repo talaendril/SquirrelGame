@@ -10,6 +10,7 @@ import entities.HandOperatedMasterSquirrel;
 import entities.MasterSquirrel;
 import entities.MiniSquirrel;
 import entities.Wall;
+import location.XY;
 import ui.commandhandle.Command;
 import ui.commandhandle.CommandScanner;
 
@@ -61,5 +62,10 @@ public class ConsoleUI implements UI{
 	@Override
 	public void message(String msg) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void implode(XY location, int impactRadius) {
+		//nothing to do right now
 	}
 }
