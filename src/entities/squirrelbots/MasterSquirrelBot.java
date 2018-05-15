@@ -47,7 +47,6 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 	private class ControllerContextImpl implements ControllerContext {
 		
 		private final EntityContext entContext;
-		private final int sightRange = 15;
 		
 		ControllerContextImpl(EntityContext context) {
 			this.entContext = context;
@@ -55,14 +54,12 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 
 		@Override
 		public XY getViewLowerLeft() {
-			// TODO Auto-generated method stub
-			return null;
+			return new XY(0, this.entContext.getSize().y);
 		}
 
 		@Override
 		public XY getViewUpperRight() {
-			// TODO Auto-generated method stub
-			return null;
+			return new XY(this.entContext.getSize().x, 0);
 		}
 
 		@Override
@@ -102,8 +99,7 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 
 		@Override
 		public XY locate() {
-			// TODO Auto-generated method stub
-			return null;
+			return MasterSquirrelBot.this.getLocation();
 		}
 
 		@Override
@@ -114,7 +110,7 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 
 		@Override
 		public XY directionOfMaster() {
-			// TODO Auto-generated method stub
+			//should not be called
 			return null;
 		}
 

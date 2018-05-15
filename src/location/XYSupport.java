@@ -15,6 +15,17 @@ public class XYSupport {
 		}
 		return 0;
 	}
+	
+	public static XY normalize(XY vector) {
+		return new XY(normalize(vector.x), normalize(vector.y));
+	}
+	
+	public static boolean isInvalid(XY location) {
+		if(location.x < 0 || location.y < 0) {
+			return false;
+		}
+		return true;
+	}
 
 	public static XY getVectorBetween(XY location, XY direction) {
 		int deltaX = direction.x - location.x;
