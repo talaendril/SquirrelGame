@@ -227,7 +227,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		double newDistance;
 		for(int i = 0; i < array.length; i++) {
 			if(array[i] != null) {
-				if((newDistance = XYSupport.distanceBetween(array[i].getLocation(), pos)) < shortestDistance) {
+				if((newDistance = array[i].getLocation().distanceFrom(pos)) < shortestDistance) {
 					shortestDistance = newDistance;
 					nearest = array[i];
 				}
@@ -260,7 +260,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 				if(entity == null) {
 					continue;
 				}
-				double distance = XYSupport.distanceBetween(ms.getLocation(), entity.getLocation());
+				double distance = ms.getLocation().distanceFrom(entity.getLocation());
 				if(distance < impactRadius) {
 					double impactArea = impactRadius * impactRadius * Math.PI;
 					double energyLoss = 200 * (ms.getEnergy()/impactArea) * (1 - distance/impactRadius);

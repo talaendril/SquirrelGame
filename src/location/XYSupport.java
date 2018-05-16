@@ -37,12 +37,6 @@ public class XYSupport {
 		return new XY(vector.x * -1, vector.y * -1);
 	}
 
-	public static double distanceBetween(XY first, XY second) {
-		int deltaX = Math.abs(first.x - second.x);
-		int deltaY = Math.abs(first.y - second.y);
-		return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
-	}
-
 	public static XY getRandomLocationBetween(int maxX, int maxY) {
 		return new XY(new Random().nextInt(maxX), new Random().nextInt(maxY));
 	}
