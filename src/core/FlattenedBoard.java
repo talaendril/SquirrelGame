@@ -334,6 +334,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		do {
 			newLocation = XYSupport.getRandomLocationBetween(board.getBoardSizeX() - 1, board.getBoardSizeY() - 1);
 		} while(this.board.getEntitySet().getEntity(newLocation) != null);
+		entity.resetEnergy();
 		entity.setLocation(newLocation);
 		this.board.getEntitySet().addEntity(entity);
 		entityMatrix[entity.getLocation().y][entity.getLocation().x] = entity;

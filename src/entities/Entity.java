@@ -18,6 +18,8 @@ public abstract class Entity {
 	
 	public abstract void nextStep(EntityContext context, MoveCommand command);
 	
+	public abstract void resetEnergy();
+	
 	public int getID() {
 		return this.id;
 	}

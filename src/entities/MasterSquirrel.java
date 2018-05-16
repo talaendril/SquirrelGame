@@ -8,6 +8,7 @@ import core.EntityContext;
 import entities.squirrelbots.MiniSquirrelBot;
 import exceptions.BelowThresholdException;
 import exceptions.NotEnoughEnergyException;
+import exceptions.ShouldNotBeCalledException;
 import idmanager.ID;
 import location.XY;
 import location.XYSupport;
@@ -22,6 +23,11 @@ public class MasterSquirrel extends Squirrel {
 	
 	public MasterSquirrel(int id, XY location) {
 		super(id, 1100, location);
+	}
+	
+	@Override
+	public void resetEnergy() {
+		throw new ShouldNotBeCalledException();
 	}
 	
 	@Override

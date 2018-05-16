@@ -10,11 +10,21 @@ public class BadBeast extends Character {
 	public static final int MAXIMUM_BITECOUNT = 6; 
 	public static final int MAXIMUM_STEPCOUNT = 3;
 	
+	private static final int startEnergy = -150;
+	
 	private int stepCounter = 0;
 	private int biteCounter = 0;
 
 	public BadBeast(int id, XY location) {
-		super(id, -150, location);
+		super(id, startEnergy, location);
+	}
+	
+	@Override
+	public void resetEnergy() {
+		if(this.getEnergy() != startEnergy) {
+			int diff = startEnergy - this.getEnergy();
+			this.updateEnergy(diff);
+		}
 	}
 	
 	@Override

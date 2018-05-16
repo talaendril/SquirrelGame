@@ -1,6 +1,7 @@
 package entities;
 
 import core.EntityContext;
+import exceptions.ShouldNotBeCalledException;
 import location.XY;
 import ui.commandhandle.MoveCommand;
 
@@ -18,5 +19,10 @@ public class Wall extends Entity {
 	@Override
 	public void nextStep(EntityContext context, MoveCommand command) {
 		//nothing to do
+	}
+	
+	@Override
+	public void resetEnergy() {
+		throw new ShouldNotBeCalledException();
 	}
 }

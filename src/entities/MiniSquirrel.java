@@ -1,6 +1,7 @@
 package entities;
 
 import core.EntityContext;
+import exceptions.ShouldNotBeCalledException;
 import location.XY;
 import location.XYSupport;
 import ui.commandhandle.MoveCommand;
@@ -18,6 +19,11 @@ public class MiniSquirrel extends Squirrel {
 	
 	public MasterSquirrel getMaster() {
 		return this.master;
+	}
+	
+	@Override
+	public void resetEnergy() {
+		throw new ShouldNotBeCalledException();
 	}
 	
 	@Override

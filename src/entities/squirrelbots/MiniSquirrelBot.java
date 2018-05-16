@@ -52,14 +52,14 @@ public class MiniSquirrelBot extends MiniSquirrel {
 
 		@Override
 		public XY getViewLowerLeft() {
-			// TODO Auto-generated method stub
-			return null;
+			return new XY(MiniSquirrelBot.this.getLocation().x - this.sightRange, 
+					MiniSquirrelBot.this.getLocation().y + this.sightRange);
 		}
 
 		@Override
 		public XY getViewUpperRight() {
-			// TODO Auto-generated method stub
-			return null;
+			return new XY(MiniSquirrelBot.this.getLocation().x + this.sightRange,
+					MiniSquirrelBot.this.getLocation().x - this.sightRange);
 		}
 
 		@Override

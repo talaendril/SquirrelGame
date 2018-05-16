@@ -5,9 +5,19 @@ import location.XY;
 import ui.commandhandle.MoveCommand;
 
 public class BadPlant extends Entity {
-
+	
+	private final static int startEnergy = -100;
+	
 	public BadPlant(int id, XY location) {
-		super(id, -100, location);
+		super(id, startEnergy, location);
+	}
+	
+	@Override
+	public void resetEnergy() {
+		if(this.getEnergy() != startEnergy) {
+			int diff = startEnergy - this.getEnergy();
+			this.updateEnergy(diff);
+		}
 	}
 	
 	@Override

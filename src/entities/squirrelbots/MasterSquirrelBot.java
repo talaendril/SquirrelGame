@@ -13,6 +13,7 @@ import entities.MasterSquirrel;
 import entities.MiniSquirrel;
 import exceptions.BelowThresholdException;
 import exceptions.NotEnoughEnergyException;
+import exceptions.ShouldNotBeCalledException;
 import location.XY;
 import ui.commandhandle.MoveCommand;
 
@@ -47,19 +48,21 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 	private class ControllerContextImpl implements ControllerContext {
 		
 		private final EntityContext entContext;
+		private final int sightRange = 15;
 		
 		ControllerContextImpl(EntityContext context) {
 			this.entContext = context;
 		}
 
-		@Override
 		public XY getViewLowerLeft() {
-			return new XY(0, this.entContext.getSize().y);
+			return new XY(MasterSquirrelBot.this.getLocation().x - this.sightRange, 
+					MasterSquirrelBot.this.getLocation().y + this.sightRange);
 		}
 
 		@Override
 		public XY getViewUpperRight() {
-			return new XY(this.entContext.getSize().x, 0);
+			return new XY(MasterSquirrelBot.this.getLocation().x + this.sightRange,
+					MasterSquirrelBot.this.getLocation().x - this.sightRange);
 		}
 
 		@Override
@@ -94,7 +97,7 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 
 		@Override
 		public void implode(int impactRadius) {
-			// should never be called
+			throw new ShouldNotBeCalledException();
 		}
 
 		@Override
@@ -110,8 +113,7 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 
 		@Override
 		public XY directionOfMaster() {
-			//should not be called
-			return null;
+			throw new ShouldNotBeCalledException();
 		}
 
 		@Override
