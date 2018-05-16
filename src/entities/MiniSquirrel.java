@@ -33,6 +33,7 @@ public class MiniSquirrel extends Squirrel {
 	
 	@Override
 	public void nextStep(EntityContext context, MoveCommand command) {
+		this.updateEnergy(-1);
 		if(this.getStunnedAndDecrement()) {
 			return;
 		}

@@ -9,6 +9,7 @@ import botimpl.BotControllerFactoryImpl;
 import core.EntityContext;
 import core.EntityType;
 import core.logging.LoggingProxyFactory;
+import entities.Entity;
 import entities.MasterSquirrel;
 import entities.MiniSquirrel;
 import exceptions.BelowThresholdException;
@@ -54,6 +55,7 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 			this.entContext = context;
 		}
 
+		@Override
 		public XY getViewLowerLeft() {
 			return new XY(MasterSquirrelBot.this.getLocation().x - this.sightRange, 
 					MasterSquirrelBot.this.getLocation().y + this.sightRange);
@@ -77,6 +79,10 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 
 		@Override
 		public void spawnMiniBot(XY direction, int energy) {
+			if(this.getEntityAt(MasterSquirrelBot.this.getLocation().plus(direction)) != EntityType.NONE) {
+				LOGGER.info("No suitable place given to spawn a MiniSquirrelBot");
+				return;
+			}
 			try {
 				LOGGER.entering(MasterSquirrelBot.class.getName(), "spawnMiniBot(XY, int)");
 				MiniSquirrel ms = spawnMiniSquirrel(MasterSquirrelBot.this.getLocation().plus(direction), energy);
@@ -104,11 +110,15 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 		public XY locate() {
 			return MasterSquirrelBot.this.getLocation();
 		}
-
+		/*
+		 * returns true if the Entity at xy is a MiniSquirrel from the production of this MasterSquirrelBot
+		 * (non-Javadoc)
+		 * @see botapi.ControllerContext#isMine(location.XY)
+		 */
 		@Override
 		public boolean isMine(XY xy) {
-			// TODO Auto-generated method stub
-			return false;
+			Entity e = this.entContext.getEntity(xy);
+			return MasterSquirrelBot.this.checkEntityInProduction(e);
 		}
 
 		@Override

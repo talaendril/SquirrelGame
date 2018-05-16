@@ -48,8 +48,22 @@ public class MasterSquirrel extends Squirrel {
 		return newMS;	
 	}
 	
+	public String productionToString() {
+		StringBuilder s = new StringBuilder();
+		for(MiniSquirrel ms : production) {
+			s.append(ms.toString() + "\n");
+		}
+		return s.toString();
+	}
+	
 	public List<MiniSquirrel> getProduction() {
 		return this.production;
+	}
+	
+	public void removeFromProduction(Entity ms) {
+		if(this.checkEntityInProduction(ms)) {
+			this.production.remove(ms);
+		}
 	}
 	
 	public boolean checkEntityInProduction(Entity entity) {
