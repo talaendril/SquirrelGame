@@ -34,11 +34,9 @@ public final class XY {
 	}
 	
 	public double length() {
-		//TODO:
-		return 0;
+		return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
 	}
     /**
-     * 
      * @param xy a second coordinate pair
      * @return the euklidian distance (pythagoras)
      */
