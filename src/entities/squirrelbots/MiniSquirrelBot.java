@@ -6,8 +6,10 @@ import botapi.ControllerContext;
 import botimpl.BotControllerFactoryImpl;
 import core.EntityContext;
 import core.EntityType;
+import entities.Entity;
 import entities.MasterSquirrel;
 import entities.MiniSquirrel;
+import exceptions.ShouldNotBeCalledException;
 import location.XY;
 import location.XYSupport;
 import ui.commandhandle.MoveCommand;
@@ -74,7 +76,7 @@ public class MiniSquirrelBot extends MiniSquirrel {
 
 		@Override
 		public void spawnMiniBot(XY direction, int energy) {
-			//should never be called
+			throw new ShouldNotBeCalledException();
 		}
 
 		@Override
@@ -84,13 +86,20 @@ public class MiniSquirrelBot extends MiniSquirrel {
 
 		@Override
 		public XY locate() {
-			// TODO Auto-generated method stub
-			return null;
+			return MiniSquirrelBot.this.getLocation();
 		}
 
 		@Override
 		public boolean isMine(XY xy) {
-			// TODO Auto-generated method stub
+			Entity e = this.entContext.getEntity(xy);
+			if(EntityType.getEntityType(e) == EntityType.MASTER_SQUIRREL) {
+				MasterSquirrel master = MiniSquirrelBot.this.getMaster();
+				return master.equals(e);
+			}
+			if(EntityType.getEntityType(e) == EntityType.MINI_SQUIRREL) {
+				MasterSquirrel master = MiniSquirrelBot.this.getMaster();
+				return master.checkEntityInProduction(e);
+			}
 			return false;
 		}
 

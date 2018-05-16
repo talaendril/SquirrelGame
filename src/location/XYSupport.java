@@ -33,10 +33,6 @@ public class XYSupport {
 		return new XY(normalize(deltaX), normalize(deltaY));
 	}
 
-	public static XY invertVector(XY vector) {
-		return new XY(vector.x * -1, vector.y * -1);
-	}
-
 	public static XY getRandomLocationBetween(int maxX, int maxY) {
 		return new XY(new Random().nextInt(maxX), new Random().nextInt(maxY));
 	}

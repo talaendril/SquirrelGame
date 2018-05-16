@@ -39,6 +39,11 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	public Entity getEntity(int x, int y) {
 		return this.board.getEntitySet().getEntity(new XY(x, y));
 	}
+	
+	@Override
+	public Entity getEntity(XY xy) {
+		return this.board.getEntitySet().getEntity(xy);
+	}
 
 	@Override
 	public EntityType getEntityType(int x, int y) {
@@ -247,7 +252,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	
 	public XY bestVectorAwayFromEntity(Entity beast, Entity hunter) {
 		XY vectorToEntity = this.bestVectorToEntity(beast, hunter);
-		return XYSupport.invertVector(vectorToEntity);
+		return vectorToEntity.times(-1);
 	}
 	
 	@Override

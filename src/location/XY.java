@@ -29,7 +29,6 @@ public final class XY {
 	}
 	
 	public XY times(int factor) {
-		//not certain about this impl
 		return new XY(this.x * factor, this.y * factor);
 	}
 	
