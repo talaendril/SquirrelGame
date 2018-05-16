@@ -37,22 +37,22 @@ public class FlattenedBoard implements EntityContext, BoardView {
 
 	@Override
 	public Entity getEntity(int x, int y) {
-		return this.board.getEntitySet().getEntity(new XY(x, y));
+		return this.board.getEntity(new XY(x, y));
 	}
 
 	@Override
 	public Entity getEntity(XY xy) {
-		return this.board.getEntitySet().getEntity(xy);
+		return this.board.getEntity(xy);
 	}
 
 	@Override
 	public EntityType getEntityType(int x, int y) {
-		return EntityType.getEntityType(this.board.getEntitySet().getEntity(new XY(x, y)));
+		return EntityType.getEntityType(this.board.getEntity(new XY(x, y)));
 	}
 
 	@Override
 	public EntityType getEntityType(XY xy) {
-		return EntityType.getEntityType(this.board.getEntitySet().getEntity(xy));
+		return EntityType.getEntityType(this.board.getEntity(xy));
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 
 	@Override
 	public void tryMove(MiniSquirrel ms, XY direction) {
-		Entity e = this.board.getEntitySet().getEntity(ms.getLocation().plus(direction));
+		Entity e = this.board.getEntity(ms.getLocation().plus(direction));
 		LOGGER.info("MiniSquirrel" + ms.getID() + " tries to move from " + ms.getLocation().toString()
 				+ " in a direction of " + direction.toString());
 		if (e != null) {
@@ -119,7 +119,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		if (gb.getStepCounterAndIncrement() == GoodBeast.MAXIMUM_STEPCOUNT) {
 			LOGGER.info("GoodBeast" + gb.getID() + " tries to move from " + gb.getLocation().toString()
 					+ " in a direction of " + vector.toString());
-			Entity e = this.board.getEntitySet().getEntity(gb.getLocation().plus(vector));
+			Entity e = this.board.getEntity(gb.getLocation().plus(vector));
 			if (e != null) {
 				if (e instanceof Squirrel) {
 					e.updateEnergy(gb.getEnergy());
@@ -143,7 +143,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		if (bb.getStepCounterAndIncrement() == BadBeast.MAXIMUM_STEPCOUNT) {
 			LOGGER.info("BadBeast" + bb.getID() + " tries to move from " + bb.getLocation().toString()
 					+ " in a direction of " + vector.toString());
-			Entity e = this.board.getEntitySet().getEntity(bb.getLocation().plus(vector));
+			Entity e = this.board.getEntity(bb.getLocation().plus(vector));
 			if (e != null) {
 				if (e instanceof Squirrel) {
 					if (EntityType.getEntityType(e) == EntityType.MINI_SQUIRREL) {
@@ -175,7 +175,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		if (direction == XY.ZERO_ZERO) {
 			return;
 		}
-		Entity e = this.board.getEntitySet().getEntity(master.getLocation().plus(direction));
+		Entity e = this.board.getEntity(master.getLocation().plus(direction));
 		if (e != null) {
 			if (e instanceof Character) {
 				if (EntityType.getEntityType(e) == EntityType.MASTER_SQUIRREL) {
@@ -220,7 +220,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		int arrayPosition = 0;
 		for (int i = pos.y - 6; i < pos.y + 6; i++) {
 			for (int j = pos.x - 6; j < pos.x + 6; j++) {
-				Entity e = this.board.getEntitySet().getEntity(new XY(j, i));
+				Entity e = this.board.getEntity(new XY(j, i));
 				if (e instanceof Squirrel) {
 					array[arrayPosition++] = (Squirrel) e;
 				}
@@ -263,7 +263,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		double accumulatedEnergy = 0;
 		for (int i = msLoc.y - impactRadius; i <= msLoc.y + impactRadius; i++) {
 			for (int j = msLoc.x - impactRadius; j <= msLoc.x + impactRadius; j++) {
-				Entity entity = this.board.getEntitySet().getEntity(new XY(j, i));
+				Entity entity = this.board.getEntity(new XY(j, i));
 				if (entity == null || entity.equals(ms)) {
 					continue;
 				}
@@ -344,7 +344,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		XY newLocation;
 		do {
 			newLocation = XYSupport.getRandomLocationBetween(board.getBoardSizeX() - 1, board.getBoardSizeY() - 1);
-		} while (this.board.getEntitySet().getEntity(newLocation) != null);
+		} while (this.board.getEntity(newLocation) != null);
 		entity.resetEnergy();
 		entity.setLocation(newLocation);
 		this.board.getEntitySet().addEntity(entity);

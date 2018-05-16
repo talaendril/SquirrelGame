@@ -4,7 +4,6 @@ import java.util.logging.Logger;
 
 import entities.Entity;
 import entities.Wall;
-import location.XY;
 
 public class EntitySet {
 	
@@ -17,7 +16,7 @@ public class EntitySet {
 		entities = new Entity[ArraySize];
 	}
 	
-	public Entity[] doubleArraySize() {
+	private Entity[] doubleArraySize() {
 		Entity[] newArray = new Entity[entities.length * 2];
 		for(int i = 0; i < entities.length; i++) {
 			newArray[i] = entities[i];
@@ -61,32 +60,5 @@ public class EntitySet {
 	
 	public Entity[] getEntities() {
 		return this.entities;
-	}
-	
-	public Entity getEntity(XY location) {
-		for(Entity e : entities) {
-			if(e != null) {
-				if(e.getLocation().equals(location)) {
-					return e;
-				}
-			}
-		}
-		return null;
-	}
-	
-	public XY getEmptyLocationAround(XY pos) {
-		if(this.getEntity(new XY(pos.x - 1, pos.y)) == null) {
-			return new XY(pos.x - 1, pos.y);
-		}
-		if(this.getEntity(new XY(pos.x - 1, pos.y)) == null) {
-			return new XY(pos.x + 1, pos.y);
-		}
-		if(this.getEntity(new XY(pos.x - 1, pos.y)) == null) {
-			return new XY(pos.x, pos.y - 1);
-		}
-		if(this.getEntity(new XY(pos.x - 1, pos.y)) == null) {
-			return new XY(pos.x, pos.y + 1);
-		} 
-		return null;
 	}
 }
