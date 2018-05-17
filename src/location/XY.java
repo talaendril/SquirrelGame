@@ -25,7 +25,7 @@ public final class XY {
 	}
 	
 	public XY minus(XY xy) {
-		return new XY(this.x + xy.x, this.y + xy.y);
+		return new XY(this.x - xy.x, this.y - xy.y);
 	}
 	
 	public XY times(int factor) {
