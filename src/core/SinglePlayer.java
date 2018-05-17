@@ -1,6 +1,5 @@
 package core;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -103,14 +102,14 @@ public class SinglePlayer extends Game {
 			}
 			MasterSquirrel[] masters = this.getMasters();
 			List<MiniSquirrel> list = masters[0].getProduction();
-			Iterator<MiniSquirrel> iterator = list.iterator();
-			while(iterator.hasNext()) {
-				MiniSquirrel ms = iterator.next();
+			try {
+				MiniSquirrel ms = list.get(0);
 				int impactRadius = Integer.parseInt((String) params[0]);
 				this.getBoard().flatten().implode(ms, impactRadius); 
-				this.getUI().implode(ms.getLocation(), impactRadius);;
+				this.getUI().implode(ms.getLocation(), impactRadius);
+			} catch(IndexOutOfBoundsException e) {
+				LOGGER.severe("Tried to implode a MiniSquirrel that doesn't exist");
 			}
-			nextCommand = new Command(GameCommandType.NOTHING);
 			break;
 		default:
 			break;

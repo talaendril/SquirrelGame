@@ -6,8 +6,6 @@ import location.XYSupport;
 import ui.commandhandle.MoveCommand;
 
 public class MasterBotController implements BotController {
-	
-	private final int sightRange = 15;
 
 	@Override
 	public void nextStep(ControllerContext view) {

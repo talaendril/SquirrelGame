@@ -85,7 +85,7 @@ public class Board {
 		} else if (ms.getEnergy() < energy ){
 			throw new NotEnoughEnergyException();
 		} else {
-			XY location = this.getEntitySet().getEmptyLocationAround(ms.getLocation());
+			XY location = this.getEmptyLocationAround(ms.getLocation());
 			if(location == null) {
 				LOGGER.log(Level.INFO, "couldn't find a location for the MiniSquirrel to spawn");
 				return;
@@ -103,7 +103,7 @@ public class Board {
 			int randomX = new Random().nextInt(this.boardSizeX - 1);
 			int randomY = new Random().nextInt(this.boardSizeY - 1);
 			XY check = new XY(randomX, randomY);
-			if (es.getEntity(check) == null) {
+			if (this.getEntity(check) == null) {
 				return check;
 			} 
 		}
@@ -129,5 +129,32 @@ public class Board {
 	@Override
 	public String toString() {
 		return this.es.toString();
+	}
+	
+	public Entity getEntity(XY location) {
+		for(Entity e : this.getEntitySet().getEntities()) {
+			if(e != null) {
+				if(e.getLocation().equals(location)) {
+					return e;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public XY getEmptyLocationAround(XY pos) {
+		if(this.getEntity(new XY(pos.x - 1, pos.y)) == null) {
+			return new XY(pos.x - 1, pos.y);
+		}
+		if(this.getEntity(new XY(pos.x - 1, pos.y)) == null) {
+			return new XY(pos.x + 1, pos.y);
+		}
+		if(this.getEntity(new XY(pos.x - 1, pos.y)) == null) {
+			return new XY(pos.x, pos.y - 1);
+		}
+		if(this.getEntity(new XY(pos.x - 1, pos.y)) == null) {
+			return new XY(pos.x, pos.y + 1);
+		} 
+		return null;
 	}
 }

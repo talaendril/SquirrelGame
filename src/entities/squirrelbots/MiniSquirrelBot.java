@@ -32,6 +32,7 @@ public class MiniSquirrelBot extends MiniSquirrel {
 	}
 	
 	public void nextStep(EntityContext context, MoveCommand command) {
+		this.updateEnergy(-1);
 		if(this.getStunnedAndDecrement()) {
 			return;
 		}
@@ -88,9 +89,13 @@ public class MiniSquirrelBot extends MiniSquirrel {
 		public XY locate() {
 			return MiniSquirrelBot.this.getLocation();
 		}
-
+		/*
+		 * returns true if the Entity at xy is a MiniSquirrel of the same production as this MiniSquirrelBot
+		 * (non-Javadoc)
+		 * @see botapi.ControllerContext#isMine(location.XY)
+		 */
 		@Override
-		public boolean isMine(XY xy) {
+		public boolean isMine(XY xy) {		
 			Entity e = this.entContext.getEntity(xy);
 			if(EntityType.getEntityType(e) == EntityType.MASTER_SQUIRREL) {
 				MasterSquirrel master = MiniSquirrelBot.this.getMaster();

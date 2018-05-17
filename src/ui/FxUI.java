@@ -29,6 +29,7 @@ public class FxUI extends Scene implements UI {
 	private static final Logger LOGGER = Logger.getLogger(FxUI.class.getName());
 	private static final int CELL_SIZE = 25;
 	private static Command nextCommand = new Command(GameCommandType.NOTHING);
+	private static Command lastMoveCommand = new Command(GameCommandType.NOTHING);
 	
 	private Canvas boardCanvas;
 	private Label msgLabel;
@@ -81,9 +82,11 @@ public class FxUI extends Scene implements UI {
 				nextCommand = new Command(GameCommandType.MOVE, MoveCommand.DOWN_RIGHT);
 				break;
 			case I:
+				lastMoveCommand = nextCommand;
 				nextCommand = new Command(GameCommandType.IMPLODE_MINI, "3");
 				break;
 			case P:
+				lastMoveCommand = nextCommand;
 				nextCommand = new Command(GameCommandType.SPAWN_MINI, "100");
 				break;
 			default:
@@ -215,9 +218,9 @@ public class FxUI extends Scene implements UI {
 
 	@Override
 	public Command getCommand() {
-		if (nextCommand.getCommandType() == GameCommandType.SPAWN_MINI) {
+		if (nextCommand.getCommandType() != GameCommandType.MOVE) {
 			Command returned = nextCommand;
-			nextCommand = new Command(GameCommandType.NOTHING);
+			nextCommand = lastMoveCommand;
 			return returned;
 		}
 		return nextCommand;
