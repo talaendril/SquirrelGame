@@ -14,6 +14,7 @@ import location.XY;
 import ui.commandhandle.Command;
 import ui.commandhandle.CommandScanner;
 
+@Deprecated
 public class ConsoleUI implements UI{
 	
 	private CommandScanner scanner;

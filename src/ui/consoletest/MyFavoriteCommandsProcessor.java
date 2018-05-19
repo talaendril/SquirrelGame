@@ -19,7 +19,7 @@ public class MyFavoriteCommandsProcessor {
 		 while (true) { // the loop over all commands with one input line for every command
 		     command = commandScanner.next();
 		     if(command == null) {
-		    	 System.out.println("Ungültiger Command");
+		    	 System.out.println("UngÃ¼ltiger Command");
 		    	 continue;
 		     }
 		     Object[] params = command.getParams();
@@ -66,7 +66,7 @@ public class MyFavoriteCommandsProcessor {
 		while(true) {
 			command = scanner.next();
 			if(command == null) {
-		    	 System.out.println("Ungültiger Command");
+		    	 System.out.println("UngÃ¼ltiger Command");
 		    	 continue;
 		     }
 			Object[] params = command.getParams();

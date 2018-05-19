@@ -6,14 +6,15 @@ import exceptions.BelowThresholdException;
 import exceptions.NotEnoughEnergyException;
 import exceptions.ScanException;
 
+/*
+currently useless since we don't use Reflection anymore
+ */
+@Deprecated
 public class GameCommandRunner {
 	/*
 	 * this class is used to work with the processed command
 	 * meaning it is used as the reflection and any method invoked in Game will be called here
 	 * this class then continues to call either Board, prints help, exit System, etc
-	 * 
-	 * TODO needs cleanup since KeyEvents have been implemented in exercise 5 and certain commands arent called anymore
-	 * ALSO FIX GAMECOMMANDTYPE
 	 */
 
 	private State state;
@@ -52,5 +53,9 @@ public class GameCommandRunner {
 	
 	public void doNothing() {
 		this.state.update(MoveCommand.NONE);
+	}
+
+	public void implode(Object[] params) {
+
 	}
 }
