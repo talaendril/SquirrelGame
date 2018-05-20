@@ -107,20 +107,13 @@ public class FxUI extends Scene implements UI {
 
     public static void loadImages() {
         try {
-            FileInputStream input = new FileInputStream("images\\MasterSquirrel.png");
-            masterImage = new Image(input, CELL_SIZE, CELL_SIZE, false, false);
-            input = new FileInputStream("images\\Wall.jpg");
-            wallImage = new Image(input, CELL_SIZE, CELL_SIZE, false, false);
-            input = new FileInputStream("images\\GoodBeast.png");
-            goodBeastImage = new Image(input, CELL_SIZE, CELL_SIZE, false, false);
-            input = new FileInputStream("images\\GoodPlant.png");
-            goodPlantImage = new Image(input, CELL_SIZE, CELL_SIZE, false, false);
-            input = new FileInputStream("images\\BadBeast.png");
-            badBeastImage = new Image(input, CELL_SIZE, CELL_SIZE, false, false);
-            input = new FileInputStream("images\\BadPlant.png");
-            badPlantImage = new Image(input, CELL_SIZE, CELL_SIZE, false, false);
-            input = new FileInputStream("images\\MiniSquirrel.png");
-            miniSquirrelImage = new Image(input, CELL_SIZE, CELL_SIZE, false, false);
+            masterImage = new Image(new FileInputStream("images\\MasterSquirrelBlackOutline.png"), CELL_SIZE, CELL_SIZE, false, false);
+            wallImage = new Image(new FileInputStream("images\\Wall.jpg"), CELL_SIZE, CELL_SIZE, false, false);
+            goodBeastImage = new Image(new FileInputStream("images\\GoodBeast.png"), CELL_SIZE, CELL_SIZE, false, false);
+            goodPlantImage = new Image(new FileInputStream("images\\GoodPlant.png"), CELL_SIZE, CELL_SIZE, false, false);
+            badBeastImage = new Image(new FileInputStream("images\\BadBeast.png"), CELL_SIZE, CELL_SIZE, false, false);
+            badPlantImage = new Image(new FileInputStream("images\\BadPlant.png"), CELL_SIZE, CELL_SIZE, false, false);
+            miniSquirrelImage = new Image(new FileInputStream("images\\MiniSquirrel.png"), CELL_SIZE, CELL_SIZE, false, false);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -202,6 +195,11 @@ public class FxUI extends Scene implements UI {
 
     private static String help() {
         StringBuilder sb = new StringBuilder("Help: \n");
+        sb.append("You play the Squirrel\n");
+        sb.append("Acorns are Good Plants\n");
+        sb.append("Blue Birds are Good Beasts\n");
+        sb.append("Green Plants with Yellow Heads are Bad Plants\n");
+        sb.append("Green Snakes are Bad Beasts\n\n");
         sb.append("Q move up left\n");
         sb.append("W move up\n");
         sb.append("E move up right\n");
