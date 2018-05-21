@@ -21,10 +21,7 @@ public class XYSupport {
 	}
 	
 	public static boolean isInvalid(XY location) {
-		if(location.x < 0 || location.y < 0) {
-			return false;
-		}
-		return true;
+		return location.x < 0 || location.y < 0;
 	}
 
 	public static XY getVectorBetween(XY location, XY direction) {

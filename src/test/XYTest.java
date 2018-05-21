@@ -4,7 +4,9 @@ import org.junit.*;
 
 import location.XY;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class XYTest {
 
@@ -56,19 +58,18 @@ public class XYTest {
 
 	@Test
 	public void testHashCode() {
-		//hashCode is not properly not implemented yet
-		assertEquals(0, loc.hashCode());
+		assertEquals(993, loc.hashCode());
 	}
 
 	@Test
 	public void testEquals() {
-		assertEquals(true, loc.equals(loc));
+		assertTrue(loc.equals(loc));
 
 		XY test1 = new XY(2, 2);
-		assertEquals(false, loc.equals(test1));
+		assertFalse(loc.equals(test1));
 
 		XY test2 = new XY(loc.x, loc.y);
-		assertEquals(true, loc.equals(test2));
+		assertTrue(loc.equals(test2));
 	}
 
 	@Test

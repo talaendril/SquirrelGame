@@ -42,7 +42,7 @@ public class FxUI extends Scene implements UI {
     private Canvas boardCanvas;
     private Label msgLabel;
 
-    public FxUI(Parent parent, Canvas boardCanvas, Label msgLabel) {
+    private FxUI(Parent parent, Canvas boardCanvas, Label msgLabel) {
         super(parent);
         this.boardCanvas = boardCanvas;
         this.msgLabel = msgLabel;
@@ -105,7 +105,7 @@ public class FxUI extends Scene implements UI {
         return fxUI;
     }
 
-    public static void loadImages() {
+    private static void loadImages() {
         try {
             masterImage = new Image(new FileInputStream("images\\MasterSquirrelBlackOutline.png"), CELL_SIZE, CELL_SIZE, false, false);
             wallImage = new Image(new FileInputStream("images\\Wall.jpg"), CELL_SIZE, CELL_SIZE, false, false);
@@ -115,7 +115,7 @@ public class FxUI extends Scene implements UI {
             badPlantImage = new Image(new FileInputStream("images\\BadPlant.png"), CELL_SIZE, CELL_SIZE, false, false);
             miniSquirrelImage = new Image(new FileInputStream("images\\MiniSquirrel.png"), CELL_SIZE, CELL_SIZE, false, false);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.severe("Could not find the specified image to load");
         }
     }
 
@@ -145,7 +145,7 @@ public class FxUI extends Scene implements UI {
                     case MASTER_SQUIRREL:
                         gc.drawImage(masterImage, j, i);
                         gc.setFill(Color.BLACK);
-                        gc.fillText(Integer.toString(view.getEntity(b, a).getID()), j, i, CELL_SIZE);    //still scuffed
+                        gc.fillText(Integer.toString(view.getEntity(b, a).getID()), j, i, CELL_SIZE);
                         break;
                     case MINI_SQUIRREL:
                         gc.drawImage(miniSquirrelImage, j, i);
@@ -194,22 +194,20 @@ public class FxUI extends Scene implements UI {
     }
 
     private static String help() {
-        StringBuilder sb = new StringBuilder("Help: \n");
-        sb.append("You play the Squirrel\n");
-        sb.append("Acorns are Good Plants\n");
-        sb.append("Blue Birds are Good Beasts\n");
-        sb.append("Green Plants with Yellow Heads are Bad Plants\n");
-        sb.append("Green Snakes are Bad Beasts\n\n");
-        sb.append("Q move up left\n");
-        sb.append("W move up\n");
-        sb.append("E move up right\n");
-        sb.append("A move left\n");
-        sb.append("D move right\n");
-        sb.append("Y move down left\n");
-        sb.append("X move down\n");
-        sb.append("C move down right\n");
-        sb.append("P spawn MiniSquirrel with 100 energy\n");
-        return sb.toString();
+        return "Help: \n" + "You play the Squirrel\n" +
+                "Acorns are Good Plants\n" +
+                "Blue Birds are Good Beasts\n" +
+                "Green Plants with Yellow Heads are Bad Plants\n" +
+                "Green Snakes are Bad Beasts\n\n" +
+                "Q move up left\n" +
+                "W move up\n" +
+                "E move up right\n" +
+                "A move left\n" +
+                "D move right\n" +
+                "Y move down left\n" +
+                "X move down\n" +
+                "C move down right\n" +
+                "P spawn MiniSquirrel with 100 energy\n";
     }
 
     @Override
