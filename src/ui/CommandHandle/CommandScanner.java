@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import exceptions.ScanException;
 
+@Deprecated
 public class CommandScanner {
 	
 	private CommandTypeInfo[] commandTypeInfos;
@@ -19,7 +20,7 @@ public class CommandScanner {
 	}
 	
 	public Command next() {
-		System.out.println("Gib den n‰chsten Command ein:");
+		System.out.println("Gib den n√§chsten Command ein:");
 		String input = scanner.nextLine();
 		String[] tokens = input.split("\\s+");
 		if(tokens == null) {

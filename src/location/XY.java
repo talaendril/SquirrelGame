@@ -1,5 +1,7 @@
 package location;
 
+import java.util.Objects;
+
 public final class XY {
 	
 	public final int x;
@@ -37,19 +39,21 @@ public final class XY {
 	}
     /**
      * @param xy a second coordinate pair
-     * @return the euklidian distance (pythagoras)
+     * @return the euclidean distance (pythagoras)
      */
     public double distanceFrom(XY xy) {
     	int deltaX = Math.abs(this.x - xy.x);
 		int deltaY = Math.abs(this.y - xy.y);
 		return Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
     }
-    
+
+    @Override
     public int hashCode() {
-    	//TODO
-    	return 0;
+        //formula for hashing: result = 31 * (31 + x) + y
+    	return Objects.hash(this.x, this.y);
     }
-    
+
+    @Override
     public boolean equals(Object obj) {
 		if(obj instanceof XY) {
 			XY location = (XY) obj;
