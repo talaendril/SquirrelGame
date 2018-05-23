@@ -4,9 +4,8 @@ import org.junit.*;
 
 import location.XY;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 
 public class XYTest {
 
@@ -63,13 +62,13 @@ public class XYTest {
 
 	@Test
 	public void testEquals() {
-		assertTrue(loc.equals(loc));
+		assertEquals(loc, loc);
 
 		XY test1 = new XY(2, 2);
-		assertFalse(loc.equals(test1));
+		assertNotEquals(loc, test1);
 
 		XY test2 = new XY(loc.x, loc.y);
-		assertTrue(loc.equals(test2));
+		assertEquals(loc, test2);
 	}
 
 	@Test

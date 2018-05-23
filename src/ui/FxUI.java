@@ -26,7 +26,7 @@ import ui.windows.OutputWindow;
 
 public class FxUI extends Scene implements UI {
     private static final Logger LOGGER = Logger.getLogger(FxUI.class.getName());
-    private static final int CELL_SIZE = 30;
+    private static final int CELL_SIZE = 20;
 
     private static Image masterImage;
     private static Image miniSquirrelImage;

@@ -23,7 +23,7 @@ public class Launcher extends Application {
 	private State state = new State(board);
 
 	@Override
-	public void start(Stage arg0) throws Exception {
+	public void start(Stage arg0) {
 		LOGGER.log(Level.INFO, "starting new game with JavaFX");
 		
 		Stage primaryStage = new Stage();
@@ -31,6 +31,12 @@ public class Launcher extends Application {
 		
 		String name = "kigame";
         final Game game = createGame(name, fxUI);
+
+        if(game == null) {
+            LOGGER.severe("The input String doesn't match any game name");
+            LOGGER.severe("Stopping game");
+            System.exit(0);
+        }
          
         primaryStage.setScene(fxUI);
         primaryStage.setTitle("Diligent Squirrel");
