@@ -4,21 +4,28 @@ import location.XY;
 
 public class BoardConfig {
 	
-	private final XY size = new XY(28, 28);
+	private final XY size;
 	
-	private final int numberOfGoodPlants = 20;
-	private final int numberOfBadPlants = 15;
-	private final int numberOfBadBeasts = 9;
-	private final int numberOfGoodBeasts = 25;
-	private final int numberOfRandomWalls = 40;
-	private final int numberOfWalls = 2 * size.x + 2 * size.y - 4 + numberOfRandomWalls;
-	private final int totalEntities = 
-			numberOfGoodPlants + numberOfBadPlants +
-			numberOfGoodBeasts + numberOfBadBeasts +
-			numberOfWalls;
+	private final int numberOfGoodPlants;
+	private final int numberOfBadPlants;
+	private final int numberOfBadBeasts;
+	private final int numberOfGoodBeasts;
+	private final int numberOfRandomWalls;
+	private final int numberOfWalls;
+	private final int totalEntities;
 	
 	public BoardConfig() {
-		
+		size = new XY(28, 28);
+
+		numberOfGoodPlants = 20;
+		numberOfBadPlants = 15;
+		numberOfBadBeasts = 9;
+		numberOfGoodBeasts = 25;
+		numberOfRandomWalls = 40;
+		numberOfWalls = 2 * size.x + 2 * size.y - 4 + numberOfRandomWalls;
+		totalEntities = numberOfGoodPlants + numberOfBadPlants +
+						numberOfGoodBeasts + numberOfBadBeasts +
+						numberOfWalls;
 	}
 	
 	public int getNumberOfBadPlants() {

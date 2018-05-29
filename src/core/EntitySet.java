@@ -12,12 +12,12 @@ public class EntitySet {
 	private Entity[] entities;
 	private int currentArrayPosition = 0;
 	
-	public EntitySet(int ArraySize) {
-		entities = new Entity[ArraySize];
+	public EntitySet(int arraySize) {
+		entities = new Entity[arraySize];
 	}
 	
-	private Entity[] doubleArraySize() {
-		Entity[] newArray = new Entity[entities.length * 2];
+	private Entity[] increaseArraySize() {
+		Entity[] newArray = new Entity[(entities.length + 1) * 2];
 		for(int i = 0; i < entities.length; i++) {
 			newArray[i] = entities[i];
 		}
@@ -27,10 +27,10 @@ public class EntitySet {
 	public void addEntity(Entity entity) {
 		if(entity != null) {
 			if(currentArrayPosition == entities.length) {
-				entities = this.doubleArraySize();
+				entities = this.increaseArraySize();
 			}
 			entities[currentArrayPosition++] = entity;
-			LOGGER.info("added entity " + entity.toString());
+			//LOGGER.info("added entity " + entity.toString());
 		}
 	}
 	
@@ -56,8 +56,7 @@ public class EntitySet {
 		}
 		return string;
 	}
-	
-	
+
 	public Entity[] getEntities() {
 		return this.entities;
 	}

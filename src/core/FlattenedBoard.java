@@ -22,7 +22,6 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	public FlattenedBoard(Board b) {
 		this.board = b;
 		entityMatrix = new Entity[this.board.getBoardSizeY()][this.board.getBoardSizeX()];
-
 		for (Entity e : this.board.getEntitySet().getEntities()) {
 			if (e != null) {
 				entityMatrix[e.getLocation().y][e.getLocation().x] = e;
@@ -83,10 +82,11 @@ public class FlattenedBoard implements EntityContext, BoardView {
 					} else {
 						ms.updateEnergy(e.getEnergy());
 					}
-					if (((BadBeast) e).getBiteCounterAndIncrement() == BadBeast.MAXIMUM_BITECOUNT) {
+					if (((BadBeast) e).getBiteCounter() == BadBeast.MAXIMUM_BITECOUNT) {
 						this.killAndReplace(e);
 						ms.move(direction);
 					}
+					((BadBeast) e).incrementBiteCounter();
 				} else if (EntityType.getEntityType(e) == EntityType.GOOD_BEAST) {
 					ms.updateEnergy(e.getEnergy());
 					this.killAndReplace(e);
@@ -156,11 +156,12 @@ public class FlattenedBoard implements EntityContext, BoardView {
 					} else if (EntityType.getEntityType(e) == EntityType.MASTER_SQUIRREL) {
 						e.updateEnergy(bb.getEnergy());
 					}
-					if (bb.getBiteCounterAndIncrement() == BadBeast.MAXIMUM_BITECOUNT) {
+					if (bb.getBiteCounter() == BadBeast.MAXIMUM_BITECOUNT) {
 						this.killAndReplace(bb);
 					} else {
 						// do nothing
 					}
+                    bb.incrementBiteCounter();
 				} else {
 					// do nothing
 				}
@@ -190,10 +191,11 @@ public class FlattenedBoard implements EntityContext, BoardView {
 					master.move(direction);
 				} else {
 					if (EntityType.getEntityType(e) == EntityType.BAD_BEAST) {
-						if (((BadBeast) e).getBiteCounterAndIncrement() == BadBeast.MAXIMUM_BITECOUNT) {
+						if (((BadBeast) e).getBiteCounter() == BadBeast.MAXIMUM_BITECOUNT) {
 							this.killAndReplace(e);
 							master.move(direction);
 						}
+                        ((BadBeast) e).incrementBiteCounter();
 					} else {
 						this.killAndReplace(e);
 						master.move(direction);

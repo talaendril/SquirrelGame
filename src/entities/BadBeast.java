@@ -32,9 +32,13 @@ public class BadBeast extends Character {
 		return "| BadBeast" + super.toString() + " Current Stepcount: " + this.stepCounter;
 	}
 	
-	public int getBiteCounterAndIncrement() {
-		return this.biteCounter++;
+	public int getBiteCounter() {
+		return this.biteCounter;
 	}
+
+	public void incrementBiteCounter() {
+	    this.biteCounter++;
+    }
 	
 	public int getStepCounterAndIncrement() {
 		if(this.stepCounter == 4) {
