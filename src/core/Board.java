@@ -92,7 +92,6 @@ public class Board {
 			} else {
 				LOGGER.entering(Board.class.getName(), "spawnMiniSquirrel(MasterSquirrel, int)");
 				MiniSquirrel newMS = ms.spawnMiniSquirrel(location, energy);
-				ms.updateEnergy(-energy);
 				this.getEntitySet().addEntity(newMS);
 			}
 		}

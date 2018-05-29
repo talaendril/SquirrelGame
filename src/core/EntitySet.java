@@ -57,6 +57,15 @@ public class EntitySet {
 		return string;
 	}
 
+	public boolean containsEntity(Entity entity) {
+	    for(Entity e : entities) {
+	        if(e != null && e.equals(entity)) {
+	            return true;
+            }
+        }
+        return false;
+    }
+
 	public Entity[] getEntities() {
 		return this.entities;
 	}

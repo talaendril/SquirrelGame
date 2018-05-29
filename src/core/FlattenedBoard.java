@@ -68,7 +68,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 			if (e instanceof Character) {
 				if (EntityType.getEntityType(e) == EntityType.MASTER_SQUIRREL) {
 					if (e.equals(ms.getMaster())) {
-						ms.getMaster().updateEnergy(ms.getEnergy());
+						e.updateEnergy(ms.getEnergy());
 					} else {
 						e.updateEnergy(MiniSquirrel.ENERGY_GAIN_NOT_MASTER);
 					}
@@ -90,6 +90,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 				} else if (EntityType.getEntityType(e) == EntityType.GOOD_BEAST) {
 					ms.updateEnergy(e.getEnergy());
 					this.killAndReplace(e);
+					ms.move(direction);
 				}
 			} else {
 				if (ms.getEnergy() < Math.abs(e.getEnergy())) {
@@ -234,14 +235,14 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		Squirrel nearest = null;
 		double shortestDistance = entityMatrix.length * entityMatrix.length; // initialized with something big
 		double newDistance;
-		for (int i = 0; i < array.length; i++) {
-			if (array[i] != null) {
-				if ((newDistance = array[i].getLocation().distanceFrom(pos)) < shortestDistance) {
-					shortestDistance = newDistance;
-					nearest = array[i];
-				}
-			}
-		}
+        for (Squirrel anArray : array) {
+            if (anArray != null) {
+                if ((newDistance = anArray.getLocation().distanceFrom(pos)) < shortestDistance) {
+                    shortestDistance = newDistance;
+                    nearest = anArray;
+                }
+            }
+        }
 		return nearest;
 	}
 
@@ -250,11 +251,11 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		this.board.getEntitySet().addEntity(ms);
 	}
 
-	public XY bestVectorToEntity(Entity beast, Entity target) {
+	private XY bestVectorToEntity(Entity beast, Entity target) {
 		return XYSupport.getVectorBetween(beast.getLocation(), target.getLocation());
 	}
 
-	public XY bestVectorAwayFromEntity(Entity beast, Entity hunter) {
+	private XY bestVectorAwayFromEntity(Entity beast, Entity hunter) {
 		XY vectorToEntity = this.bestVectorToEntity(beast, hunter);
 		return vectorToEntity.times(-1);
 	}
@@ -285,7 +286,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		ms.getMaster().updateEnergy(((int) accumulatedEnergy));
 	}
 
-	public double updateEntityAfterImplosion(MiniSquirrel ms, Entity entity, double energyLoss) {
+	private double updateEntityAfterImplosion(MiniSquirrel ms, Entity entity, double energyLoss) {
 		if (entity == null)
 			return 0;
 		int delta = (int) -energyLoss;
