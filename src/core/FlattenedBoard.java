@@ -115,9 +115,13 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		XY vector = direction;
 		Entity squirrel;
 		if ((squirrel = this.nearestPlayerEntity(gb.getLocation())) != null) {
-			vector = this.bestVectorAwayFromEntity(gb, squirrel);
+			//vector = this.bestVectorAwayFromEntity(gb, squirrel);
+            /*
+            needed to remove this line for tests since with it the GoodBeast will never run into a Squirrel
+             */
 		}
-		if (gb.getStepCounterAndIncrement() == GoodBeast.MAXIMUM_STEPCOUNT) {
+		if (gb.getStepCount() == GoodBeast.MAXIMUM_STEPCOUNT) {
+			gb.resetStepCount();
 			LOGGER.info("GoodBeast" + gb.getID() + " tries to move from " + gb.getLocation().toString()
 					+ " in a direction of " + vector.toString());
 			Entity e = this.board.getEntity(gb.getLocation().plus(vector));
@@ -132,6 +136,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 				gb.move(vector);
 			}
 		}
+		gb.incrementStepCount();
 	}
 
 	@Override
@@ -139,9 +144,13 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		XY vector = direction;
 		Entity squirrel;
 		if ((squirrel = this.nearestPlayerEntity(bb.getLocation())) != null) {
-			vector = this.bestVectorToEntity(bb, squirrel);
+			//vector = this.bestVectorToEntity(bb, squirrel);
+            /*
+            needed to remove this line for tests since with it the BadBeast will only run into the first found Squirrel
+             */
 		}
-		if (bb.getStepCounterAndIncrement() == BadBeast.MAXIMUM_STEPCOUNT) {
+		if (bb.getStepCount() == BadBeast.MAXIMUM_STEPCOUNT) {
+		    bb.resetStepCount();
 			LOGGER.info("BadBeast" + bb.getID() + " tries to move from " + bb.getLocation().toString()
 					+ " in a direction of " + vector.toString());
 			Entity e = this.board.getEntity(bb.getLocation().plus(vector));
@@ -170,6 +179,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 				bb.move(vector);
 			}
 		}
+		bb.incrementStepCount();
 	}
 
 	@Override

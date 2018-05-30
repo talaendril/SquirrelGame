@@ -19,7 +19,7 @@ public class MasterSquirrel extends Squirrel {
 	private static final Logger LOGGER = Logger.getLogger(MasterSquirrel.class.getName());
 	
 	List<MiniSquirrel> production = new ArrayList<>();
-	public static final int MINISQUIRREL_THRESHOLD = 999;
+	private static final int MINISQUIRREL_THRESHOLD = 999;
 	
 	public MasterSquirrel(int id, XY location) {
 		super(id, 1100, location);
@@ -47,14 +47,6 @@ public class MasterSquirrel extends Squirrel {
 		production.add(newMS);
 		LOGGER.exiting(MasterSquirrel.class.getName(), "spawnMiniSquirrel(XY, int)");
 		return newMS;	
-	}
-	
-	public String productionToString() {
-		StringBuilder s = new StringBuilder();
-		for(MiniSquirrel ms : production) {
-			s.append(ms.toString() + "\n");
-		}
-		return s.toString();
 	}
 	
 	public List<MiniSquirrel> getProduction() {
