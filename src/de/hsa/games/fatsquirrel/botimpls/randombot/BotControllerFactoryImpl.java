@@ -1,7 +1,9 @@
-package botimpl;
+package de.hsa.games.fatsquirrel.botimpls.randombot;
 
 import botapi.BotController;
 import botapi.BotControllerFactory;
+import de.hsa.games.fatsquirrel.botimpls.randombot.MasterBotController;
+import de.hsa.games.fatsquirrel.botimpls.randombot.MiniBotController;
 
 public class BotControllerFactoryImpl implements BotControllerFactory {
 

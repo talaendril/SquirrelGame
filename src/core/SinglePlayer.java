@@ -34,7 +34,7 @@ public class SinglePlayer extends Game {
 		this.getBoard().generateMasterSquirrels(masters);
 	}
 
-	public void run() {
+	public void run(int steps) {
 		Timer renderTimer = new Timer();
 		renderTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
@@ -105,8 +105,7 @@ public class SinglePlayer extends Game {
 			try {
 				MiniSquirrel ms = list.get(0);
 				int impactRadius = Integer.parseInt((String) params[0]);
-				this.getBoard().flatten().implode(ms, impactRadius); 
-				this.getUI().implode(ms.getLocation(), impactRadius);
+				this.getBoard().flatten().implode(ms, impactRadius);
 			} catch(IndexOutOfBoundsException e) {
 				LOGGER.severe("Tried to implode a MiniSquirrel that doesn't exist");
 			}

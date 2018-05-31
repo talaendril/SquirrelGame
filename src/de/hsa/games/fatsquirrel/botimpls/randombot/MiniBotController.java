@@ -1,4 +1,4 @@
-package botimpl;
+package de.hsa.games.fatsquirrel.botimpls.randombot;
 
 import botapi.BotController;
 import botapi.ControllerContext;

@@ -296,6 +296,11 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		ms.getMaster().updateEnergy(((int) accumulatedEnergy));
 	}
 
+	@Override
+	public int remainingSteps() {
+		return this.board.getRemainingSteps();
+	}
+
 	private double updateEntityAfterImplosion(MiniSquirrel ms, Entity entity, double energyLoss) {
 		if (entity == null)
 			return 0;

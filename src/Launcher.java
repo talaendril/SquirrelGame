@@ -20,7 +20,8 @@ public class Launcher extends Application {
 	
 	private BoardConfig config = new BoardConfig();
 	private Board board = new Board(config);
-	private State state = new State(board);
+
+	private final String name = "kigame";
 
 	@Override
 	public void start(Stage arg0) {
@@ -28,9 +29,8 @@ public class Launcher extends Application {
 		
 		Stage primaryStage = new Stage();
 		FxUI fxUI = FxUI.createInstance(config.getSize());
-		
-		String name = "singleplayer";
-        final Game game = createGame(name, fxUI);
+
+        final Game game = createGame(fxUI);
 
         if(game == null) {
             LOGGER.severe("The input String doesn't match any game name");
@@ -45,24 +45,24 @@ public class Launcher extends Application {
         startGame(game);   
 	}
 	
-	private Game createGame(String name, UI ui) {
+	private Game createGame(UI ui) {
 		switch(name.toLowerCase()) {
 		case "singleplayer":
 			LOGGER.log(Level.INFO, "initialized singleplayer game");
-			return new SinglePlayer(state, board, ui); 
+			return new SinglePlayer(new State(board), board, ui);
 		case "multiplayer":
 			LOGGER.log(Level.INFO, "initialized multiplayer game");
-			return new MultiPlayer(state, board, ui);
+			return new MultiPlayer(new State(board), board, ui);
 		case "kigame":
 			LOGGER.log(Level.INFO, "initiliazed kigame game");
-			return new KIGame(state, board, ui);
+			return new KIGame(new State(board), board, ui);
 		default:
 			return null;
 		}
 	}
 	
 	private void startGame(Game game) {
-		game.run();
+		game.run(config.getMaximumSteps());
 	}
 	
 	public static void main(String[] args) {

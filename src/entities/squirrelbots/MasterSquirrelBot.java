@@ -1,11 +1,13 @@
 package entities.squirrelbots;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Logger;
 
 import botapi.BotController;
 import botapi.BotControllerFactory;
 import botapi.ControllerContext;
-import botimpl.BotControllerFactoryImpl;
+import de.hsa.games.fatsquirrel.botimpls.randombot.BotControllerFactoryImpl;
 import core.EntityContext;
 import core.EntityType;
 import core.logging.LoggingProxyFactory;
@@ -13,6 +15,7 @@ import entities.Entity;
 import entities.MasterSquirrel;
 import entities.MiniSquirrel;
 import exceptions.BelowThresholdException;
+import exceptions.DynamicCreationFailureException;
 import exceptions.NotEnoughEnergyException;
 import exceptions.ShouldNotBeCalledException;
 import location.XY;
@@ -21,14 +24,25 @@ import ui.commandhandle.MoveCommand;
 public class MasterSquirrelBot extends MasterSquirrel  {
 	
 	private static final Logger LOGGER = Logger.getLogger(MasterSquirrelBot.class.getName());
-	
-	private final BotControllerFactory botControllerFactory = new BotControllerFactoryImpl();	//TODO change location maybe
-	private final BotController masterBotController = botControllerFactory.createMasterBotController();
+
+    private final BotControllerFactory botControllerFactory;	//TODO change location maybe
+	private final BotController masterBotController;
 	private ControllerContext contContext;
 
-	public MasterSquirrelBot(int id, XY location) {
+	public MasterSquirrelBot(int id, XY location, String name) {
 		super(id, location);
-	}
+
+		Object placeHolder;
+        try {
+            Class<?> aClass = Class.forName("de.hsa.games.fatsquirrel.botimpls." + name + ".BotControllerFactoryImpl");
+            placeHolder = aClass.newInstance();
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+            LOGGER.severe("Could not create BotControllerFactory");
+            throw new DynamicCreationFailureException("Could not create BotControllerFactory");
+        }
+        this.botControllerFactory = (BotControllerFactory) placeHolder;
+        this.masterBotController = botControllerFactory.createMasterBotController();
+    }
 	
 	private ControllerContext getControllerContext(EntityContext context) {
 		if(this.contContext == null) {
@@ -127,8 +141,7 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 
 		@Override
 		public long getRemainingSteps() {
-			// TODO Auto-generated method stub
-			return 0;
+			return this.entContext.remainingSteps();
 		}	
 	}
 }

@@ -22,6 +22,7 @@ public class Board {
 	private final int boardSizeY;
 	private EntitySet es;
 	private BoardConfig config;
+	private int currentStep = 0;
 	
 	private ArrayList<MasterSquirrel> masters = new ArrayList<>();
 	
@@ -33,6 +34,10 @@ public class Board {
 		
 		generateEntities();
 	}
+
+	public BoardConfig getConfig() {
+	    return this.config;
+    }
 	
 	public int getBoardSizeX() {
 		return this.boardSizeX;
@@ -113,17 +118,22 @@ public class Board {
 	}
 	
 	public void nextStep(MoveCommand command) {
+	    currentStep++;
 		for(Entity e : es.getEntities()) {
 			if(e != null && e instanceof Character) {
 				LOGGER.info(e.toString());
 				if (e instanceof HandOperatedMasterSquirrel) {
-					((HandOperatedMasterSquirrel) e).nextStep(this.flatten(), command);
+					e.nextStep(this.flatten(), command);
 					continue;
 				}
 				e.nextStep(this.flatten(), MoveCommand.getRandomCommand());
 			}
 		}
 	}
+
+	public int getRemainingSteps() {
+	    return this.config.getMaximumSteps() - this.currentStep;
+    }
 	
 	@Override
 	public String toString() {

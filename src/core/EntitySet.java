@@ -18,9 +18,7 @@ public class EntitySet {
 	
 	private Entity[] increaseArraySize() {
 		Entity[] newArray = new Entity[(entities.length + 1) * 2];
-		for(int i = 0; i < entities.length; i++) {
-			newArray[i] = entities[i];
-		}
+        System.arraycopy(entities, 0, newArray, 0, entities.length);
 		return newArray;
 	}
 	
@@ -37,9 +35,8 @@ public class EntitySet {
 	public void removeEntity(Entity entity) {
 		for(int i = 0; i < entities.length; i++) {
 			if(entities[i] != null && entities[i].equals(entity)) {
-				for(int j = i; j < entities.length - 1; j++) {
-					entities[j] = entities[j+1];
-				}
+                System.arraycopy(entities, i + 1, entities, i, entities.length - 1 - i);
+                return;
 			}
 		}
 	}
