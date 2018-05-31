@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import core.BoardView;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -16,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import location.XY;
@@ -29,7 +31,7 @@ public class FxUI extends Scene implements UI {
     private static final Logger LOGGER = Logger.getLogger(FxUI.class.getName());
     private static final int CELL_SIZE = 20;
 
-    public boolean resetCalled;
+    private boolean resetCalled;
 
     private static Image masterImage;
     private static Image miniSquirrelImage;
@@ -62,16 +64,17 @@ public class FxUI extends Scene implements UI {
         Label masterEnergy = new Label();
         Label steps = new Label();
         Button reset = new Button("Reset");
-        AnchorPane.setBottomAnchor(masterEnergy, 10.0);
         HBox bottomRow = new HBox();
-        bottomRow.getChildren().add(masterEnergy);
-        bottomRow.getChildren().add(steps);
-        bottomRow.getChildren().add(reset);
+        HBox rightSide = new HBox();
+        rightSide.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(rightSide, Priority.ALWAYS);
+        rightSide.getChildren().add(reset);
+        bottomRow.getChildren().addAll(steps, rightSide);
+
+        Separator line = new Separator();
 
         VBox top = new VBox();
-        top.getChildren().add(createMenuBar());
-        top.getChildren().add(boardCanvas);
-        top.getChildren().add(bottomRow);
+        top.getChildren().addAll(createMenuBar(), boardCanvas, masterEnergy, line, bottomRow);
 
         masterEnergy.setText("");
         steps.setText("");

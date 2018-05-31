@@ -56,7 +56,7 @@ public abstract class Game {
 		StringBuilder sb = new StringBuilder();
 		MasterSquirrel[] masters = this.getMasters();
 		for (MasterSquirrel master : masters) {
-			sb.append("Master Energy").append(master.getID()).append(": ").append(master.getEnergy()).append("\n");
+			sb.append("Master Energy").append(master.getID()).append(": ").append(master.getEnergy()).append("\t");
 		}
 		this.getUI().message(sb.toString());
 	}
