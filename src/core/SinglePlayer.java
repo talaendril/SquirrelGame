@@ -84,8 +84,8 @@ public class SinglePlayer extends Game {
 				throw new ScanException("Wrong Number of Parameters");
 			}
 			try {
-				MasterSquirrel[] masters = this.getMasters();	//this works if only one MasterSquirrel is in the game
-				this.getBoard().spawnMiniSquirrel(masters[0], Integer.parseInt((String) params[0]));
+				List<MasterSquirrel> masters = this.getMasters();	//this works if only one MasterSquirrel is in the game
+				this.getBoard().spawnMiniSquirrel(masters.get(0), Integer.parseInt((String) params[0]));
 				break;
 			} catch (NumberFormatException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
@@ -100,8 +100,8 @@ public class SinglePlayer extends Game {
 			if(params.length != 1) {
 				throw new ScanException("Wrong Number of Parameters");
 			}
-			MasterSquirrel[] masters = this.getMasters();
-			List<MiniSquirrel> list = masters[0].getProduction();
+			List<MasterSquirrel> masters = this.getMasters();
+			List<MiniSquirrel> list = masters.get(0).getProduction();
 			try {
 				MiniSquirrel ms = list.get(0);
 				int impactRadius = Integer.parseInt((String) params[0]);

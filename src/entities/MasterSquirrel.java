@@ -19,10 +19,18 @@ public class MasterSquirrel extends Squirrel {
 	private static final Logger LOGGER = Logger.getLogger(MasterSquirrel.class.getName());
 	
 	List<MiniSquirrel> production = new ArrayList<>();
+	private final String name;
+
 	private static final int MINISQUIRREL_THRESHOLD = 999;
-	
-	public MasterSquirrel(int id, XY location) {
+
+    public MasterSquirrel(int id, XY location) {
+        super(id, 1100, location);
+        this.name = "HandOperated";
+    }
+
+	public MasterSquirrel(int id, XY location, String name) {
 		super(id, 1100, location);
+		this.name = name;
 	}
 	
 	@Override
@@ -91,4 +99,8 @@ public class MasterSquirrel extends Squirrel {
 		+ " in a direction of " + direction.toString());
 		super.move(direction);
 	}
+
+    public String getName() {
+        return this.name;
+    }
 }

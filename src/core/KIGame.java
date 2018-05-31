@@ -1,5 +1,9 @@
 package core;
 
+import entities.MasterSquirrel;
+import entities.squirrelbots.MasterSquirrelBot;
+import idmanager.ID;
+import location.XY;
 import ui.UI;
 import ui.commandhandle.MoveCommand;
 
@@ -13,7 +17,18 @@ public class KIGame extends Game {
 	
 	public KIGame(State state, Board board, UI ui) {
 		super(state, board, ui);
-		createMasters();
+		this.getHighScoresFromFile();
+
+        int x, y = x = -1;
+        String[] bots = this.getBoard().getConfig().getBotNames();
+
+        MasterSquirrel master1 = new MasterSquirrelBot(ID.getNewID(), new XY(x--, y--), bots[0]);
+        MasterSquirrel master2 = new MasterSquirrelBot(ID.getNewID(), new XY(x--, y--), bots[1]);
+        MasterSquirrel master3 = new MasterSquirrelBot(ID.getNewID(), new XY(x--, y--), bots[0]);
+        MasterSquirrel master4 = new MasterSquirrelBot(ID.getNewID(), new XY(x--, y--), bots[1]);
+        MasterSquirrel[] masters = {master1, master2, master3, master4};
+        this.addMasters(masters);
+        this.getBoard().generateMasterSquirrels(masters);
 	}
 
 	public void run(int steps) {
@@ -42,6 +57,9 @@ public class KIGame extends Game {
                     this.getUI().changeResetCalled(false);
                     resetGame();
                     break;
+                }
+                if(this.getCurrentStep() == steps && !(this.getUI().checkResetCalled()) && !this.savedHighScores) {
+                    this.saveHighScores();
                 }
                 try {
                     Thread.sleep(1000);

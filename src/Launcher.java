@@ -1,4 +1,6 @@
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,9 +42,15 @@ public class Launcher extends Application {
          
         primaryStage.setScene(fxUI);
         primaryStage.setTitle("Diligent Squirrel");
-        primaryStage.show();   
-        
-        startGame(game);   
+        primaryStage.show();
+
+        game.getHighScoresFromFile();
+        Map<String, Integer> test = game.getHighScores();
+        for(String key: test.keySet()) {
+            System.out.println(key + " " + test.get(key).toString());
+        }
+        System.out.println("wat");
+        startGame(game);
 	}
 	
 	private Game createGame(UI ui) {

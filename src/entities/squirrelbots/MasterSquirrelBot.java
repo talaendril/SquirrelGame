@@ -30,7 +30,7 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 	private ControllerContext contContext;
 
 	public MasterSquirrelBot(int id, XY location, String name) {
-		super(id, location);
+		super(id, location, name);
 
 		Object placeHolder;
         try {
