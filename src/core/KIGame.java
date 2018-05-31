@@ -17,31 +17,36 @@ public class KIGame extends Game {
 	}
 
 	public void run(int steps) {
-        Runnable updating = () -> {
-            while(this.getCurrentStep() != steps) {
-                update();
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    LOGGER.severe("Updating Thread failed to sleep");
-                }
-            }
-        };
-
 		Runnable rendering = () -> {
 		    while(true) {
                 render();
                 setMessageToMasterEnergy();
                 setRemainingSteps();
                 if(this.getUI().checkResetCalled()) {
-                    this.getUI().changeResetCalled(false);
-                    resetGame();
                     break;
                 }
                 try {
                     Thread.sleep(1000 / FPS);
                 } catch (InterruptedException e) {
                     LOGGER.severe("Rendering Thread failed to sleep");
+                }
+            }
+        };
+
+        Runnable updating = () -> {
+            while(true) {
+                if(this.getCurrentStep() != steps) {
+                    update();
+                }
+                if (this.getUI().checkResetCalled()) {
+                    this.getUI().changeResetCalled(false);
+                    resetGame();
+                    break;
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    LOGGER.severe("Updating Thread failed to sleep");
                 }
             }
         };
