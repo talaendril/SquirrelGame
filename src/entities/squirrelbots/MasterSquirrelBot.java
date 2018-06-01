@@ -25,7 +25,7 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 	
 	private static final Logger LOGGER = Logger.getLogger(MasterSquirrelBot.class.getName());
 
-    private final BotControllerFactory botControllerFactory;	//TODO change location maybe
+    private final BotControllerFactory botControllerFactory;
 	private final BotController masterBotController;
 	private ControllerContext contContext;
 
@@ -35,10 +35,10 @@ public class MasterSquirrelBot extends MasterSquirrel  {
 		Object placeHolder;
         try {
             Class<?> aClass = Class.forName("de.hsa.games.fatsquirrel.botimpls." + name + ".BotControllerFactoryImpl");
-            placeHolder = aClass.newInstance();
+            placeHolder = aClass.newInstance();		//deprecated what are the options?
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-            LOGGER.severe("Could not create BotControllerFactory");
-            throw new DynamicCreationFailureException("Could not create BotControllerFactory");
+            LOGGER.severe("Could not create BotControllerFactory for MasterSquirrelBot");
+            throw new DynamicCreationFailureException("Could not create BotControllerFactory for MasterSquirrelBot");
         }
         this.botControllerFactory = (BotControllerFactory) placeHolder;
         this.masterBotController = botControllerFactory.createMasterBotController();

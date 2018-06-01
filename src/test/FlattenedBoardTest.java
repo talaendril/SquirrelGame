@@ -23,7 +23,7 @@ public class FlattenedBoardTest {
     public void tryMoveMasterAgainstBadBeastTest() {
         MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 1));
         int originalMasterEnergy = master.getEnergy();
-        entitySet = board.getEntitySet();
+        entitySet = new EntitySet(0);
         flattenedBoard = board.flatten();
 
         entitySet.addEntity(master);
@@ -54,7 +54,7 @@ public class FlattenedBoardTest {
     public void tryMoveMasterAgainstGoodBeastTest() {
         MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 1));
         int originalMasterEnergy = master.getEnergy();
-        entitySet = board.getEntitySet();
+        entitySet = new EntitySet(0);
         flattenedBoard = board.flatten();
 
         entitySet.addEntity(master);
@@ -71,7 +71,7 @@ public class FlattenedBoardTest {
     public void tryMoveMasterAgainstSquirrelsTest() throws BelowThresholdException, NotEnoughEnergyException {
         MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 1));
         int originalMasterEnergy = master.getEnergy();
-        entitySet = board.getEntitySet();
+        entitySet = new EntitySet(0);
         flattenedBoard = board.flatten();
 
         entitySet.addEntity(master);
@@ -109,7 +109,7 @@ public class FlattenedBoardTest {
     public void tryMoveMasterAgainstPlantsTest() {
         MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 1));
         int originalMasterEnergy = master.getEnergy();
-        entitySet = board.getEntitySet();
+        entitySet = new EntitySet(0);
         flattenedBoard = board.flatten();
 
         entitySet.addEntity(master);
@@ -134,7 +134,7 @@ public class FlattenedBoardTest {
     public void tryMoveMasterAgainstWallTest() {
         MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 1));
         int originalMasterEnergy = master.getEnergy();
-        entitySet = board.getEntitySet();
+        entitySet = new EntitySet(0);
         flattenedBoard = board.flatten();
         master.setLocation(new XY(1, 1));
 
@@ -154,7 +154,7 @@ public class FlattenedBoardTest {
     public void tryMoveMiniSquirrelAgainstOwnMasterTest() throws BelowThresholdException, NotEnoughEnergyException {
         MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 1));
         int originalMasterEnergy = master.getEnergy();
-        entitySet = board.getEntitySet();
+        entitySet = new EntitySet(0);
         flattenedBoard = board.flatten();
         entitySet.addEntity(master);
 
@@ -169,7 +169,7 @@ public class FlattenedBoardTest {
 
     @Test
     public void tryMoveMiniSquirrelAgainstEnemyMasterTest() throws BelowThresholdException, NotEnoughEnergyException {
-        entitySet = board.getEntitySet();
+        entitySet = new EntitySet(0);
         flattenedBoard = board.flatten();
         MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 1));
         entitySet.addEntity(master);
@@ -188,7 +188,7 @@ public class FlattenedBoardTest {
 
     @Test
     public void tryMoveMiniSquirrelAgainstMiniSquirrelTest() {
-        entitySet = board.getEntitySet();
+        entitySet = new EntitySet(0);
         flattenedBoard = board.flatten();
         MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 2));    //just needs to exist
         MiniSquirrel miniSquirrel = new MiniSquirrel(ID.getNewID(), 100, new XY(1, 1), master);
@@ -204,7 +204,7 @@ public class FlattenedBoardTest {
 
     @Test
     public void tryMoveMiniSquirrelAgainstBadBeastTest() {
-        entitySet = board.getEntitySet();
+        entitySet = new EntitySet(0);
         flattenedBoard = board.flatten();
         MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 2));    //just needs to exist
         MiniSquirrel miniSquirrel = new MiniSquirrel(ID.getNewID(), 100, new XY(1, 1), master);
@@ -228,7 +228,7 @@ public class FlattenedBoardTest {
 
     @Test
     public void tryMoveMiniSquirrelAgainstGoodBeastTest() {
-        entitySet = board.getEntitySet();
+        entitySet = new EntitySet(0);
         flattenedBoard = board.flatten();
         MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 2));    //just needs to exist
         MiniSquirrel miniSquirrel = new MiniSquirrel(ID.getNewID(), 100, new XY(1, 1), master);
@@ -244,7 +244,7 @@ public class FlattenedBoardTest {
 
     @Test
     public void tryMoveMiniSquirrelAgainstPlants() {
-        entitySet = board.getEntitySet();
+        entitySet = new EntitySet(0);
         flattenedBoard = board.flatten();
         MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 2));
         MiniSquirrel miniSquirrel = new MiniSquirrel(ID.getNewID(), 100, new XY(2, 1), master);
@@ -263,7 +263,7 @@ public class FlattenedBoardTest {
 
     @Test
     public void tryMoveMiniSquirrelAgainstWall() {
-        entitySet = board.getEntitySet();
+        entitySet = new EntitySet(0);
         flattenedBoard = board.flatten();
         MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 2));
         MiniSquirrel miniSquirrel = new MiniSquirrel(ID.getNewID(), 100, new XY(1, 1), master);
@@ -281,7 +281,7 @@ public class FlattenedBoardTest {
 
     @Test
     public void tryMoveGoodBeastAgainstSquirrelTest() {
-        entitySet = board.getEntitySet();
+        entitySet = new EntitySet(0);
         flattenedBoard = board.flatten();
         Squirrel squirrel = new MasterSquirrel(ID.getNewID(), new XY(1, 1));
         int originalEnergy = squirrel.getEnergy();
@@ -303,7 +303,7 @@ public class FlattenedBoardTest {
 
     @Test
     public void tryMoveGoodBeastAgainstNonSquirrelEntitiesTest() {
-        entitySet = board.getEntitySet();
+        entitySet = new EntitySet(0);
         flattenedBoard = board.flatten();
         BadBeast badBeast = new BadBeast(ID.getNewID(), new XY(1, 2));
         entitySet.addEntity(badBeast);
@@ -350,7 +350,7 @@ public class FlattenedBoardTest {
         /*
         had to remove follow function in flattenedBoard for these tests
          */
-        entitySet = board.getEntitySet();
+        entitySet = new EntitySet(0);
         flattenedBoard = board.flatten();
         MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(2, 1));
         int originalEnergy = master.getEnergy();
@@ -386,7 +386,7 @@ public class FlattenedBoardTest {
 
     @Test
     public void tryMoveBadBeastAgainstNonSquirrelEntitiesTest() {
-        entitySet = board.getEntitySet();
+        entitySet = new EntitySet(0);
         flattenedBoard = board.flatten();
         GoodBeast goodBeast = new GoodBeast(ID.getNewID(), new XY(1, 2));
         entitySet.addEntity(goodBeast);

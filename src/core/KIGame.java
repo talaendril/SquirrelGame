@@ -6,6 +6,7 @@ import idmanager.ID;
 import location.XY;
 import ui.UI;
 import ui.commandhandle.MoveCommand;
+import ui.windows.OutputWindow;
 
 import java.util.logging.Logger;
 

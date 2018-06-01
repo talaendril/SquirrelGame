@@ -22,7 +22,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	public FlattenedBoard(Board b) {
 		this.board = b;
 		entityMatrix = new Entity[this.board.getBoardSizeY()][this.board.getBoardSizeX()];
-		for (Entity e : this.board.getEntitySet().getEntities()) {
+		for (Entity e : this.board.getEntitySet()) {
 			if (e != null) {
 				entityMatrix[e.getLocation().y][e.getLocation().x] = e;
 			}
@@ -115,10 +115,9 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		XY vector = direction;
 		Entity squirrel;
 		if ((squirrel = this.nearestPlayerEntity(gb.getLocation())) != null) {
-			//vector = this.bestVectorAwayFromEntity(gb, squirrel);
-            /*
-            needed to remove this line for tests since with it the GoodBeast will never run into a Squirrel
-             */
+			vector = this.bestVectorAwayFromEntity(gb, squirrel);
+
+            //needed to remove this line for tests since with it the GoodBeast will never run into a Squirrel
 		}
 		if (gb.getStepCount() == GoodBeast.MAXIMUM_STEPCOUNT) {
 			gb.resetStepCount();
@@ -144,10 +143,9 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		XY vector = direction;
 		Entity squirrel;
 		if ((squirrel = this.nearestPlayerEntity(bb.getLocation())) != null) {
-			//vector = this.bestVectorToEntity(bb, squirrel);
-            /*
-            needed to remove this line for tests since with it the BadBeast will only run into the first found Squirrel
-             */
+			vector = this.bestVectorToEntity(bb, squirrel);
+
+            //needed to remove this line for tests since with it the BadBeast will only run into the first found Squirrel
 		}
 		if (bb.getStepCount() == BadBeast.MAXIMUM_STEPCOUNT) {
 		    bb.resetStepCount();
@@ -258,7 +256,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 
 	@Override
 	public void addMiniSquirrel(MiniSquirrel ms) {
-		this.board.getEntitySet().addEntity(ms);
+		this.board.getEntitySet().add(ms);
 	}
 
 	private XY bestVectorToEntity(Entity beast, Entity target) {
@@ -352,7 +350,8 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		if (EntityType.getEntityType(entity) == EntityType.MINI_SQUIRREL) {
 			((MiniSquirrel) entity).getMaster().removeFromProduction(entity);
 		}
-		this.board.getEntitySet().removeEntity(entity);
+		//might throw a ConcurrentModificationException
+		this.board.getEntitySet().remove(entity);
 		entityMatrix[entity.getLocation().y][entity.getLocation().x] = null;
 	}
 
@@ -365,7 +364,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		} while (this.board.getEntity(newLocation) != null);
 		entity.resetEnergy();
 		entity.setLocation(newLocation);
-		this.board.getEntitySet().addEntity(entity);
+		this.board.getEntitySet().add(entity);
 		entityMatrix[entity.getLocation().y][entity.getLocation().x] = entity;
 	}
 }

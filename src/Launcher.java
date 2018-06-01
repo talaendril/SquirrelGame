@@ -1,5 +1,4 @@
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,7 +48,6 @@ public class Launcher extends Application {
         for(String key: test.keySet()) {
             System.out.println(key + " " + test.get(key).toString());
         }
-        System.out.println("wat");
         startGame(game);
 	}
 	

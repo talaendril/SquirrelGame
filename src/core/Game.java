@@ -106,6 +106,7 @@ public abstract class Game {
             out.writeObject(highScores);
             out.close();
             fileOutputStream.close();
+            System.out.println(highScores.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }

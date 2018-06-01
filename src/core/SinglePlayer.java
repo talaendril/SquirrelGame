@@ -35,23 +35,43 @@ public class SinglePlayer extends Game {
 	}
 
 	public void run(int steps) {
-		Timer renderTimer = new Timer();
-		renderTimer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				render();
-				setMessageToMasterEnergy();
-			}
-		}, 0, 1000 / FPS);
+        Runnable rendering = () -> {
+            while(true) {
+                render();
+                setMessageToMasterEnergy();
+                setRemainingSteps();
+                if(this.getUI().checkResetCalled()) {
+                    break;
+                }
+                try {
+                    Thread.sleep(1001 / FPS);
+                } catch (InterruptedException e) {
+                    LOGGER.severe("Rendering Thread failed to sleep");
+                }
+            }
+        };
 
-		Timer updateTimer = new Timer();
-		updateTimer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				processInput();
-				update();
-			}
-		}, 0, 500);
+        Runnable updating = () -> {
+            while(true) {
+                if(this.getCurrentStep() != steps) {
+                    processInput();
+                    update();
+                }
+                if (this.getUI().checkResetCalled()) {
+                    this.getUI().changeResetCalled(false);
+                    resetGame();
+                    break;
+                }
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    LOGGER.severe("Updating Thread failed to sleep");
+                }
+            }
+        };
+
+        new Thread(rendering).start();
+        new Thread(updating).start();
 	}
 
 	@Override
@@ -61,6 +81,7 @@ public class SinglePlayer extends Game {
 
 	@Override
 	protected void processInput() {
+        this.incrementCurrentStep();
 		nextCommand = this.getUI().getCommand();
 		LOGGER.info(nextCommand.toString());
 	}
