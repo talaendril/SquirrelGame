@@ -6,7 +6,6 @@ import idmanager.ID;
 import location.XY;
 import ui.UI;
 import ui.commandhandle.MoveCommand;
-import ui.windows.OutputWindow;
 
 import java.util.logging.Logger;
 
@@ -23,10 +22,10 @@ public class KIGame extends Game {
         int x, y = x = -1;
         String[] bots = this.getBoard().getConfig().getBotNames();
 
-        MasterSquirrel master1 = new MasterSquirrelBot(ID.getNewID(), new XY(x--, y--), bots[0]);
-        MasterSquirrel master2 = new MasterSquirrelBot(ID.getNewID(), new XY(x--, y--), bots[1]);
-        MasterSquirrel master3 = new MasterSquirrelBot(ID.getNewID(), new XY(x--, y--), bots[0]);
-        MasterSquirrel master4 = new MasterSquirrelBot(ID.getNewID(), new XY(x--, y--), bots[1]);
+        MasterSquirrel master1 = new MasterSquirrelBot(ID.getNewID(), new XY(x, y), bots[0]);
+        MasterSquirrel master2 = new MasterSquirrelBot(ID.getNewID(), new XY(x, y), bots[1]);
+        MasterSquirrel master3 = new MasterSquirrelBot(ID.getNewID(), new XY(x, y), bots[0]);
+        MasterSquirrel master4 = new MasterSquirrelBot(ID.getNewID(), new XY(x, y), bots[1]);
         MasterSquirrel[] masters = {master1, master2, master3, master4};
         this.addMasters(masters);
         this.getBoard().generateMasterSquirrels(masters);

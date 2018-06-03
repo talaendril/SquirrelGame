@@ -86,6 +86,18 @@ public class Board {
         }
     }
 
+    public void addEntity(Entity e) {
+        if(e != null) {
+            this.entitySet.add(e);
+        }
+    }
+
+    public void removeEntity(Entity e) {
+        if(e != null && this.entitySet.contains(e)) {
+            this.entitySet.remove(e);
+        }
+    }
+
     public void spawnMiniSquirrel(MasterSquirrel ms, int energy) throws NotEnoughEnergyException, BelowThresholdException {
         if (ms == null) {
             throw new EntityNotFoundException("No MasterSquirrel in the EntitySet");

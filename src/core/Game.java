@@ -5,18 +5,18 @@ import location.XY;
 import ui.UI;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.logging.Logger;
 
 public abstract class Game {
+
+    private static final Logger LOGGER = Logger.getLogger(Game.class.getName());
 	
 	private State state;
 	private Board board;
 	private UI ui;
 
-	private Map<String, Integer> highScores = new Hashtable<>();
+	private Map<String, ArrayList<Integer>> highScores = new Hashtable<>();
 	boolean savedHighScores = false;
 
 	private int currentStep = 0;
@@ -46,9 +46,7 @@ public abstract class Game {
     }
 
     void addMasters(MasterSquirrel[] masters) {
-	    for(MasterSquirrel master: masters) {
-	        this.masters.add(master);
-        }
+        this.masters.addAll(Arrays.asList(masters));
     }
 
 	int getCurrentStep() {
@@ -82,18 +80,20 @@ public abstract class Game {
 	    this.run(this.board.getConfig().getMaximumSteps());
     }
 
-    void resetMasters() {
-	    List<MasterSquirrel> resettedMasters = new ArrayList<>();
+    private void resetMasters() {
+	    List<MasterSquirrel> resetMasters = new ArrayList<>();
         for(MasterSquirrel master: masters) {
-            MasterSquirrel resettedMaster = new MasterSquirrel(master.getID(), new XY(0, 0), master.getName());
-            resettedMasters.add(resettedMaster);
+            MasterSquirrel resetMaster = new MasterSquirrel(master.getID(), new XY(0, 0), master.getName());
+            resetMasters.add(resetMaster);
         }
-        masters = resettedMasters;
+        masters = resetMasters;
     }
 
     void saveHighScores() {
 	    for(MasterSquirrel master : masters) {
-            highScores.put(master.getName() + master.getID(), master.getEnergy());
+	        String key = master.getName() + master.getID();
+            ArrayList<Integer> list = highScores.computeIfAbsent(key, k -> new ArrayList<>());
+            list.add(master.getEnergy());
         }
         this.savedHighScores = true;
 	    highScoresToFile();
@@ -108,24 +108,22 @@ public abstract class Game {
             fileOutputStream.close();
             System.out.println(highScores.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.fine("Couldn't write to highScores.ser file.");
         }
     }
 
-    public void getHighScoresFromFile() {
+    void getHighScoresFromFile() {
         try {
             FileInputStream fileInputStream = new FileInputStream("highScores.ser");
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            highScores = (Map<String, Integer>) objectInputStream.readObject();
+            highScores = (Map<String, ArrayList<Integer>>) objectInputStream.readObject();
             objectInputStream.close();
             fileInputStream.close();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            LOGGER.fine("Couldn't load highScores.ser file.\nMaybe not created yet");
+        } catch (ClassNotFoundException e) {
+            LOGGER.severe("The read map is not compatible with our highScores map");
         }
-    }
-
-    public Map<String, Integer> getHighScores() {
-        return highScores;
     }
 
     public abstract void run(int steps);

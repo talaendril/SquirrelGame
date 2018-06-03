@@ -2,429 +2,417 @@ package test;
 
 import core.*;
 import entities.*;
-import exceptions.BelowThresholdException;
-import exceptions.NotEnoughEnergyException;
-import idmanager.ID;
 import location.XY;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class FlattenedBoardTest {
+    @Mock
+    private Board boardMock;
 
-    private DummyBoardConfig config = new DummyBoardConfig();
-    private Board board = new Board(config);
-    private EntitySet entitySet;
+    @InjectMocks
     private FlattenedBoard flattenedBoard;
 
-    //TODO: try to implement Mocks
+    @Before
+    public void setup(){
+        MockitoAnnotations.initMocks(this);
+        when(boardMock.getBoardSizeX()).thenReturn(10);
+        when(boardMock.getBoardSizeY()).thenReturn(10);
+    }
+
+    @Test
+    public void tryMoveMasterTest() {
+        MasterSquirrel masterMock = mock(MasterSquirrel.class);
+        when(masterMock.getLocation()).thenReturn(new XY(1, 1));
+        flattenedBoard.tryMove(masterMock, XY.DOWN);
+
+        verify(masterMock).move(XY.DOWN);
+    }
 
     @Test
     public void tryMoveMasterAgainstBadBeastTest() {
-        MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 1));
-        int originalMasterEnergy = master.getEnergy();
-        entitySet = new EntitySet(0);
-        flattenedBoard = board.flatten();
+        MasterSquirrel masterMock = mock(MasterSquirrel.class);
+        BadBeast badMock = mock(BadBeast.class);
 
-        entitySet.addEntity(master);
-        BadBeast badBeast = new BadBeast(ID.getNewID(), new XY(2, 2));
-        entitySet.addEntity(badBeast);
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(badMock);
+        when(badMock.getEnergy()).thenReturn(-150);
+        when(masterMock.getLocation()).thenReturn(new XY(1, 1));
+        when(badMock.getLocation()).thenReturn(new XY(2, 2));
+        when(badMock.getBiteCounter()).thenReturn(0);
 
-        flattenedBoard.tryMove(master, XY.RIGHT_DOWN);
+        flattenedBoard.tryMove(masterMock, XY.RIGHT_DOWN);
 
-        //after colliding with a BadBeast the MasterSquirrel shouldn't move
-        assertEquals(new XY(1, 1), master.getLocation());
+        verify(masterMock).updateEnergy(-150);
+        verify(badMock).incrementBiteCounter();
+        verify(masterMock, never()).move(XY.RIGHT_DOWN);
+        verify(boardMock, never()).removeEntity(badMock);
+    }
 
-        //after colliding with a BadBeast the MasterSquirrel loses 150 energy
-        assertEquals(originalMasterEnergy + badBeast.getEnergy(), master.getEnergy());
+    @Test
+    public void tryMoveMasterAgainstBadBeastMaxBiteTest() {
+        MasterSquirrel masterMock = mock(MasterSquirrel.class);
+        BadBeast badMock = mock(BadBeast.class);
 
-        //BiteCounter starts at 0 and goes up by one every time he collides with a Squirrel
-        assertEquals(1, badBeast.getBiteCounter());
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(badMock);
+        when(badMock.getEnergy()).thenReturn(-150);
+        when(masterMock.getLocation()).thenReturn(new XY(1, 1));
+        when(badMock.getLocation()).thenReturn(new XY(2, 2));
+        when(badMock.getBiteCounter()).thenReturn(6);
 
-        while (badBeast.getBiteCounter() != BadBeast.MAXIMUM_BITECOUNT) {
-            badBeast.incrementBiteCounter();
-        }
-        flattenedBoard.tryMove(master, XY.RIGHT_DOWN);
+        flattenedBoard.tryMove(masterMock, XY.RIGHT_DOWN);
 
-        //since BiteCounter is at maximum the BadBeast should die and the MasterSquirrel should take its place
-        assertEquals(new XY(2, 2), master.getLocation());
+        verify(masterMock).updateEnergy(-150);
+        verify(masterMock).move(XY.RIGHT_DOWN);
+        verify(boardMock).removeEntity(badMock);
+        verify(boardMock).addEntity(badMock);
     }
 
     @Test
     public void tryMoveMasterAgainstGoodBeastTest() {
-        MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 1));
-        int originalMasterEnergy = master.getEnergy();
-        entitySet = new EntitySet(0);
-        flattenedBoard = board.flatten();
+        MasterSquirrel masterMock = mock(MasterSquirrel.class);
+        GoodBeast goodMock = mock(GoodBeast.class);
 
-        entitySet.addEntity(master);
-        GoodBeast goodBeast = new GoodBeast(ID.getNewID(), new XY(2, 2));
-        entitySet.addEntity(goodBeast);
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(goodMock);
+        when(goodMock.getEnergy()).thenReturn(200);
+        when(masterMock.getLocation()).thenReturn(new XY(1, 1));
+        when(goodMock.getLocation()).thenReturn(new XY(2, 2));
 
-        flattenedBoard.tryMove(master, XY.RIGHT_DOWN);
-        assertEquals(new XY(2, 2), master.getLocation());
+        flattenedBoard.tryMove(masterMock, XY.RIGHT_DOWN);
 
-        assertEquals(originalMasterEnergy + goodBeast.getEnergy(), master.getEnergy());
+        verify(masterMock).updateEnergy(200);
+        verify(masterMock).move(XY.RIGHT_DOWN);
+        verify(boardMock).removeEntity(goodMock);
+        verify(boardMock).addEntity(goodMock);
     }
 
     @Test
-    public void tryMoveMasterAgainstSquirrelsTest() throws BelowThresholdException, NotEnoughEnergyException {
-        MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 1));
-        int originalMasterEnergy = master.getEnergy();
-        entitySet = new EntitySet(0);
-        flattenedBoard = board.flatten();
+    public void tryMoveMasterAgainstMasterTest() {
+        MasterSquirrel masterOneMock = mock(MasterSquirrel.class);
+        MasterSquirrel masterTwoMock = mock(MasterSquirrel.class);
 
-        entitySet.addEntity(master);
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(masterTwoMock);
+        when(masterOneMock.getLocation()).thenReturn(new XY(1, 1));
 
-        MasterSquirrel masterTwo = new MasterSquirrel(ID.getNewID(), new XY(2, 2));
-        entitySet.addEntity(masterTwo);
+        flattenedBoard.tryMove(masterOneMock, XY.RIGHT_DOWN);
 
-        MiniSquirrel miniSquirrelOne = master.spawnMiniSquirrel(new XY(2, 1), 100);
-        entitySet.addEntity(miniSquirrelOne);
-
-        MiniSquirrel miniSquirrelTwo = masterTwo.spawnMiniSquirrel(new XY(1, 2), 100);
-        entitySet.addEntity(miniSquirrelTwo);
-
-        //Master 1 eats his own MiniSquirrel
-        flattenedBoard.tryMove(master, XY.RIGHT);
-        assertEquals(new XY(2, 1), master.getLocation());
-
-        assertEquals(originalMasterEnergy, master.getEnergy());
-
-        assertFalse(entitySet.containsEntity(miniSquirrelOne));
-        //Master 1 hits Master 2
-        flattenedBoard.tryMove(master, XY.DOWN);
-        assertEquals(new XY(2, 1), master.getLocation());
-
-        assertEquals(originalMasterEnergy, master.getEnergy());
-        //Master 1 hits MiniSquirrel of Master 2
-        master.move(XY.LEFT);
-        flattenedBoard.tryMove(master, XY.DOWN);
-        assertEquals(new XY(1, 2), master.getLocation());
-
-        assertEquals(originalMasterEnergy + MiniSquirrel.ENERGY_GAIN_NOT_MASTER, master.getEnergy());
+        verify(masterOneMock, never()).move(XY.RIGHT_DOWN);
+        verify(masterOneMock, never()).updateEnergy(150);
+        verify(masterTwoMock, never()).updateEnergy(150);
+        verify(boardMock, never()).removeEntity(masterOneMock);
+        verify(boardMock, never()).removeEntity(masterTwoMock);
     }
 
     @Test
-    public void tryMoveMasterAgainstPlantsTest() {
-        MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 1));
-        int originalMasterEnergy = master.getEnergy();
-        entitySet = new EntitySet(0);
-        flattenedBoard = board.flatten();
+    public void tryMoveMasterAgainstOwnMiniTest() {
+        MasterSquirrel masterMock = mock(MasterSquirrel.class);
+        MiniSquirrel miniMock = mock(MiniSquirrel.class);
 
-        entitySet.addEntity(master);
-        BadPlant badPlant = new BadPlant(ID.getNewID(), new XY(1, 2));
-        entitySet.addEntity(badPlant);
-        GoodPlant goodPlant = new GoodPlant(ID.getNewID(), new XY(2, 1));
-        entitySet.addEntity(goodPlant);
+        when(masterMock.checkEntityInProduction(miniMock)).thenReturn(true);
+        when(miniMock.getMaster()).thenReturn(masterMock);
+        when(miniMock.getEnergy()).thenReturn(200);
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(miniMock);
+        when(masterMock.getLocation()).thenReturn(new XY(1, 1));
 
-        flattenedBoard.tryMove(master, XY.DOWN);
-        assertEquals(new XY(1, 2), master.getLocation());
+        flattenedBoard.tryMove(masterMock, XY.RIGHT_DOWN);
 
-        assertEquals(originalMasterEnergy + badPlant.getEnergy(), master.getEnergy());
-        master.updateEnergy(-badPlant.getEnergy()); //resetting energy
+        verify(masterMock).updateEnergy(miniMock.getEnergy());
+        verify(masterMock).move(XY.RIGHT_DOWN);
+        verify(boardMock).removeEntity(miniMock);
+        verify(masterMock).removeFromProduction(miniMock);
+    }
 
-        flattenedBoard.tryMove(master, XY.RIGHT_UP);
-        assertEquals(new XY(2, 1), master.getLocation());
+    @Test
+    public void tryMoveMasterAgainstEnemyMiniTest() {
+        MasterSquirrel masterMock = mock(MasterSquirrel.class);
+        MasterSquirrel masterTwoMock = mock(MasterSquirrel.class);
+        MiniSquirrel miniMock = mock(MiniSquirrel.class);
 
-        assertEquals(originalMasterEnergy + goodPlant.getEnergy(), master.getEnergy());
+        when(masterMock.checkEntityInProduction(miniMock)).thenReturn(false);
+        when(miniMock.getMaster()).thenReturn(masterTwoMock);
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(miniMock);
+        when(masterMock.getLocation()).thenReturn(new XY(1, 1));
+
+        flattenedBoard.tryMove(masterMock, XY.RIGHT_DOWN);
+
+        verify(masterMock).updateEnergy(MiniSquirrel.ENERGY_GAIN_NOT_MASTER);
+        verify(masterMock).move(XY.RIGHT_DOWN);
+        verify(boardMock).removeEntity(miniMock);
+        verify(masterTwoMock).removeFromProduction(miniMock);
+    }
+
+    @Test
+    public void tryMoveMasterAgainstBadPlantsTest() {
+        MasterSquirrel masterMock = mock(MasterSquirrel.class);
+        BadPlant badPlantMock = mock(BadPlant.class);
+
+        when(masterMock.getLocation()).thenReturn(new XY(1, 1));
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(badPlantMock);
+        when(badPlantMock.getEnergy()).thenReturn(-100);
+
+        flattenedBoard.tryMove(masterMock, XY.RIGHT_DOWN);
+
+        verify(masterMock).updateEnergy(-100);
+        verify(masterMock).move(XY.RIGHT_DOWN);
+        verify(boardMock).removeEntity(badPlantMock);
+        verify(boardMock).addEntity(badPlantMock);
+    }
+
+    @Test
+    public void tryMoveMasterAgainstGoodPlants() {
+        MasterSquirrel masterMock = mock(MasterSquirrel.class);
+        GoodPlant goodPlantMock = mock(GoodPlant.class);
+
+        when(masterMock.getLocation()).thenReturn(new XY(1, 1));
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(goodPlantMock);
+        when(goodPlantMock.getEnergy()).thenReturn(100);
+
+        flattenedBoard.tryMove(masterMock, XY.RIGHT_DOWN);
+
+        verify(masterMock).updateEnergy(100);
+        verify(masterMock).move(XY.RIGHT_DOWN);
+        verify(boardMock).removeEntity(goodPlantMock);
+        verify(boardMock).addEntity(goodPlantMock);
     }
 
     @Test
     public void tryMoveMasterAgainstWallTest() {
-        MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 1));
-        int originalMasterEnergy = master.getEnergy();
-        entitySet = new EntitySet(0);
-        flattenedBoard = board.flatten();
-        master.setLocation(new XY(1, 1));
+        MasterSquirrel masterMock = mock(MasterSquirrel.class);
+        Wall wallMock = mock(Wall.class);
 
-        entitySet.addEntity(master);
-        Wall wall = new Wall(ID.getNewID(), new XY(0, 0));
-        entitySet.addEntity(wall);
+        when(masterMock.getLocation()).thenReturn(new XY(1, 1));
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(wallMock);
+        when(wallMock.getEnergy()).thenReturn(-10);
 
-        flattenedBoard.tryMove(master, XY.LEFT_UP);
-        assertEquals(originalMasterEnergy + wall.getEnergy(), master.getEnergy());
+        flattenedBoard.tryMove(masterMock, XY.RIGHT_DOWN);
 
-        assertEquals(new XY(1, 1), master.getLocation());
-
-        assertTrue(master.getStunnedAndDecrement());
+        verify(masterMock).updateEnergy(-10);
+        verify(masterMock).setStunned();
+        verify(masterMock, never()).move(XY.RIGHT_DOWN);
+        verify(boardMock, never()).removeEntity(wallMock);
     }
 
     @Test
-    public void tryMoveMiniSquirrelAgainstOwnMasterTest() throws BelowThresholdException, NotEnoughEnergyException {
-        MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 1));
-        int originalMasterEnergy = master.getEnergy();
-        entitySet = new EntitySet(0);
-        flattenedBoard = board.flatten();
-        entitySet.addEntity(master);
+    public void tryMoveMiniAgainstOwnMasterTest() {
+        MasterSquirrel masterMock = mock(MasterSquirrel.class);
+        MiniSquirrel miniMock = mock(MiniSquirrel.class);
 
-        MiniSquirrel miniSquirrel = master.spawnMiniSquirrel(new XY(2, 2), 100);
-        entitySet.addEntity(miniSquirrel);
-        flattenedBoard.tryMove(miniSquirrel, XY.LEFT_UP);
+        when(masterMock.checkEntityInProduction(miniMock)).thenReturn(true);
+        when(miniMock.getMaster()).thenReturn(masterMock);
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(masterMock);
+        when(miniMock.getLocation()).thenReturn(new XY(1 , 1));
+        when(miniMock.getEnergy()).thenReturn(100);
+        when(masterMock.equals(miniMock.getMaster())).thenReturn(true);
 
-        assertEquals(originalMasterEnergy, master.getEnergy());
+        flattenedBoard.tryMove(miniMock, XY.RIGHT_DOWN);
 
-        assertFalse(entitySet.containsEntity(miniSquirrel));
+        verify(masterMock).updateEnergy(100);
+        verify(masterMock).removeFromProduction(miniMock);
+        verify(boardMock).removeEntity(miniMock);
+        verify(boardMock, never()).addEntity(miniMock);
+        verify(miniMock, never()).move(XY.RIGHT_DOWN);
     }
 
     @Test
-    public void tryMoveMiniSquirrelAgainstEnemyMasterTest() throws BelowThresholdException, NotEnoughEnergyException {
-        entitySet = new EntitySet(0);
-        flattenedBoard = board.flatten();
-        MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 1));
-        entitySet.addEntity(master);
-        MasterSquirrel enemy = new MasterSquirrel(ID.getNewID(), new XY(2, 2));
-        int originalEnemyEnergy = enemy.getEnergy();
-        entitySet.addEntity(enemy);
+    public void tryMoveMiniAgainstEnemyMasterTest() {
+        MiniSquirrel miniMock = mock(MiniSquirrel.class);
+        MasterSquirrel masterMock = mock(MasterSquirrel.class);
+        MasterSquirrel enemyMock = mock(MasterSquirrel.class);
 
-        MiniSquirrel miniSquirrel = master.spawnMiniSquirrel(new XY(1, 2), 100);
-        entitySet.addEntity(miniSquirrel);
-        flattenedBoard.tryMove(miniSquirrel, XY.RIGHT);
-        assertEquals(originalEnemyEnergy + MiniSquirrel.ENERGY_GAIN_NOT_MASTER, enemy.getEnergy());
+        when(miniMock.getLocation()).thenReturn(new XY(1, 1));
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(enemyMock);
+        when(miniMock.getMaster()).thenReturn(masterMock);
 
-        assertFalse(entitySet.containsEntity(miniSquirrel));
+        flattenedBoard.tryMove(miniMock, XY.RIGHT_DOWN);
 
+        verify(enemyMock).updateEnergy(MiniSquirrel.ENERGY_GAIN_NOT_MASTER);
+        verify(boardMock).removeEntity(miniMock);
+        verify(boardMock, never()).addEntity(miniMock);
+        verify(miniMock, never()).move(XY.RIGHT_DOWN);
     }
 
     @Test
-    public void tryMoveMiniSquirrelAgainstMiniSquirrelTest() {
-        entitySet = new EntitySet(0);
-        flattenedBoard = board.flatten();
-        MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 2));    //just needs to exist
-        MiniSquirrel miniSquirrel = new MiniSquirrel(ID.getNewID(), 100, new XY(1, 1), master);
-        entitySet.addEntity(miniSquirrel);
-        MiniSquirrel enemy = new MiniSquirrel(ID.getNewID(), 100, new XY(2, 2), master);
-        entitySet.addEntity(enemy);
+    public void tryMoveMiniAgainstMiniTest() {
+        MiniSquirrel miniMock = mock(MiniSquirrel.class);
+        MiniSquirrel enemyMiniMock = mock(MiniSquirrel.class);
+        MasterSquirrel masterMock = mock(MasterSquirrel.class);
+        MasterSquirrel enemyMock = mock(MasterSquirrel.class);
 
-        flattenedBoard.tryMove(miniSquirrel, XY.RIGHT_DOWN);
-        assertFalse(entitySet.containsEntity(miniSquirrel));
+        when(miniMock.getMaster()).thenReturn(masterMock);
+        when(enemyMiniMock.getMaster()).thenReturn(enemyMock);
+        when(miniMock.getLocation()).thenReturn(new XY(1, 1));
+        when(boardMock.getEntity(new XY(2,2))).thenReturn(enemyMiniMock);
 
-        assertFalse(entitySet.containsEntity(enemy));
+        flattenedBoard.tryMove(miniMock, XY.RIGHT_DOWN);
+
+        verify(boardMock).removeEntity(miniMock);
+        verify(boardMock).removeEntity(enemyMiniMock);
+        verify(boardMock, never()).addEntity(miniMock);
+        verify(boardMock, never()).addEntity(enemyMiniMock);
+        verify(miniMock, never()).move(XY.RIGHT_DOWN);
     }
 
     @Test
-    public void tryMoveMiniSquirrelAgainstBadBeastTest() {
-        entitySet = new EntitySet(0);
-        flattenedBoard = board.flatten();
-        MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 2));    //just needs to exist
-        MiniSquirrel miniSquirrel = new MiniSquirrel(ID.getNewID(), 100, new XY(1, 1), master);
-        entitySet.addEntity(miniSquirrel);
-        BadBeast badBeast = new BadBeast(ID.getNewID(), new XY(2, 2));
-        entitySet.addEntity(badBeast);
+    public void tryMoveMiniAgainstBadBeastTest() {
+        MiniSquirrel miniMock = mock(MiniSquirrel.class);
+        BadBeast badMock = mock(BadBeast.class);
 
-        flattenedBoard.tryMove(miniSquirrel, XY.RIGHT_DOWN);
-        assertFalse(entitySet.containsEntity(miniSquirrel));
+        when(miniMock.getEnergy()).thenReturn(200);
+        when(miniMock.getLocation()).thenReturn(new XY(1, 1));
+        when(badMock.getEnergy()).thenReturn(-150);
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(badMock);
 
-        assertEquals(1, badBeast.getBiteCounter());
+        flattenedBoard.tryMove(miniMock, XY.RIGHT_DOWN);
 
-        miniSquirrel = new MiniSquirrel(ID.getNewID(), 200, new XY(3, 3), master);
-        entitySet.addEntity(miniSquirrel);
-
-        flattenedBoard.tryMove(miniSquirrel, XY.LEFT_UP);
-        assertTrue(entitySet.containsEntity(miniSquirrel));
-
-        assertEquals(200 + badBeast.getEnergy(), miniSquirrel.getEnergy());
+        verify(miniMock).updateEnergy(-150);
+        verify(miniMock, never()).move(XY.RIGHT_DOWN);
+        verify(boardMock, never()).removeEntity(miniMock);
+        verify(badMock).incrementBiteCounter();
     }
 
     @Test
-    public void tryMoveMiniSquirrelAgainstGoodBeastTest() {
-        entitySet = new EntitySet(0);
-        flattenedBoard = board.flatten();
-        MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 2));    //just needs to exist
-        MiniSquirrel miniSquirrel = new MiniSquirrel(ID.getNewID(), 100, new XY(1, 1), master);
-        entitySet.addEntity(miniSquirrel);
-        GoodBeast goodBeast = new GoodBeast(ID.getNewID(), new XY(2, 2));
-        entitySet.addEntity(goodBeast);
+    public void tryMoveMiniAgainstGoodBeastTest() {
+        MiniSquirrel miniMock = mock(MiniSquirrel.class);
+        GoodBeast goodMock = mock(GoodBeast.class);
 
-        flattenedBoard.tryMove(miniSquirrel, XY.RIGHT_DOWN);
-        assertEquals(new XY(2, 2), miniSquirrel.getLocation());
+        when(miniMock.getLocation()).thenReturn(new XY(1, 1));
+        when(goodMock.getEnergy()).thenReturn(200);
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(goodMock);
 
-        assertEquals(100 + goodBeast.getEnergy(), miniSquirrel.getEnergy());
+        flattenedBoard.tryMove(miniMock, XY.RIGHT_DOWN);
+
+        verify(miniMock).updateEnergy(200);
+        verify(miniMock).move(XY.RIGHT_DOWN);
+        verify(boardMock).removeEntity(goodMock);
+        verify(boardMock).addEntity(goodMock);
     }
 
     @Test
-    public void tryMoveMiniSquirrelAgainstPlants() {
-        entitySet = new EntitySet(0);
-        flattenedBoard = board.flatten();
-        MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 2));
-        MiniSquirrel miniSquirrel = new MiniSquirrel(ID.getNewID(), 100, new XY(2, 1), master);
-        entitySet.addEntity(miniSquirrel);
-        BadPlant badPlant = new BadPlant(ID.getNewID(), new XY(1, 1));
-        entitySet.addEntity(badPlant);
-        GoodPlant goodPlant = new GoodPlant(ID.getNewID(), new XY(2, 2));
-        entitySet.addEntity(goodPlant);
+    public void tryMoveMiniAgainstBadPlantsTest() {
+        MiniSquirrel miniMock = mock(MiniSquirrel.class);
+        BadPlant badMock = mock(BadPlant.class);
 
-        flattenedBoard.tryMove(miniSquirrel, XY.DOWN);
-        assertEquals(100 + goodPlant.getEnergy(), miniSquirrel.getEnergy());    //energy should 200
+        when(miniMock.getLocation()).thenReturn(new XY(1, 1));
+        when(badMock.getEnergy()).thenReturn(-100);
+        when(miniMock.getEnergy()).thenReturn(150);
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(badMock);
 
-        flattenedBoard.tryMove(miniSquirrel, XY.LEFT_UP);
-        assertEquals(200 + badPlant.getEnergy(), miniSquirrel.getEnergy());
+        flattenedBoard.tryMove(miniMock, XY.RIGHT_DOWN);
+
+        verify(boardMock, never()).removeEntity(miniMock);
+        verify(boardMock, never()).addEntity(miniMock);
+        verify(boardMock).removeEntity(badMock);
+        verify(boardMock).addEntity(badMock);
+        verify(miniMock).move(XY.RIGHT_DOWN);
     }
 
     @Test
-    public void tryMoveMiniSquirrelAgainstWall() {
-        entitySet = new EntitySet(0);
-        flattenedBoard = board.flatten();
-        MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(1, 2));
-        MiniSquirrel miniSquirrel = new MiniSquirrel(ID.getNewID(), 100, new XY(1, 1), master);
-        entitySet.addEntity(miniSquirrel);
-        Wall wall = new Wall(ID.getNewID(), new XY(0, 0));
-        entitySet.addEntity(wall);
+    public void tryMoveMiniAgainstGoodPlantsTest() {
+        MiniSquirrel miniMock = mock(MiniSquirrel.class);
+        GoodPlant goodMock = mock(GoodPlant.class);
 
-        flattenedBoard.tryMove(miniSquirrel, XY.LEFT_UP);
-        assertEquals(new XY(1, 1), miniSquirrel.getLocation());
+        when(miniMock.getLocation()).thenReturn(new XY(1, 1));
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(goodMock);
+        when(goodMock.getEnergy()).thenReturn(200);
 
-        assertEquals(100 + wall.getEnergy(), miniSquirrel.getEnergy());
+        flattenedBoard.tryMove(miniMock, XY.RIGHT_DOWN);
 
-        assertTrue(miniSquirrel.getStunnedAndDecrement());
+        verify(miniMock).updateEnergy(200);
+        verify(miniMock).move(XY.RIGHT_DOWN);
+        verify(boardMock).removeEntity(goodMock);
+        verify(boardMock).addEntity(goodMock);
+    }
+
+    @Test
+    public void tryMoveMiniAgainstWallTest() {
+        MiniSquirrel miniMock = mock(MiniSquirrel.class);
+        Wall wallMock = mock(Wall.class);
+
+        when(miniMock.getLocation()).thenReturn(new XY(1, 1));
+        when(miniMock.getEnergy()).thenReturn(100);
+        when(wallMock.getEnergy()).thenReturn(-10);
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(wallMock);
+
+        flattenedBoard.tryMove(miniMock, XY.RIGHT_DOWN);
+
+        verify(miniMock).updateEnergy(-10);
+        verify(miniMock, never()).move(XY.RIGHT_DOWN);
+        verify(miniMock).setStunned();
+        verify(boardMock, never()).removeEntity(wallMock);
     }
 
     @Test
     public void tryMoveGoodBeastAgainstSquirrelTest() {
-        entitySet = new EntitySet(0);
-        flattenedBoard = board.flatten();
-        Squirrel squirrel = new MasterSquirrel(ID.getNewID(), new XY(1, 1));
-        int originalEnergy = squirrel.getEnergy();
-        entitySet.addEntity(squirrel);
-        GoodBeast goodBeast = new GoodBeast(ID.getNewID(), new XY(2, 2));
-        entitySet.addEntity(goodBeast);
+        Squirrel squirrelMock = mock(Squirrel.class);
+        GoodBeast goodMock = mock(GoodBeast.class);
 
-        while (goodBeast.getStepCount() != GoodBeast.MAXIMUM_STEPCOUNT) {
-            goodBeast.incrementStepCount();
-        }
+        when(goodMock.getEnergy()).thenReturn(200);
+        when(goodMock.getLocation()).thenReturn(new XY(1, 1));
+        when(goodMock.getStepCount()).thenReturn(4);
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(squirrelMock);
 
-        flattenedBoard.tryMove(goodBeast, XY.LEFT_UP);  //this only works with disabling the runaway function in flattenedBoard
-        assertEquals(originalEnergy + goodBeast.getEnergy(), squirrel.getEnergy());
+        flattenedBoard.tryMove(goodMock, XY.RIGHT_DOWN);
 
-        assertNull(flattenedBoard.getEntity(new XY(2, 2)));
-
-        assertEquals(1, goodBeast.getStepCount());
+        verify(squirrelMock).updateEnergy(200);
+        verify(boardMock).removeEntity(goodMock);
+        verify(boardMock).addEntity(goodMock);
     }
 
     @Test
-    public void tryMoveGoodBeastAgainstNonSquirrelEntitiesTest() {
-        entitySet = new EntitySet(0);
-        flattenedBoard = board.flatten();
-        BadBeast badBeast = new BadBeast(ID.getNewID(), new XY(1, 2));
-        entitySet.addEntity(badBeast);
-        Wall wall = new Wall(ID.getNewID(), new XY(0, 0));
-        entitySet.addEntity(wall);
-        GoodPlant goodPlant = new GoodPlant(ID.getNewID(), new XY(2, 2));
-        entitySet.addEntity(goodPlant);
-        BadPlant badPlant = new BadPlant(ID.getNewID(), new XY(2, 1));
-        entitySet.addEntity(badPlant);
-        GoodBeast goodBeast = new GoodBeast(ID.getNewID(), new XY(1, 1));
-        entitySet.addEntity(goodBeast);
+    public void tryMoveGoodBeastAgainstNonSquirrelTest() {
+        GoodBeast goodMock = mock(GoodBeast.class);
+        BadPlant badPlantMock = mock(BadPlant.class);
 
-        while (goodBeast.getStepCount() != GoodBeast.MAXIMUM_STEPCOUNT) {
-            goodBeast.incrementStepCount();
-        }
+        when(goodMock.getStepCount()).thenReturn(4);
+        when(goodMock.getLocation()).thenReturn(new XY(1, 1));
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(badPlantMock);
 
-        flattenedBoard.tryMove(goodBeast, XY.LEFT_UP);
-        assertEquals(goodBeast, flattenedBoard.getEntity(new XY(1, 1)));
+        flattenedBoard.tryMove(goodMock, XY.RIGHT_DOWN);
 
-        while (goodBeast.getStepCount() != GoodBeast.MAXIMUM_STEPCOUNT) {
-            goodBeast.incrementStepCount();
-        }
-
-        flattenedBoard.tryMove(goodBeast, XY.RIGHT_DOWN);
-        assertEquals(goodBeast, flattenedBoard.getEntity(new XY(1, 1)));
-
-        while (goodBeast.getStepCount() != GoodBeast.MAXIMUM_STEPCOUNT) {
-            goodBeast.incrementStepCount();
-        }
-
-        flattenedBoard.tryMove(goodBeast, XY.RIGHT);
-        assertEquals(goodBeast, flattenedBoard.getEntity(new XY(1, 1)));
-
-        while (goodBeast.getStepCount() != GoodBeast.MAXIMUM_STEPCOUNT) {
-            goodBeast.incrementStepCount();
-        }
-
-        flattenedBoard.tryMove(goodBeast, XY.DOWN);
-        assertEquals(goodBeast, flattenedBoard.getEntity(new XY(1, 1)));
+        verify(goodMock, never()).move(XY.RIGHT_DOWN);
+        verify(boardMock, never()).removeEntity(goodMock);
+        verify(boardMock, never()).addEntity(goodMock);
+        verify(boardMock, never()).removeEntity(badPlantMock);
+        verify(boardMock, never()).addEntity(badPlantMock);
     }
 
     @Test
     public void tryMoveBadBeastAgainstSquirrelsTest() {
-        /*
-        had to remove follow function in flattenedBoard for these tests
-         */
-        entitySet = new EntitySet(0);
-        flattenedBoard = board.flatten();
-        MasterSquirrel master = new MasterSquirrel(ID.getNewID(), new XY(2, 1));
-        int originalEnergy = master.getEnergy();
-        entitySet.addEntity(master);
-        MiniSquirrel miniSquirrel = new MiniSquirrel(ID.getNewID(), 100, new XY(1, 2), master);
-        entitySet.addEntity(miniSquirrel);
-        BadBeast badBeast = new BadBeast(ID.getNewID(), new XY(1, 1));
-        entitySet.addEntity(badBeast);
+        MasterSquirrel squirrelMock = mock(MasterSquirrel.class);
+        BadBeast badMock = mock(BadBeast.class);
 
-        while (badBeast.getStepCount() != GoodBeast.MAXIMUM_STEPCOUNT) {
-            badBeast.incrementStepCount();
-        }
-        flattenedBoard.tryMove(badBeast, XY.RIGHT);
-        assertEquals(1, badBeast.getBiteCounter());
+        when(badMock.getLocation()).thenReturn(new XY(1, 1));
+        when(badMock.getStepCount()).thenReturn(4);
+        when(badMock.getEnergy()).thenReturn(-150);
+        when(boardMock.getEntity(new XY(2, 2))).thenReturn(squirrelMock);
+        when(squirrelMock.getEnergy()).thenReturn(1000);
 
-        assertEquals(badBeast, flattenedBoard.getEntity(new XY(1, 1)));
+        flattenedBoard.tryMove(badMock, XY.RIGHT_DOWN);
 
-        assertEquals(originalEnergy + badBeast.getEnergy(), master.getEnergy());
-
-        assertEquals(1, badBeast.getStepCount());
-
-        while (badBeast.getStepCount() != GoodBeast.MAXIMUM_STEPCOUNT) {
-            badBeast.incrementStepCount();
-        }
-
-        flattenedBoard.tryMove(badBeast, XY.DOWN);
-        assertEquals(2, badBeast.getBiteCounter());
-
-        assertEquals(badBeast, flattenedBoard.getEntity(miniSquirrel.getLocation()));
-
-        assertFalse(entitySet.containsEntity(miniSquirrel));
+        verify(squirrelMock).updateEnergy(-150);
+        verify(badMock).incrementBiteCounter();
+        verify(badMock, never()).move(XY.RIGHT_DOWN);
     }
 
     @Test
-    public void tryMoveBadBeastAgainstNonSquirrelEntitiesTest() {
-        entitySet = new EntitySet(0);
-        flattenedBoard = board.flatten();
-        GoodBeast goodBeast = new GoodBeast(ID.getNewID(), new XY(1, 2));
-        entitySet.addEntity(goodBeast);
-        Wall wall = new Wall(ID.getNewID(), new XY(0, 0));
-        entitySet.addEntity(wall);
-        GoodPlant goodPlant = new GoodPlant(ID.getNewID(), new XY(2, 2));
-        entitySet.addEntity(goodPlant);
-        BadPlant badPlant = new BadPlant(ID.getNewID(), new XY(2, 1));
-        entitySet.addEntity(badPlant);
-        BadBeast badBeast = new BadBeast(ID.getNewID(), new XY(1, 1));
-        entitySet.addEntity(badBeast);
+    public void tryMoveBadBeastAgainstNonSquirrelTest() {
+        BadBeast badMock = mock(BadBeast.class);
+        GoodBeast goodMock = mock(GoodBeast.class);
 
-        while (badBeast.getStepCount() != GoodBeast.MAXIMUM_STEPCOUNT) {
-            badBeast.incrementStepCount();
-        }
+        when(badMock.getStepCount()).thenReturn(4);
+        when(badMock.getLocation()).thenReturn(new XY(1, 1));
+        when(boardMock.getEntity(new XY(2,2 ))).thenReturn(goodMock);
 
-        flattenedBoard.tryMove(badBeast, XY.LEFT_UP);
-        assertEquals(badBeast, flattenedBoard.getEntity(new XY(1, 1)));
+        flattenedBoard.tryMove(badMock, XY.RIGHT_DOWN);
 
-        while (badBeast.getStepCount() != GoodBeast.MAXIMUM_STEPCOUNT) {
-            badBeast.incrementStepCount();
-        }
-
-        flattenedBoard.tryMove(badBeast, XY.RIGHT_DOWN);
-        assertEquals(badBeast, flattenedBoard.getEntity(new XY(1, 1)));
-
-        while (badBeast.getStepCount() != GoodBeast.MAXIMUM_STEPCOUNT) {
-            badBeast.incrementStepCount();
-        }
-
-        flattenedBoard.tryMove(badBeast, XY.RIGHT);
-        assertEquals(badBeast, flattenedBoard.getEntity(new XY(1, 1)));
-
-        while (badBeast.getStepCount() != GoodBeast.MAXIMUM_STEPCOUNT) {
-            badBeast.incrementStepCount();
-        }
-
-        flattenedBoard.tryMove(badBeast, XY.DOWN);
-        assertEquals(badBeast, flattenedBoard.getEntity(new XY(1, 1)));
+        verify(goodMock, never()).move(XY.RIGHT_DOWN);
+        verify(boardMock, never()).removeEntity(goodMock);
+        verify(boardMock, never()).addEntity(goodMock);
+        verify(boardMock, never()).removeEntity(badMock);
+        verify(boardMock, never()).addEntity(badMock);
     }
 }

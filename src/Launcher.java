@@ -1,5 +1,4 @@
 
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,8 +21,6 @@ public class Launcher extends Application {
 	private BoardConfig config = new BoardConfig();
 	private Board board = new Board(config);
 
-	private final String name = "kigame";
-
 	@Override
 	public void start(Stage arg0) {
 		LOGGER.log(Level.INFO, "starting new game with JavaFX");
@@ -43,15 +40,12 @@ public class Launcher extends Application {
         primaryStage.setTitle("Diligent Squirrel");
         primaryStage.show();
 
-        game.getHighScoresFromFile();
-        Map<String, Integer> test = game.getHighScores();
-        for(String key: test.keySet()) {
-            System.out.println(key + " " + test.get(key).toString());
-        }
         startGame(game);
 	}
 	
 	private Game createGame(UI ui) {
+	    String name = "kigame";
+
 		switch(name.toLowerCase()) {
 		case "singleplayer":
 			LOGGER.log(Level.INFO, "initialized singleplayer game");
