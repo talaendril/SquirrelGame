@@ -59,6 +59,9 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		return new XY(board.getBoardSizeX(), board.getBoardSizeY());
 	}
 
+    /*
+    checks collision for MiniSquirrel
+     */
 	@Override
 	public void tryMove(MiniSquirrel ms, XY direction) {
 		Entity e = this.board.getEntity(ms.getLocation().plus(direction));
@@ -124,6 +127,9 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		}
 	}
 
+    /*
+    checks collision for GoodBeast
+     */
 	@Override
 	public void tryMove(GoodBeast gb, XY direction) {
 		XY vector = direction;
@@ -153,6 +159,9 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		gb.incrementStepCount();
 	}
 
+    /*
+    checks collision for BadBeast
+     */
 	@Override
 	public void tryMove(BadBeast bb, XY direction) {
 		XY vector = direction;
@@ -196,6 +205,9 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		bb.incrementStepCount();
 	}
 
+	/*
+	checks collision for MasterSquirrel
+	 */
 	@Override
 	public void tryMove(MasterSquirrel master, XY direction) {
 		if (direction == XY.ZERO_ZERO) {
@@ -315,6 +327,9 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		return this.board.getRemainingSteps();
 	}
 
+	/*
+	updates an Entity after it was hit by an Implosion
+	 */
 	private double updateEntityAfterImplosion(MiniSquirrel ms, Entity entity, double energyLoss) {
 		if (entity == null)
 			return 0;
@@ -361,6 +376,9 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		}
 	}
 
+	/*
+	removes entity from collection and in case of MiniSquirrel removes it from Production of Master
+	 */
 	@Override
 	public void kill(Entity entity) {
 		if (EntityType.getEntityType(entity) == EntityType.MINI_SQUIRREL) {
@@ -370,6 +388,9 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		//entityMatrix[entity.getLocation().y][entity.getLocation().x] = null;
 	}
 
+	/*
+	kills the entity, resets its energy, gives it a new position and then puts it back into the collection
+	 */
 	@Override
 	public void killAndReplace(Entity entity) {
 		this.kill(entity);

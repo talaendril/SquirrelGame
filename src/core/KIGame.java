@@ -22,6 +22,9 @@ public class KIGame extends Game {
         int x, y = x = -1;
         String[] bots = this.getBoard().getConfig().getBotNames();
 
+        /*
+        create MasterSquirrelBots here and add them to the Board
+         */
         MasterSquirrel master1 = new MasterSquirrelBot(ID.getNewID(), new XY(x, y), bots[0]);
         MasterSquirrel master2 = new MasterSquirrelBot(ID.getNewID(), new XY(x, y), bots[1]);
         MasterSquirrel master3 = new MasterSquirrelBot(ID.getNewID(), new XY(x, y), bots[0]);

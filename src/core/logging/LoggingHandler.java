@@ -15,8 +15,11 @@ public class LoggingHandler implements InvocationHandler {
 		this.log = Logger.getLogger(loggerName);
 	}
 
+	/*
+	Logs every method called in an Interface where the Proxy was used to instantiate the Interface
+	 */
 	@Override
-	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+	public Object invoke(Object proxy, Method method, Object[] args) {
 		StringBuilder s = new StringBuilder("");
 		s.append(method.getName());
 		s.append("(");
