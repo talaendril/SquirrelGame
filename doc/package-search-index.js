@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"botapi"},{"l":"core"},{"l":"core.logging"},{"l":"de.hsa.games.fatsquirrel.botimpls.dijkstrabot"},{"l":"de.hsa.games.fatsquirrel.botimpls.randombot"},{"l":"entities"},{"l":"entities.squirrelbots"},{"l":"exceptions"},{"l":"idmanager"},{"l":"location"},{"l":"test"},{"l":"ui"},{"l":"ui.commandhandle"},{"l":"ui.consoletest"},{"l":"ui.windows"}]
