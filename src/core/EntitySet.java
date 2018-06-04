@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import entities.Entity;
 import entities.Wall;
 
+@Deprecated
 public class EntitySet {
 	
 	private static final Logger LOGGER = Logger.getLogger(EntitySet.class.getName());

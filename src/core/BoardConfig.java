@@ -1,35 +1,55 @@
 package core;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import location.XY;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class BoardConfig {
 	
-	private final XY size;
+	private XY size = new XY(28, 28);
 
-	private final int maximumSteps = 10;
+	private int maximumSteps = 10;
 
-	private final String[] botNames = {"randombot", "dijkstrabot"};
+	private String[] botNames = {"randombot", "dijkstrabot"};
 	
-	private final int numberOfGoodPlants;
-	private final int numberOfBadPlants;
-	private final int numberOfBadBeasts;
-	private final int numberOfGoodBeasts;
-	private final int numberOfRandomWalls;
-    private final int totalEntities;
+	private int numberOfGoodPlants = 20;
+	private int numberOfBadPlants = 15;
+	private int numberOfBadBeasts = 9;
+	private int numberOfGoodBeasts = 25;
+	private int numberOfRandomWalls = 40;
+    private int totalEntities;
 	
 	public BoardConfig() {
-		size = new XY(28, 28);
-
-		numberOfGoodPlants = 20;
-		numberOfBadPlants = 15;
-		numberOfBadBeasts = 9;
-		numberOfGoodBeasts = 25;
-		numberOfRandomWalls = 40;
+	    //loadConfig();
         int numberOfWalls = 2 * size.x + 2 * size.y - 4 + numberOfRandomWalls;
 		totalEntities = numberOfGoodPlants + numberOfBadPlants +
 						numberOfGoodBeasts + numberOfBadBeasts +
                         numberOfWalls;
 	}
+
+	public void loadConfig() {
+        Path p = Paths.get("config.json");
+	    try(InputStream is = Files.newInputStream(p)) {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(is);
+            numberOfGoodPlants = node.path("numberOfGoodPlants").asInt();
+            numberOfBadPlants = node.path("numberOfBadPlants").asInt();
+            numberOfBadBeasts = node.path("numberOfBadBeasts").asInt();
+            numberOfGoodBeasts = node.path("numberOfGoodBeasts").asInt();
+            numberOfRandomWalls = node.path("numberOfRandomWalls").asInt();
+        } catch (JsonParseException e) {
+	        e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 	
 	public int getNumberOfBadPlants() {
 		return numberOfBadPlants;
@@ -45,10 +65,6 @@ public class BoardConfig {
 
 	public int getNumberOfRandomWalls() {
 		return numberOfRandomWalls;
-	}
-
-	public int getTotalEntities() {
-		return totalEntities;
 	}
 
 	public int getMaximumSteps() {
