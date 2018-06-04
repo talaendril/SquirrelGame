@@ -1,0 +1,16 @@
+unnamed package
+botapi
+core
+core.logging
+de.hsa.games.fatsquirrel.botimpls.dijkstrabot
+de.hsa.games.fatsquirrel.botimpls.randombot
+entities
+entities.squirrelbots
+exceptions
+idmanager
+location
+test
+ui
+ui.commandhandle
+ui.consoletest
+ui.windows

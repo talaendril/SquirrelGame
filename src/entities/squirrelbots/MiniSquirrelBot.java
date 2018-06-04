@@ -3,25 +3,39 @@ package entities.squirrelbots;
 import botapi.BotController;
 import botapi.BotControllerFactory;
 import botapi.ControllerContext;
-import botimpl.BotControllerFactoryImpl;
 import core.EntityContext;
 import core.EntityType;
 import entities.Entity;
 import entities.MasterSquirrel;
 import entities.MiniSquirrel;
+import exceptions.DynamicCreationFailureException;
 import exceptions.ShouldNotBeCalledException;
 import location.XY;
 import location.XYSupport;
 import ui.commandhandle.MoveCommand;
 
+import java.util.logging.Logger;
+
 public class MiniSquirrelBot extends MiniSquirrel {
+
+    private static final Logger LOGGER = Logger.getLogger(MiniSquirrelBot.class.getName());
 	
-	private BotControllerFactory botControllerFactory = new BotControllerFactoryImpl();
-	private BotController miniBotController = this.botControllerFactory.createMiniBotController();
+	private final BotControllerFactory botControllerFactory;
+	private final BotController miniBotController;
 	private ControllerContext contContext;
 
-	public MiniSquirrelBot(int id, int energy, XY location, MasterSquirrel master) {
+	public MiniSquirrelBot(int id, int energy, XY location, MasterSquirrel master, String name) {
 		super(id, energy, location, master);
+        Object placeHolder;
+        try {
+            Class<?> aClass = Class.forName("de.hsa.games.fatsquirrel.botimpls." + name + ".BotControllerFactoryImpl");
+            placeHolder = aClass.newInstance();
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+            LOGGER.severe("Could not create BotControllerFactory");
+            throw new DynamicCreationFailureException("Could not create BotControllerFactory");
+        }
+        this.botControllerFactory = (BotControllerFactory) placeHolder;
+        this.miniBotController = botControllerFactory.createMiniBotController();
 	}
 	
 	private ControllerContext getControllerContext(EntityContext context) {
@@ -116,8 +130,7 @@ public class MiniSquirrelBot extends MiniSquirrel {
 
 		@Override
 		public long getRemainingSteps() {
-			// TODO Auto-generated method stub
-			return 0;
+            return this.entContext.remainingSteps();
 		}
 	}
 }

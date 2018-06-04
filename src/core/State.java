@@ -17,8 +17,4 @@ public class State {
 	public void update(MoveCommand command) {
 		this.board.nextStep(command);
 	}
-	
-	public FlattenedBoard flattenedBoard() {
-		return board.flatten();
-	}
 }

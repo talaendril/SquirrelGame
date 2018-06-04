@@ -33,4 +33,6 @@ public interface EntityContext {
 	Entity getEntity(XY xy);
 	
 	void implode(MiniSquirrel ms, int impactRadius);
+
+	int remainingSteps();
 }

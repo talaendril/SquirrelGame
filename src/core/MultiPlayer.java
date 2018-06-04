@@ -10,7 +10,7 @@ public class MultiPlayer extends Game {
 	}
 
 	@Override
-	public void run() {
+	public void run(int steps) {
 		// TODO Auto-generated method stub
 		
 	}

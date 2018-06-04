@@ -8,11 +8,11 @@ import ui.commandhandle.MoveCommand;
 public class BadBeast extends Character {
 	
 	public static final int MAXIMUM_BITECOUNT = 6; 
-	public static final int MAXIMUM_STEPCOUNT = 3;
+	public static final int MAXIMUM_STEPCOUNT = 4;
 	
 	private static final int startEnergy = -150;
 	
-	private int stepCounter = 0;
+	private int stepCounter = 1;
 	private int biteCounter = 0;
 
 	public BadBeast(int id, XY location) {
@@ -32,15 +32,24 @@ public class BadBeast extends Character {
 		return "| BadBeast" + super.toString() + " Current Stepcount: " + this.stepCounter;
 	}
 	
-	public int getBiteCounterAndIncrement() {
-		return this.biteCounter++;
+	public int getBiteCounter() {
+		return this.biteCounter;
 	}
-	
-	public int getStepCounterAndIncrement() {
-		if(this.stepCounter == 4) {
-			this.stepCounter = 0;
-		}
-		return this.stepCounter++;
+
+	public void incrementBiteCounter() {
+	    this.biteCounter++;
+    }
+
+	public int getStepCount() {
+		return this.stepCounter;
+	}
+
+	public void incrementStepCount() {
+		this.stepCounter++;
+	}
+
+	public void resetStepCount() {
+		this.stepCounter = 0;
 	}
 	
 	@Override

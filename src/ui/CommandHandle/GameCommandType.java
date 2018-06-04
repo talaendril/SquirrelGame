@@ -12,7 +12,7 @@ public enum GameCommandType implements CommandTypeInfo {
 	private String methodToCall;
 	private Class<?>[] paramTypes = null;
 	
-	private GameCommandType(String name, String helpText, String method, Class<?>...param) {
+	GameCommandType(String name, String helpText, String method, Class<?>...param) {
 		this.name = name;
 		this.helpText = helpText;
 		this.methodToCall = method;

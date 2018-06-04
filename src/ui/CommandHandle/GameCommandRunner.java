@@ -6,9 +6,6 @@ import exceptions.BelowThresholdException;
 import exceptions.NotEnoughEnergyException;
 import exceptions.ScanException;
 
-/*
-currently useless since we don't use Reflection anymore
- */
 @Deprecated
 public class GameCommandRunner {
 	/*

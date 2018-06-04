@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import entities.Entity;
 import entities.Wall;
 
+@Deprecated
 public class EntitySet {
 	
 	private static final Logger LOGGER = Logger.getLogger(EntitySet.class.getName());
@@ -12,34 +13,31 @@ public class EntitySet {
 	private Entity[] entities;
 	private int currentArrayPosition = 0;
 	
-	public EntitySet(int ArraySize) {
-		entities = new Entity[ArraySize];
+	public EntitySet(int arraySize) {
+		entities = new Entity[arraySize];
 	}
 	
-	private Entity[] doubleArraySize() {
-		Entity[] newArray = new Entity[entities.length * 2];
-		for(int i = 0; i < entities.length; i++) {
-			newArray[i] = entities[i];
-		}
+	private Entity[] increaseArraySize() {
+		Entity[] newArray = new Entity[(entities.length + 1) * 2];
+        System.arraycopy(entities, 0, newArray, 0, entities.length);
 		return newArray;
 	}
 	
 	public void addEntity(Entity entity) {
 		if(entity != null) {
 			if(currentArrayPosition == entities.length) {
-				entities = this.doubleArraySize();
+				entities = this.increaseArraySize();
 			}
 			entities[currentArrayPosition++] = entity;
-			LOGGER.info("added entity " + entity.toString());
+			//LOGGER.info("added entity " + entity.toString());
 		}
 	}
 	
 	public void removeEntity(Entity entity) {
 		for(int i = 0; i < entities.length; i++) {
 			if(entities[i] != null && entities[i].equals(entity)) {
-				for(int j = i; j < entities.length - 1; j++) {
-					entities[j] = entities[j+1];
-				}
+                System.arraycopy(entities, i + 1, entities, i, entities.length - 1 - i);
+                return;
 			}
 		}
 	}
@@ -56,8 +54,16 @@ public class EntitySet {
 		}
 		return string;
 	}
-	
-	
+
+	public boolean containsEntity(Entity entity) {
+	    for(Entity e : entities) {
+	        if(e != null && e.equals(entity)) {
+	            return true;
+            }
+        }
+        return false;
+    }
+
 	public Entity[] getEntities() {
 		return this.entities;
 	}

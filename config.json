@@ -1,0 +1,16 @@
+{
+  "numberOfGoodPlants": 25,
+  "numberOfBadPlants": 17,
+  "numberOfBadBeasts": 10,
+  "numberOfGoodBeasts": 25,
+  "numberOfRandomWalls": 40,
+  "maximumSteps": 8,
+  "size": {
+    "width": 25,
+    "length": 25
+  },
+  "botNames": [
+    "randombot",
+    "dijkstrabot"
+  ]
+}

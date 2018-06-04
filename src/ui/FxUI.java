@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import core.BoardView;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -14,7 +15,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import location.XY;
@@ -27,6 +29,8 @@ import ui.windows.OutputWindow;
 public class FxUI extends Scene implements UI {
     private static final Logger LOGGER = Logger.getLogger(FxUI.class.getName());
     private static final int CELL_SIZE = 20;
+
+    private boolean resetCalled;
 
     private static Image masterImage;
     private static Image miniSquirrelImage;
@@ -41,24 +45,39 @@ public class FxUI extends Scene implements UI {
 
     private Canvas boardCanvas;
     private Label msgLabel;
+    private Label stepLabel;
+    private Button resetButton;
 
-    private FxUI(Parent parent, Canvas boardCanvas, Label msgLabel) {
+    private FxUI(Parent parent, Canvas boardCanvas, Label msgLabel, Label stepLabel, Button resetButton) {
         super(parent);
         this.boardCanvas = boardCanvas;
         this.msgLabel = msgLabel;
+        this.stepLabel = stepLabel;
+        this.resetButton = resetButton;
+        this.resetButton.setOnAction(event -> resetCalled = true);
     }
 
     public static FxUI createInstance(XY boardSize) {
         loadImages();
         Canvas boardCanvas = new Canvas(boardSize.x * CELL_SIZE, boardSize.y * CELL_SIZE);
         Label masterEnergy = new Label();
-        AnchorPane.setBottomAnchor(masterEnergy, 10.0);
+        Label steps = new Label();
+        Button reset = new Button("Reset");
+        HBox bottomRow = new HBox();
+        HBox rightSide = new HBox();
+        rightSide.setAlignment(Pos.CENTER_RIGHT);
+        HBox.setHgrow(rightSide, Priority.ALWAYS);
+        rightSide.getChildren().add(reset);
+        bottomRow.getChildren().addAll(steps, rightSide);
+
+        Separator line = new Separator();
+
         VBox top = new VBox();
-        top.getChildren().add(createMenuBar());
-        top.getChildren().add(boardCanvas);
-        top.getChildren().add(masterEnergy);
+        top.getChildren().addAll(createMenuBar(), boardCanvas, masterEnergy, line, bottomRow);
+
         masterEnergy.setText("");
-        final FxUI fxUI = new FxUI(top, boardCanvas, masterEnergy);
+        steps.setText("");
+        final FxUI fxUI = new FxUI(top, boardCanvas, masterEnergy, steps, reset);
         fxUI.setOnKeyPressed(value -> {
             switch (value.getCode()) {
                 case W:
@@ -98,11 +117,36 @@ public class FxUI extends Scene implements UI {
                     lastMoveCommand = nextCommand;
                     nextCommand = new Command(GameCommandType.SPAWN_MINI, "100");
                     break;
+                case T:
+
+                    break;
                 default:
                     break;
             }
         });
         return fxUI;
+    }
+
+    private static MenuBar createMenuBar() {
+        MenuBar mb = new MenuBar();
+        Menu file = new Menu("Game");
+        Menu help = new Menu("Help");
+        MenuItem helpContents = new MenuItem("Help contents");
+        helpContents.setOnAction(value -> new OutputWindow(help(), "Help"));
+        MenuItem exit = new MenuItem("Exit");
+        exit.setOnAction(value -> {
+            LOGGER.log(Level.INFO, "stopped game");
+            System.exit(0);
+        });
+        MenuItem spawnMiniSquirrel = new MenuItem("Spawn Mini");
+        spawnMiniSquirrel.setOnAction(value -> {
+            InputWindow spawnMS = new InputWindow("Spawn Minisquirrel", "Specify how much energy you want to give");
+            spawnMiniSquirrel(spawnMS);
+        });
+        help.getItems().add(helpContents);
+        file.getItems().addAll(spawnMiniSquirrel, exit);
+        mb.getMenus().addAll(file, help);
+        return mb;
     }
 
     private static void loadImages() {
@@ -158,28 +202,6 @@ public class FxUI extends Scene implements UI {
         }
     }
 
-    private static MenuBar createMenuBar() {
-        MenuBar mb = new MenuBar();
-        Menu file = new Menu("Game");
-        Menu help = new Menu("Help");
-        MenuItem helpContents = new MenuItem("Help contents");
-        helpContents.setOnAction(value -> new OutputWindow(help(), "Help"));
-        MenuItem exit = new MenuItem("Exit");
-        exit.setOnAction(value -> {
-            LOGGER.log(Level.INFO, "stopped game");
-            System.exit(0);
-        });
-        MenuItem spawnMiniSquirrel = new MenuItem("Spawn Mini");
-        spawnMiniSquirrel.setOnAction(value -> {
-            InputWindow spawnMS = new InputWindow("Spawn Minisquirrel", "Specify how much energy you want to give");
-            spawnMiniSquirrel(spawnMS);
-        });
-        help.getItems().add(helpContents);
-        file.getItems().addAll(spawnMiniSquirrel, exit);
-        mb.getMenus().addAll(file, help);
-        return mb;
-    }
-
     private static void spawnMiniSquirrel(InputWindow spawnMS) {
         spawnMS.getEnterButton().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             String input = spawnMS.getTextField().getText();
@@ -216,15 +238,13 @@ public class FxUI extends Scene implements UI {
     }
 
     @Override
-    public void implode(XY location, int impactRadius) {    //TODO show for more than 1 frame
-        GraphicsContext gc = boardCanvas.getGraphicsContext2D();
-        gc.setFill(Color.AQUA);
-        gc.fillOval(location.x * CELL_SIZE, location.y * CELL_SIZE, CELL_SIZE * impactRadius, CELL_SIZE * impactRadius);
+    public void message(final String msg) {
+        Platform.runLater(() -> msgLabel.setText(msg));
     }
 
     @Override
-    public void message(final String msg) {
-        Platform.runLater(() -> msgLabel.setText(msg));
+    public void remainingSteps(final int steps) {
+        Platform.runLater(() -> stepLabel.setText("Remaining Steps: " + steps));
     }
 
     @Override
@@ -235,5 +255,15 @@ public class FxUI extends Scene implements UI {
             return returned;
         }
         return nextCommand;
+    }
+
+    @Override
+    public boolean checkResetCalled() {
+        return this.resetCalled;
+    }
+
+    @Override
+    public void changeResetCalled(boolean bool) {
+        this.resetCalled = bool;
     }
 }

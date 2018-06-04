@@ -34,24 +34,44 @@ public class SinglePlayer extends Game {
 		this.getBoard().generateMasterSquirrels(masters);
 	}
 
-	public void run() {
-		Timer renderTimer = new Timer();
-		renderTimer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				render();
-				setMessageToMasterEnergy();
-			}
-		}, 0, 1000 / FPS);
+	public void run(int steps) {
+        Runnable rendering = () -> {
+            while(true) {
+                render();
+                setMessageToMasterEnergy();
+                setRemainingSteps();
+                if(this.getUI().checkResetCalled()) {
+                    break;
+                }
+                try {
+                    Thread.sleep(1001 / FPS);
+                } catch (InterruptedException e) {
+                    LOGGER.severe("Rendering Thread failed to sleep");
+                }
+            }
+        };
 
-		Timer updateTimer = new Timer();
-		updateTimer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				processInput();
-				update();
-			}
-		}, 0, 500);
+        Runnable updating = () -> {
+            while(true) {
+                if(this.getBoard().getRemainingSteps() != 0) {
+                    processInput();
+                    update();
+                }
+                if (this.getUI().checkResetCalled()) {
+                    this.getUI().changeResetCalled(false);
+                    resetGame();
+                    break;
+                }
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    LOGGER.severe("Updating Thread failed to sleep");
+                }
+            }
+        };
+
+        new Thread(rendering).start();
+        new Thread(updating).start();
 	}
 
 	@Override
@@ -84,8 +104,8 @@ public class SinglePlayer extends Game {
 				throw new ScanException("Wrong Number of Parameters");
 			}
 			try {
-				MasterSquirrel[] masters = this.getMasters();	//this works if only one MasterSquirrel is in the game
-				this.getBoard().spawnMiniSquirrel(masters[0], Integer.parseInt((String) params[0]));
+				List<MasterSquirrel> masters = this.getMasters();	//this works if only one MasterSquirrel is in the game
+				this.getBoard().spawnMiniSquirrel(masters.get(0), Integer.parseInt((String) params[0]));
 				break;
 			} catch (NumberFormatException e) {
 				LOGGER.log(Level.SEVERE, e.toString(), e);
@@ -100,13 +120,12 @@ public class SinglePlayer extends Game {
 			if(params.length != 1) {
 				throw new ScanException("Wrong Number of Parameters");
 			}
-			MasterSquirrel[] masters = this.getMasters();
-			List<MiniSquirrel> list = masters[0].getProduction();
+			List<MasterSquirrel> masters = this.getMasters();
+			List<MiniSquirrel> list = masters.get(0).getProduction();
 			try {
 				MiniSquirrel ms = list.get(0);
 				int impactRadius = Integer.parseInt((String) params[0]);
-				this.getBoard().flatten().implode(ms, impactRadius); 
-				this.getUI().implode(ms.getLocation(), impactRadius);
+				this.getBoard().flatten().implode(ms, impactRadius);
 			} catch(IndexOutOfBoundsException e) {
 				LOGGER.severe("Tried to implode a MiniSquirrel that doesn't exist");
 			}

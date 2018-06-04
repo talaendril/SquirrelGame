@@ -10,7 +10,6 @@ import entities.HandOperatedMasterSquirrel;
 import entities.MasterSquirrel;
 import entities.MiniSquirrel;
 import entities.Wall;
-import location.XY;
 import ui.commandhandle.Command;
 import ui.commandhandle.CommandScanner;
 
@@ -26,32 +25,32 @@ public class ConsoleUI implements UI{
 	@Override
 	public void render(BoardView view) {
 		Entity[][] entityMatrix = view.getEntityMatrix();
-		for(int i = 0; i < entityMatrix.length; i++) {
-			for(int j = 0; j < entityMatrix[0].length; j++) {
-				if(entityMatrix[i][j] instanceof Wall) {
+		for (Entity[] anEntityMatrix : entityMatrix) {
+			for (int j = 0; j < entityMatrix[0].length; j++) {
+				if (anEntityMatrix[j] instanceof Wall) {
 					System.out.print("W\t");
-				} else if(entityMatrix[i][j] instanceof BadBeast) {
+				} else if (anEntityMatrix[j] instanceof BadBeast) {
 					System.out.print("BB\t");
-				} else if(entityMatrix[i][j] instanceof GoodBeast) {
+				} else if (anEntityMatrix[j] instanceof GoodBeast) {
 					System.out.print("GB\t");
-				} else if(entityMatrix[i][j] instanceof BadPlant) {
+				} else if (anEntityMatrix[j] instanceof BadPlant) {
 					System.out.print("BP\t");
-				} else if(entityMatrix[i][j] instanceof GoodPlant) {
+				} else if (anEntityMatrix[j] instanceof GoodPlant) {
 					System.out.print("GP\t");
-				} else if(entityMatrix[i][j] instanceof HandOperatedMasterSquirrel) {
-					HandOperatedMasterSquirrel homs = (HandOperatedMasterSquirrel) entityMatrix[i][j];
+				} else if (anEntityMatrix[j] instanceof HandOperatedMasterSquirrel) {
+					HandOperatedMasterSquirrel homs = (HandOperatedMasterSquirrel) anEntityMatrix[j];
 					System.out.print("OS" + homs.getID() + "\t");
-				} else if(entityMatrix[i][j] instanceof MasterSquirrel) {
-					MasterSquirrel ms = (MasterSquirrel) entityMatrix[i][j];
+				} else if (anEntityMatrix[j] instanceof MasterSquirrel) {
+					MasterSquirrel ms = (MasterSquirrel) anEntityMatrix[j];
 					System.out.print("S" + ms.getID() + "\t");
-				} else if(entityMatrix[i][j] instanceof MiniSquirrel) {
-					MiniSquirrel ms = (MiniSquirrel) entityMatrix[i][j];
+				} else if (anEntityMatrix[j] instanceof MiniSquirrel) {
+					MiniSquirrel ms = (MiniSquirrel) anEntityMatrix[j];
 					System.out.print("s" + ms.getMaster().getID() + "\t");
 				} else {
 					System.out.print(".\t");
 				}
 			}
-			System.out.println("");
+			System.out.println();
 		}
 	}
 	
@@ -66,7 +65,17 @@ public class ConsoleUI implements UI{
 	}
 
 	@Override
-	public void implode(XY location, int impactRadius) {
-		//nothing to do right now
+	public void remainingSteps(int steps) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public boolean checkResetCalled() {
+		return false;
+	}
+
+	@Override
+	public void changeResetCalled(boolean bool) {
+		// TODO Auto-generated method stub
 	}
 }
