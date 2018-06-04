@@ -53,7 +53,7 @@ public class SinglePlayer extends Game {
 
         Runnable updating = () -> {
             while(true) {
-                if(this.getCurrentStep() != steps) {
+                if(this.getBoard().getRemainingSteps() != 0) {
                     processInput();
                     update();
                 }
@@ -81,7 +81,6 @@ public class SinglePlayer extends Game {
 
 	@Override
 	protected void processInput() {
-        this.incrementCurrentStep();
 		nextCommand = this.getUI().getCommand();
 		LOGGER.info(nextCommand.toString());
 	}

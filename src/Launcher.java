@@ -42,7 +42,16 @@ public class Launcher extends Application {
 
         startGame(game);
 	}
-	
+	/*
+	change name here to either
+	    - singleplayer:
+	        play a MasterSquirrel yourself, using the keyboard buttons
+	        open the Help Menu in the MenuBar to actually see the controls
+	    - kigame:
+	        4 MasterSquirrelBots fight it out
+	    - multiplayer:
+	        not yet implemented
+	 */
 	private Game createGame(UI ui) {
 	    String name = "kigame";
 

@@ -34,6 +34,7 @@ public class KIGame extends Game {
         this.getBoard().generateMasterSquirrels(masters);
 	}
 
+	@Override
 	public void run(int steps) {
 		Runnable rendering = () -> {
 		    while(true) {
@@ -53,7 +54,7 @@ public class KIGame extends Game {
 
         Runnable updating = () -> {
             while(true) {
-                if(this.getCurrentStep() != steps) {
+                if(this.getBoard().getRemainingSteps() != 0) {
                     update();
                 }
                 if (this.getUI().checkResetCalled()) {
@@ -61,7 +62,7 @@ public class KIGame extends Game {
                     resetGame();
                     break;
                 }
-                if(this.getCurrentStep() == steps && !(this.getUI().checkResetCalled()) && !this.savedHighScores) {
+                if(this.getBoard().getRemainingSteps() == 0 && !(this.getUI().checkResetCalled()) && !this.savedHighScores) {
                     this.saveHighScores();
                 }
                 try {
@@ -90,7 +91,6 @@ public class KIGame extends Game {
 	
 	@Override
 	protected void update() {
-	    this.incrementCurrentStep();
 		this.getState().update(MoveCommand.NONE);
 	}
 

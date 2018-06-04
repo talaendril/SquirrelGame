@@ -1,13 +1,10 @@
 package entities.squirrelbots;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Logger;
 
 import botapi.BotController;
 import botapi.BotControllerFactory;
 import botapi.ControllerContext;
-import de.hsa.games.fatsquirrel.botimpls.randombot.BotControllerFactoryImpl;
 import core.EntityContext;
 import core.EntityType;
 import core.logging.LoggingProxyFactory;

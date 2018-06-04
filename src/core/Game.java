@@ -19,8 +19,6 @@ public abstract class Game {
 	private Map<String, ArrayList<Integer>> highScores = new Hashtable<>();
 	boolean savedHighScores = false;
 
-	private int currentStep = 0;
-
 	private List<MasterSquirrel> masters = new ArrayList<>();
 	
 	Game(State state, Board board, UI ui) {
@@ -48,14 +46,6 @@ public abstract class Game {
     void addMasters(MasterSquirrel[] masters) {
         this.masters.addAll(Arrays.asList(masters));
     }
-
-	int getCurrentStep() {
-	    return this.currentStep;
-    }
-
-    void incrementCurrentStep() {
-	    this.currentStep++;
-    }
 	
 	void setMessageToMasterEnergy() {
 		StringBuilder sb = new StringBuilder();
@@ -66,13 +56,12 @@ public abstract class Game {
 	}
 
 	void setRemainingSteps() {
-        this.ui.remainingSteps(this.board.getConfig().getMaximumSteps() - this.currentStep);
+        this.ui.remainingSteps(this.board.getRemainingSteps());
     }
 
     void resetGame() {
 	    this.board = new Board(this.board.getConfig());
 	    this.state = new State(this.board);
-	    currentStep = 0;
 	    resetMasters();
 	    MasterSquirrel[] masterSquirrels = masters.toArray(new MasterSquirrel[masters.size()]);
 	    this.board.generateMasterSquirrels(masterSquirrels);
