@@ -5,25 +5,35 @@ import entities.*;
 import location.XY;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.MockitoRule;
+import org.mockito.quality.Strictness;
 
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class FlattenedBoardTest {
+    public MockitoRule rule = MockitoJUnit.rule().strictness(Strictness.LENIENT);
+
     @Mock
     private Board boardMock;
 
-    @InjectMocks
     private FlattenedBoard flattenedBoard;
 
     @Before
     public void setup(){
-        MockitoAnnotations.initMocks(this);
         when(boardMock.getBoardSizeX()).thenReturn(10);
         when(boardMock.getBoardSizeY()).thenReturn(10);
+        flattenedBoard = new FlattenedBoard(boardMock);
     }
+
+    /*
+    for BadBeast and GoodBeast move Tests you need to remove the small line in their respective tryMove methods
+    that change their Direction based on the closest Squirrel Entity, otherwise there might be an error
+     */
 
     @Test
     public void tryMoveMasterTest() {
@@ -42,7 +52,6 @@ public class FlattenedBoardTest {
         when(boardMock.getEntity(new XY(2, 2))).thenReturn(badMock);
         when(badMock.getEnergy()).thenReturn(-150);
         when(masterMock.getLocation()).thenReturn(new XY(1, 1));
-        when(badMock.getLocation()).thenReturn(new XY(2, 2));
         when(badMock.getBiteCounter()).thenReturn(0);
 
         flattenedBoard.tryMove(masterMock, XY.RIGHT_DOWN);
@@ -115,6 +124,7 @@ public class FlattenedBoardTest {
         when(masterMock.checkEntityInProduction(miniMock)).thenReturn(true);
         when(miniMock.getMaster()).thenReturn(masterMock);
         when(miniMock.getEnergy()).thenReturn(200);
+        when(miniMock.getLocation()).thenReturn(new XY(2, 2));
         when(boardMock.getEntity(new XY(2, 2))).thenReturn(miniMock);
         when(masterMock.getLocation()).thenReturn(new XY(1, 1));
 
@@ -134,6 +144,7 @@ public class FlattenedBoardTest {
 
         when(masterMock.checkEntityInProduction(miniMock)).thenReturn(false);
         when(miniMock.getMaster()).thenReturn(masterTwoMock);
+        when(miniMock.getLocation()).thenReturn(new XY(2, 2));
         when(boardMock.getEntity(new XY(2, 2))).thenReturn(miniMock);
         when(masterMock.getLocation()).thenReturn(new XY(1, 1));
 
@@ -153,6 +164,7 @@ public class FlattenedBoardTest {
         when(masterMock.getLocation()).thenReturn(new XY(1, 1));
         when(boardMock.getEntity(new XY(2, 2))).thenReturn(badPlantMock);
         when(badPlantMock.getEnergy()).thenReturn(-100);
+        when(badPlantMock.getLocation()).thenReturn(new XY(2, 2));
 
         flattenedBoard.tryMove(masterMock, XY.RIGHT_DOWN);
 
@@ -168,6 +180,7 @@ public class FlattenedBoardTest {
         GoodPlant goodPlantMock = mock(GoodPlant.class);
 
         when(masterMock.getLocation()).thenReturn(new XY(1, 1));
+        when(goodPlantMock.getLocation()).thenReturn(new XY(2, 2));
         when(boardMock.getEntity(new XY(2, 2))).thenReturn(goodPlantMock);
         when(goodPlantMock.getEnergy()).thenReturn(100);
 
@@ -201,7 +214,6 @@ public class FlattenedBoardTest {
         MasterSquirrel masterMock = mock(MasterSquirrel.class);
         MiniSquirrel miniMock = mock(MiniSquirrel.class);
 
-        when(masterMock.checkEntityInProduction(miniMock)).thenReturn(true);
         when(miniMock.getMaster()).thenReturn(masterMock);
         when(boardMock.getEntity(new XY(2, 2))).thenReturn(masterMock);
         when(miniMock.getLocation()).thenReturn(new XY(1 , 1));
@@ -245,6 +257,7 @@ public class FlattenedBoardTest {
         when(miniMock.getMaster()).thenReturn(masterMock);
         when(enemyMiniMock.getMaster()).thenReturn(enemyMock);
         when(miniMock.getLocation()).thenReturn(new XY(1, 1));
+        when(enemyMiniMock.getLocation()).thenReturn(new XY(2, 2));
         when(boardMock.getEntity(new XY(2,2))).thenReturn(enemyMiniMock);
 
         flattenedBoard.tryMove(miniMock, XY.RIGHT_DOWN);
@@ -281,6 +294,7 @@ public class FlattenedBoardTest {
 
         when(miniMock.getLocation()).thenReturn(new XY(1, 1));
         when(goodMock.getEnergy()).thenReturn(200);
+        when(goodMock.getLocation()).thenReturn(new XY(2, 2));
         when(boardMock.getEntity(new XY(2, 2))).thenReturn(goodMock);
 
         flattenedBoard.tryMove(miniMock, XY.RIGHT_DOWN);
@@ -299,6 +313,7 @@ public class FlattenedBoardTest {
         when(miniMock.getLocation()).thenReturn(new XY(1, 1));
         when(badMock.getEnergy()).thenReturn(-100);
         when(miniMock.getEnergy()).thenReturn(150);
+        when(badMock.getLocation()).thenReturn(new XY(2, 2));
         when(boardMock.getEntity(new XY(2, 2))).thenReturn(badMock);
 
         flattenedBoard.tryMove(miniMock, XY.RIGHT_DOWN);
@@ -316,6 +331,7 @@ public class FlattenedBoardTest {
         GoodPlant goodMock = mock(GoodPlant.class);
 
         when(miniMock.getLocation()).thenReturn(new XY(1, 1));
+        when(goodMock.getLocation()).thenReturn(new XY(2, 2));
         when(boardMock.getEntity(new XY(2, 2))).thenReturn(goodMock);
         when(goodMock.getEnergy()).thenReturn(200);
 
@@ -389,7 +405,6 @@ public class FlattenedBoardTest {
         when(badMock.getStepCount()).thenReturn(4);
         when(badMock.getEnergy()).thenReturn(-150);
         when(boardMock.getEntity(new XY(2, 2))).thenReturn(squirrelMock);
-        when(squirrelMock.getEnergy()).thenReturn(1000);
 
         flattenedBoard.tryMove(badMock, XY.RIGHT_DOWN);
 

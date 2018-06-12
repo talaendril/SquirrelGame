@@ -133,13 +133,10 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	@Override
 	public void tryMove(GoodBeast gb, XY direction) {
 		XY vector = direction;
-        //TODO ADD THIS LINE AFTER DONE TESTING
-        /*
 		Entity squirrel;
 		if ((squirrel = this.nearestPlayerEntity(gb.getLocation())) != null) {
 			vector = this.bestVectorAwayFromEntity(gb, squirrel);
 		}
-		*/
 		if (gb.getStepCount() == GoodBeast.MAXIMUM_STEPCOUNT) {
 			gb.resetStepCount();
 			LOGGER.info("GoodBeast" + gb.getID() + " tries to move from " + gb.getLocation().toString()
@@ -165,13 +162,10 @@ public class FlattenedBoard implements EntityContext, BoardView {
 	@Override
 	public void tryMove(BadBeast bb, XY direction) {
 		XY vector = direction;
-        //TODO ADD THIS LINE AFTER DONE TESTING
-        /*
 		Entity squirrel;
 		if ((squirrel = this.nearestPlayerEntity(bb.getLocation())) != null) {
 			vector = this.bestVectorToEntity(bb, squirrel);
 		}
-		*/
 		if (bb.getStepCount() == BadBeast.MAXIMUM_STEPCOUNT) {
 		    bb.resetStepCount();
 			LOGGER.info("BadBeast" + bb.getID() + " tries to move from " + bb.getLocation().toString()
@@ -385,7 +379,7 @@ public class FlattenedBoard implements EntityContext, BoardView {
 			((MiniSquirrel) entity).getMaster().removeFromProduction(entity);
 		}
 		this.board.removeEntity(entity);
-		//entityMatrix[entity.getLocation().y][entity.getLocation().x] = null;
+		entityMatrix[entity.getLocation().y][entity.getLocation().x] = null;
 	}
 
 	/*
@@ -401,10 +395,6 @@ public class FlattenedBoard implements EntityContext, BoardView {
 		entity.resetEnergy();
 		entity.setLocation(newLocation);
 		this.board.addEntity(entity);
-		//entityMatrix[entity.getLocation().y][entity.getLocation().x] = entity;
-        /* TODO ADD THAT LINE AGAIN SO GAME WORKS
-        THIS IS GETTING CALLED BUT FOR SOME REASON THE LENGTH OF THIS MATRIX
-        IS ALWAYS 0 SO REMOVING THAT FOR TESTING PURPOSES
-         */
+		entityMatrix[entity.getLocation().y][entity.getLocation().x] = entity;
 	}
 }
